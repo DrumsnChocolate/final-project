@@ -27,3 +27,4 @@ pip install timm==0.4.12
 pip install ml-collections
 
 pip install chardet
+conda install -c conda-forge typing-extensions=4.7.1

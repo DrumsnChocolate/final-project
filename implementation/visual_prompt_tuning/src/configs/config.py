@@ -130,9 +130,6 @@ _C.DATA.NUM_WORKERS = 4
 # Load data to pinned host memory
 _C.DATA.PIN_MEMORY = True
 
-_C.DIST_BACKEND = "nccl"
-_C.DIST_INIT_PATH = "env://"
-_C.DIST_INIT_FILE = ""
 
 
 def get_cfg():

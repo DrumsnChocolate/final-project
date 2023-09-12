@@ -32,9 +32,6 @@ def setup(args):
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
 
-    # setup dist
-    cfg.DIST_INIT_PATH = "tcp://{}:12399".format(os.environ["SLURMD_NODENAME"])
-
     # setup output dir
     # output_dir / data_name / feature_name / lr_wd / run1
     output_dir = cfg.OUTPUT_DIR
