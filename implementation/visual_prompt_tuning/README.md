@@ -1,4 +1,5 @@
 cloned this from https://github.com/kmnp/vpt
+there are datasets that need to be downloaded manually, such as https://www.tensorflow.org/datasets/catalog/diabetic_retinopathy_detection
 
 # Visual Prompt Tuning 
 
