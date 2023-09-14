@@ -7,12 +7,13 @@
 # copy visual prompt tuning folder to node (beware of running experiments that involve symlinked data, that might not go well)
 cd /local
 mkdir ${SLURM_JOBID}
+cd ${SLURM_JOBID}
 cp -r ${SLURM_SUBMIT_DIR}/implementation/visual_prompt_tuning .
 
 # setup environment with conda
 env_setup.sh
 
-# todo: replace below path with proper path on node
+# launch experiments
 visual_prompt_tuning/experiments/vit_vtab.sh
 
 env_teardown.sh

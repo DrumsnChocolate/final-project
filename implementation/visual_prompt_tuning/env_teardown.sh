@@ -1,1 +1,2 @@
-conda remove prompt
+conda deactivate
+conda env remove --name prompt
