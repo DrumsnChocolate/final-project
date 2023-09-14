@@ -11,14 +11,12 @@ cd ${SLURM_JOBID}
 cp -r ${SLURM_SUBMIT_DIR}/implementation/visual_prompt_tuning .
 
 
-# setup environment with conda
+# properly load conda
 source ~/miniconda3/etc/profile.d/conda.sh
-visual_prompt_tuning/env_setup.sh
 
 # launch experiments
 visual_prompt_tuning/experiments/vit_vtab.sh
 
-visual_prompt_tuning/env_teardown.sh
 
 # copy output back to submit directory
 cp -r visual_prompt_tuning/output_dir ${SLURM_SUBMIT_DIR}/implementation/visual_prompt_tuning
