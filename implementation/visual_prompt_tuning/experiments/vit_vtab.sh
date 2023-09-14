@@ -15,7 +15,7 @@ for d in  "caltech101 102"; do
 
   # parameters are specified based on the visual prompt tuning paper, and the hyper parameter tuning that was done there
   for seed in "42" "44" "82" "100" "800"; do
-    python train.py \
+    python visual_prompt_tuning/train.py \
       --config-file configs/prompt/cub.yaml
       MODEL.TYPE "vit" \
       DATA.BATCH_SIZE "64" \
