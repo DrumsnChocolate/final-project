@@ -1,5 +1,4 @@
 #!/bin/bash
-#SBATCH -J vpt-vit-vtab
 #SBATCH -c 1
 #SBATCH --gres=gpu:1
 #SBATCH --mail-type=BEGIN,END,FAIL
@@ -17,7 +16,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate prompt
 
 # launch experiments
-visual_prompt_tuning/experiments/vit_vtab.sh
+visual_prompt_tuning/experiments/vit_vtab.sh $1 $2
 
 conda deactivate
 
