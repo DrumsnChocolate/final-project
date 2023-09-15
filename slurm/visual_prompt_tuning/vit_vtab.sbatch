@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -c 1
 #SBATCH --gres=gpu:2
-#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-type=END,FAIL
 
 ## copy visual prompt tuning folder to node (beware of running experiments that involve symlinked data, that might not go well)
 #cd /local
