@@ -6,5 +6,5 @@ for d in "caltech101 102" "cifar(num_classes=100) 100" "dtd 47" "oxford_flowers1
   set -- $d
   dataset=$1
   num_classes=$2
-  sbatch -J "vpt-vit-vtab-${d}" slurm/visual_prompt_tuning/vit_vtab.sbatch ${dataset} ${num_classes}
+  sbatch -J "vpt-vit-vtab-${dataset}" slurm/visual_prompt_tuning/vit_vtab.sbatch ${dataset} ${num_classes}
 done

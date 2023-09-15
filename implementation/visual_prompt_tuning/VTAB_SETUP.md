@@ -69,8 +69,8 @@ There are 4 datasets need special care:
 dataset_builder = tfds.builder("sun397/tfds:4.*.*", data_dir=data_dir)
 dataset_builder.download_and_prepare()
 
-# kitti version is wrong from vtab repo, try 3.2.0 (https://github.com/google-research/task_adaptation/issues/18)
-dataset_builder = tfds.builder("kitti:3.2.0", data_dir=data_dir)
+# kitti version is wrong from vtab repo, try 3.3.0 (https://github.com/google-research/task_adaptation/issues/18)
+dataset_builder = tfds.builder("kitti:3.3.0", data_dir=data_dir)
 dataset_builder.download_and_prepare()
 
 
@@ -135,7 +135,7 @@ diabetic_retinopathy_detection: 3.0.0
 # Structured
 clevr: 3.1.0
 dmlab: 2.0.1
-kitti: 3.2.0
+kitti: 3.3.0
 dsprites: 2.0.0
 smallnorb: 2.0.0
 ```
