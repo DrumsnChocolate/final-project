@@ -19,7 +19,8 @@ Possible solutions to jobs that failed:
 - [x] same for dsprites label_orientation
 - [x] same for dsprites label x position
 - [x] diabetic retinopathy still needs to be placed in the manual folder
-- [ ] something is going on with sun397, not sure what. It has to do with the data
+- [x] something is going on with sun397, not sure what. It has to do with the data
+  okay, this had to do with: https://github.com/tensorflow/datasets/issues/2889 which was fixed by doing the same as in https://github.com/tensorflow/datasets/pull/4955
 
 
 
