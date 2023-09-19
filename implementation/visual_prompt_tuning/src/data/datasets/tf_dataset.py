@@ -111,6 +111,9 @@ class TFDataset(torch.utils.data.Dataset):
         if weight_type == "none":
             return [1.0] * cls_num
 
+        # todo: fix this code, because it does not actually count anything,
+        #  since the class_ids are just the list of classes, and counting
+        #  them will always result in an array of 1s.
         id2counts = Counter(self._class_ids)
         assert len(id2counts) == cls_num
         num_per_cls = np.array([id2counts[i] for i in self._class_ids])
