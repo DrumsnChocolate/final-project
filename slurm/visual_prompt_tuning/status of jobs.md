@@ -26,14 +26,19 @@ Possible solutions to jobs that failed:
 
 
 
-- [ ] oxford_flowers needs more gpu mem. try 3 gpus
-- [ ] dtd same
-- [ ] oxford_iiit_pet same
-- [ ] cifar same
-- [ ] camelyon same
-- [ ] svhn same
-- [ ] dmlab same
-- [ ] resisc45 same
-- [ ] smallnorb label elevation same
-- [ ] kitti same
-- [ ] dsprites same
+- [x] oxford_flowers needs more gpu mem. try 3 gpus
+- [x] dtd same
+- [x] oxford_iiit_pet same
+- [x] cifar same
+- [x] camelyon same
+- [x] svhn same
+- [x] dmlab same
+- [x] resisc45 same
+- [x] smallnorb label elevation same
+- [x] kitti same
+- [x] dsprites same
+
+dsprites jobs were killed, for some reason:
+
+- [ ] dsprites x_position 235568 was killed in four out of 5 runs
+- [ ] 
