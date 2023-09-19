@@ -11,13 +11,14 @@ for seed in "42"; do
   python visual_prompt_tuning/train.py \
     --config-file visual_prompt_tuning/configs/prompt/cub.yaml \
     MODEL.TYPE "vit" \
-    DATA.BATCH_SIZE "1" \
+    DATA.BATCH_SIZE "64" \
     MODEL.PROMPT.NUM_TOKENS "100" \
     MODEL.PROMPT.DEEP "True" \
     MODEL.PROMPT.DROPOUT "0.1" \
     DATA.FEATURE "sup_vitb16_imagenet21k" \
     DATA.NAME "mammo-${dataset}" \
     DATA.NUMBER_CLASSES "${num_classes}" \
+    DATA.CROPSIZE "224" \
     SOLVER.BASE_LR "5.0" \
     SOLVER.WEIGHT_DECAY "0.0001" \
     MODEL.MODEL_ROOT "${model_root}" \

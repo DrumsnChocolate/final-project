@@ -17,6 +17,12 @@ def get_transforms(split, size):
     elif size == 384:
         resize_dim = 438
         crop_dim = 384
+    elif size == 672:
+        resize_dim = 768
+        crop_dim = 672
+    elif size == 896:
+        resize_dim = 1024
+        crop_dim = 896
     if split == "train":
         transform = tv.transforms.Compose(
             [

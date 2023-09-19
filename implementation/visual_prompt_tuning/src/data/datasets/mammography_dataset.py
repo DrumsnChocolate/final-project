@@ -38,6 +38,7 @@ class CBISDataset(torch.utils.data.Dataset):
         # todo: not sure about the transforms, we'll see
         self.transform = get_transforms(split, cfg.DATA.CROPSIZE)
         self.image_labels = self.get_image_labels()
+        self._class_to_id = self.get_class_to_id()
 
 
     def __getitem__(self, index):
@@ -48,7 +49,7 @@ class CBISDataset(torch.utils.data.Dataset):
         # # todo: figure out what dimensions we need before the transform
         # image = image.repeat(3, 1, 1)  # todo: figure out if this is the right way to do this
         image = self.transform(image)
-        label = self.image_labels.loc[index]['CaseLabel']
+        label = self._class_to_id[self.image_labels.loc[index]['CaseLabel']]
         sample = {
             "image": image,
             "label": label,
@@ -73,6 +74,9 @@ class CBISDataset(torch.utils.data.Dataset):
             val = val.reset_index(drop=True)
             return pd.DataFrame(val)
 
+    def get_class_to_id(self):
+        return {label: i for i, label in enumerate(self.get_classes())}
+
     def get_info(self):
         num_imgs = len(self.image_labels)
         return num_imgs, self.get_class_num()
@@ -80,8 +84,11 @@ class CBISDataset(torch.utils.data.Dataset):
     def get_class_num(self):
         return 2
 
-    def get_class_ids(self):
+    def get_classes(self):
         return sorted(list(set(self.image_labels["CaseLabel"])))
+
+    def get_class_ids(self):
+        return [self._class_to_id[c] for c in self.get_classes()]
 
     def get_class_weights(self, weight_type):
         if self._split != "train":
@@ -91,7 +98,7 @@ class CBISDataset(torch.utils.data.Dataset):
         # todo: fix this code, because it does not actually count anything,
         #  since the class_ids are just the list of classes, and counting
         #  them will always result in an array of 1s.
-        id2counts = Counter(self.get_class_ids())
+        id2counts = Counter(self.image_labels["CaseLabel"])
         assert len(id2counts) == self.get_class_num()
         num_per_cls = np.array([id2counts[i] for i in self.get_class_ids()])
         mu = 0
