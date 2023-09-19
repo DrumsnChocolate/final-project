@@ -8,15 +8,14 @@ pip install tensorflow-addons
 pip install mock
 
 
-conda install pytorch torchvision torchaudio cudatoolkit -c pytorch
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 
-python -m pip install detectron2 -f \
-https://dl.fbaipublicfiles.com/detectron2/wheels/cu110/torch1.7/index.html
+#python -m pip install git+https://github.com/facebookresearch/detectron2.git
 pip install opencv-python
 
 conda install tqdm pandas matplotlib seaborn scikit-learn scipy simplejson termcolor
 conda install tqdm pandas matplotlib seaborn scikit-learn scipy simplejson termcolor jupyter
-conda install -c iopath iopath
+conda install -c conda-forge iopath fvcore
 
 
 # for transformers

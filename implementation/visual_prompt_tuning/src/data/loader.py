@@ -5,6 +5,7 @@ import torch
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data.sampler import RandomSampler
 
+from .datasets.mammography_dataset import CBISDataset
 from ..utils import logging
 from .datasets.json_dataset import (
     CUB200Dataset, CarsDataset, DogsDataset, FlowersDataset, NabirdsDataset
@@ -17,6 +18,7 @@ _DATASET_CATALOG = {
     'StanfordCars': CarsDataset,
     'StanfordDogs': DogsDataset,
     "nabirds": NabirdsDataset,
+    "mammo-cbis": CBISDataset,
 }
 
 
