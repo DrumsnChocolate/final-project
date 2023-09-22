@@ -8,8 +8,9 @@ pip install tensorflow-addons
 pip install mock
 
 
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-
+conda install -c "nvidia/label/cuda-11.8.0" cuda==11.8.0
+#conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 #python -m pip install git+https://github.com/facebookresearch/detectron2.git
 pip install opencv-python
 
