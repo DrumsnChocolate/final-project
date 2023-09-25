@@ -213,6 +213,7 @@ def train(cfg, args, final_runs):
 
 
 def get_lrwd_range(args):
+    print(args)
     lr_range = None
     wd_range = None
 

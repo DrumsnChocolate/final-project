@@ -28,6 +28,7 @@ num_classes=$2
 
 python visual_prompt_tuning/tune_cbis.py \
   --config-file visual_prompt_tuning/configs/prompt/cub.yaml \
+  --train-type "prompt" \
   MODEL.TYPE "vit" \
   DATA.BATCH_SIZE "64" \
   MODEL.PROMPT.NUM_TOKENS "50" \
@@ -39,4 +40,4 @@ python visual_prompt_tuning/tune_cbis.py \
   DATA.CROPSIZE "224" \
   MODEL.MODEL_ROOT "${model_root}" \
   DATA.DATAPATH "${data_path}" \
-  OUTPUT_DIR = "${output_dir}"
+  OUTPUT_DIR "${output_dir}"

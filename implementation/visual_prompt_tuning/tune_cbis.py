@@ -27,18 +27,17 @@ DEFAULT_SEED = 0
 
 def seed(cfg):
     SEED = cfg.SEED
-    if SEED is None:
-        SEED = DEFAULT_SEED
+    assert cfg.SEED is not None, "No seed was configured"
     torch.manual_seed(SEED)
     np.random.seed(SEED)
     random.seed(SEED)
     # TODO: complete this with more seeding calls to make sure everything becomes reproducible
 
 def get_best_lrwd(args):
-    cfg = setup_part(args, None, None, seed=None)
-    transfer_method = cfg.DATA.TRANSFER_TYPE
+    cfg = setup_part(args, None, None)
+    transfer_method = cfg.MODEL.TRANSFER_TYPE
     if transfer_method == "prompt":
-        transfer_method = f"prompt{cfg.PROMPT.NUM_TOKENS}"
+        transfer_method = f"prompt{cfg.MODEL.PROMPT.NUM_TOKENS}"
     # this might not be cross-platform-friendly, not sure if glob works on windows
     files = glob.glob(f"{cfg.OUTPUT_DIR}/"
                       f"{cfg.DATA.NAME}/"
@@ -54,15 +53,15 @@ def get_best_lrwd(args):
     return lr, wd
 
 def construct_output_dir(cfg, test=True):
-    transfer_method = cfg.DATA.TRANSFER_TYPE
+    transfer_method = cfg.MODEL.TRANSFER_TYPE
     if transfer_method == "prompt":
-        transfer_method = f"prompt{cfg.PROMPT.NUM_TOKENS}"
+        transfer_method = f"prompt{cfg.MODEL.PROMPT.NUM_TOKENS}"
     output_folder = os.path.join(
         cfg.OUTPUT_DIR,
         cfg.DATA.NAME,
         cfg.DATA.FEATURE,
         transfer_method,
-        cfg.DATA.CROPSIZE,
+        f"crop{cfg.DATA.CROPSIZE}",
         "test" if test else "val",
         f"seed{cfg.SEED}",
         f"lr{cfg.SOLVER.BASE_LR}_wd{cfg.SOLVER.WEIGHT_DECAY}",
@@ -77,7 +76,7 @@ def construct_output_dir(cfg, test=True):
     # at the end of the loop without returning, so failed
     raise ValueError(f"Alread run {cfg.RUN_N_TIMES} times for {output_folder}, no need to run more")
 
-def setup_part(args, lr, wd, seed=None):
+def setup_part(args, lr, wd, seed=DEFAULT_SEED):
     cfg = get_cfg()
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
@@ -88,7 +87,7 @@ def setup_part(args, lr, wd, seed=None):
     cfg.SOLVER.WEIGHT_DECAY = wd
     return cfg
 
-def setup(args, lr, wd, test=True, seed=None):
+def setup(args, lr, wd, test=True, seed=DEFAULT_SEED):
     cfg = setup_part(args, lr, wd, seed=seed)
     cfg.OUTPUT_DIR = construct_output_dir(cfg, test=test)
     return cfg
