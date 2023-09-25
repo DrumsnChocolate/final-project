@@ -26,6 +26,7 @@ num_classes=$2
 
 python visual_prompt_tuning/tune_vtab.py \
   --config-file visual_prompt_tuning/configs/prompt/cub.yaml \
+  --train-type "prompt" \
   MODEL.TYPE "vit" \
   DATA.BATCH_SIZE "64" \
   MODEL.PROMPT.NUM_TOKENS "50" \
@@ -34,6 +35,7 @@ python visual_prompt_tuning/tune_vtab.py \
   DATA.FEATURE "sup_vitb16_imagenet21k" \
   DATA.NAME "vtab-${dataset}" \
   DATA.NUMBER_CLASSES "${num_classes}" \
+  DATA.CROPSIZE "224" \
   MODEL.MODEL_ROOT "${model_root}" \
   DATA.DATAPATH "${data_path}" \
   OUTPUT_DIR = "${output_dir}"
