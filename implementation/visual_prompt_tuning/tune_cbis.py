@@ -5,8 +5,6 @@ import random
 import numpy as np
 import torch
 
-from implementation.visual_prompt_tuning.launch import default_argument_parser, logging_train_setup
-from tune_vtab import get_lrwd_range, find_best_lrwd
 
 import src.utils.logging as logging
 from src.configs.config import get_cfg
@@ -15,6 +13,10 @@ from src.engine.evaluator import Evaluator
 from src.engine.trainer import Trainer
 from src.models.build_model import build_model
 from src.utils.file_io import PathManager
+
+from launch import default_argument_parser, logging_train_setup
+from tune_vtab import get_lrwd_range, find_best_lrwd
+
 
 DATA2CLS = {
     "cbis": 2,
