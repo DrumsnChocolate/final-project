@@ -213,6 +213,8 @@ def train(cfg, args, final_runs):
 
 
 def get_lrwd_range(args):
+    lr_range = None
+    wd_range = None
 
     if args.train_type == "finetune":
         lr_range = [0.001, 0.0001, 0.0005, 0.005]
