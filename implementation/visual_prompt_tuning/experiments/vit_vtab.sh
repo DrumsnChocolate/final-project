@@ -38,4 +38,4 @@ python visual_prompt_tuning/tune_vtab.py \
   DATA.CROPSIZE "224" \
   MODEL.MODEL_ROOT "${model_root}" \
   DATA.DATAPATH "${data_path}" \
-  OUTPUT_DIR = "${output_dir}"
+  OUTPUT_DIR "${output_dir}"
