@@ -83,7 +83,7 @@ def main(args):
     explore_lrwd_range(args)
     lr, wd = get_best_lrwd(args)
     random_seeds = np.random.randint(10000, size=5)
-    for seed in enumerate(random_seeds):
+    for seed in random_seeds:
         try:
             cfg = setup(args, lr, wd, seed=seed)
         except ValueError:
