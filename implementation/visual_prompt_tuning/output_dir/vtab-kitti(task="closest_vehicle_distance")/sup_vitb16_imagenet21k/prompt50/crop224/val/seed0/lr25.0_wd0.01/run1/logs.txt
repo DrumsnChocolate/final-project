@@ -1,0 +1,464 @@
+[09/26 08:13:19][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[09/26 08:13:19][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[09/26 08:13:19][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-kitti(task="closest_vehicle_distance")', 'DATA.NUMBER_CLASSES', '4', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[09/26 08:13:19][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/26 08:13:19][INFO] visual_prompt:  108: Training with config:
+[09/26 08:13:19][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-kitti(task="closest_vehicle_distance")/sup_vitb16_imagenet21k/prompt50/crop224/val/seed0/lr25.0_wd0.01/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 0, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.01, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 25.0, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-kitti(task="closest_vehicle_distance")', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 4, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[09/26 08:13:19][INFO] visual_prompt:   89: Loading training data...
+[09/26 08:13:19][INFO] visual_prompt:   68: Constructing vtab-kitti(task="closest_vehicle_distance") dataset train...
+[09/26 08:13:27][INFO] visual_prompt:   88: Number of images: 800
+[09/26 08:13:27][INFO] visual_prompt:   89: Number of classes: 4 / 4
+[09/26 08:13:27][INFO] visual_prompt:   94: Loading validation data...
+[09/26 08:13:27][INFO] visual_prompt:   68: Constructing vtab-kitti(task="closest_vehicle_distance") dataset val...
+[09/26 08:13:29][INFO] visual_prompt:   88: Number of images: 200
+[09/26 08:13:29][INFO] visual_prompt:   89: Number of classes: 4 / 4
+[09/26 08:13:29][INFO] visual_prompt:  120: Constructing models...
+[09/26 08:13:32][INFO] visual_prompt:   52: Total Parameters: 86262532	 Gradient Parameters: 463876
+[09/26 08:13:32][INFO] visual_prompt:   54: tuned percent:0.538
+[09/26 08:13:32][INFO] visual_prompt:   40: Device used for model: 0
+[09/26 08:13:32][INFO] visual_prompt:  122: Setting up Evaluator...
+[09/26 08:13:32][INFO] visual_prompt:  124: Setting up Trainer...
+[09/26 08:13:32][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[09/26 08:13:32][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[09/26 08:13:39][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 6.20e-02, avg batch time: 0.5072, average train loss: 2.2051
+[09/26 08:13:41][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1683, average loss: 2.6954
+[09/26 08:13:41][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:13:41][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.185
+[09/26 08:13:41][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 2.5
+[09/26 08:13:48][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 5.88e-02, avg batch time: 0.5039, average train loss: 20.7035
+[09/26 08:13:49][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1681, average loss: 6.6871
+[09/26 08:13:49][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:13:49][INFO] visual_prompt:  245: Best epoch 2: best metric: 0.315
+[09/26 08:13:49][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 5.0
+[09/26 08:13:56][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 5.62e-02, avg batch time: 0.5023, average train loss: 12.2275
+[09/26 08:13:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1682, average loss: 7.0297
+[09/26 08:13:58][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:13:58][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 7.5
+[09/26 08:14:05][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 6.79e-02, avg batch time: 0.5130, average train loss: 21.5797
+[09/26 08:14:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.51e-05, avg batch time: 0.1682, average loss: 6.5278
+[09/26 08:14:06][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:14:06][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 10.0
+[09/26 08:14:13][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 5.33e-02, avg batch time: 0.5010, average train loss: 25.0045
+[09/26 08:14:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1686, average loss: 23.4430
+[09/26 08:14:15][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:14:15][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 12.5
+[09/26 08:14:22][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 5.69e-02, avg batch time: 0.5038, average train loss: 30.2405
+[09/26 08:14:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1686, average loss: 29.9841
+[09/26 08:14:23][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:14:23][INFO] visual_prompt:  245: Best epoch 6: best metric: 0.435
+[09/26 08:14:23][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 15.0
+[09/26 08:14:30][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 4.82e-02, avg batch time: 0.4955, average train loss: 31.3804
+[09/26 08:14:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1683, average loss: 67.8283
+[09/26 08:14:32][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:14:32][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 17.5
+[09/26 08:14:38][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 5.58e-02, avg batch time: 0.5023, average train loss: 61.7889
+[09/26 08:14:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1689, average loss: 28.0042
+[09/26 08:14:40][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:14:40][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 20.0
+[09/26 08:14:47][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 5.12e-02, avg batch time: 0.4988, average train loss: 84.0960
+[09/26 08:14:49][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1689, average loss: 71.4673
+[09/26 08:14:49][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:14:49][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 22.5
+[09/26 08:14:55][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 5.62e-02, avg batch time: 0.5030, average train loss: 82.7060
+[09/26 08:14:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.21e-05, avg batch time: 0.1690, average loss: 62.7879
+[09/26 08:14:57][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:14:57][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 25.0
+[09/26 08:15:04][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 4.89e-02, avg batch time: 0.4973, average train loss: 121.2282
+[09/26 08:15:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1691, average loss: 92.7381
+[09/26 08:15:06][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:15:06][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 24.9923853377387
+[09/26 08:15:12][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 4.66e-02, avg batch time: 0.4936, average train loss: 98.3471
+[09/26 08:15:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1689, average loss: 99.7558
+[09/26 08:15:14][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:15:14][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 24.969550628247802
+[09/26 08:15:21][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 6.09e-02, avg batch time: 0.5056, average train loss: 92.8207
+[09/26 08:15:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1693, average loss: 11.0455
+[09/26 08:15:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:15:22][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 24.931523692103415
+[09/26 08:15:29][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 5.43e-02, avg batch time: 0.5006, average train loss: 67.5567
+[09/26 08:15:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.31e-05, avg batch time: 0.1687, average loss: 59.1388
+[09/26 08:15:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:15:31][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 24.87835085926963
+[09/26 08:15:38][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 6.04e-02, avg batch time: 0.5075, average train loss: 85.9570
+[09/26 08:15:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1689, average loss: 101.2778
+[09/26 08:15:40][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:15:40][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 24.8100969126526
+[09/26 08:15:46][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 5.11e-02, avg batch time: 0.4980, average train loss: 97.6462
+[09/26 08:15:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.61e-05, avg batch time: 0.1694, average loss: 73.8311
+[09/26 08:15:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:15:48][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 24.72684500917257
+[09/26 08:15:55][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 4.89e-02, avg batch time: 0.4962, average train loss: 90.4903
+[09/26 08:15:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1686, average loss: 229.2982
+[09/26 08:15:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:15:56][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 24.628696578449954
+[09/26 08:16:03][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 4.88e-02, avg batch time: 0.4974, average train loss: 119.3278
+[09/26 08:16:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1693, average loss: 87.1487
+[09/26 08:16:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 6.50	top4: 100.00	
+[09/26 08:16:05][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 24.515771199228986
+[09/26 08:16:12][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 5.49e-02, avg batch time: 0.5019, average train loss: 105.0977
+[09/26 08:16:13][INFO] visual_prompt:  320: Inference (val):avg data time: 5.67e-05, avg batch time: 0.1694, average loss: 79.2119
+[09/26 08:16:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:16:13][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 24.38820645368942
+[09/26 08:16:20][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 4.96e-02, avg batch time: 0.4983, average train loss: 118.4419
+[09/26 08:16:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1694, average loss: 107.9104
+[09/26 08:16:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:16:22][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 24.246157759823856
+[09/26 08:16:29][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 5.84e-02, avg batch time: 0.5047, average train loss: 99.9135
+[09/26 08:16:30][INFO] visual_prompt:  320: Inference (val):avg data time: 3.68e-05, avg batch time: 0.1693, average loss: 164.7525
+[09/26 08:16:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:16:30][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 24.08979818208484
+[09/26 08:16:37][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 6.60e-02, avg batch time: 0.5114, average train loss: 82.4667
+[09/26 08:16:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.08e-05, avg batch time: 0.1690, average loss: 43.7037
+[09/26 08:16:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:16:39][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 23.91931822053251
+[09/26 08:16:46][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 5.94e-02, avg batch time: 0.5066, average train loss: 84.1322
+[09/26 08:16:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.79e-05, avg batch time: 0.1694, average loss: 138.8481
+[09/26 08:16:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:16:48][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 23.73492557873959
+[09/26 08:16:55][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 6.35e-02, avg batch time: 0.5113, average train loss: 74.2326
+[09/26 08:16:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1692, average loss: 96.3533
+[09/26 08:16:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:16:56][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 23.536844910736587
+[09/26 08:17:03][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 5.91e-02, avg batch time: 0.5069, average train loss: 104.9569
+[09/26 08:17:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1692, average loss: 88.7387
+[09/26 08:17:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:17:05][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 23.325317547305485
+[09/26 08:17:12][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 6.27e-02, avg batch time: 0.5102, average train loss: 93.8044
+[09/26 08:17:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.15e-05, avg batch time: 0.1690, average loss: 17.8900
+[09/26 08:17:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:17:13][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 23.100601201955325
+[09/26 08:17:20][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 6.31e-02, avg batch time: 0.5098, average train loss: 86.0540
+[09/26 08:17:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1692, average loss: 78.0662
+[09/26 08:17:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:17:22][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 22.86296965693802
+[09/26 08:17:29][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 6.17e-02, avg batch time: 0.5082, average train loss: 86.2214
+[09/26 08:17:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1687, average loss: 78.2838
+[09/26 08:17:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:17:31][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 22.612712429686844
+[09/26 08:17:38][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 6.27e-02, avg batch time: 0.5098, average train loss: 88.5196
+[09/26 08:17:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1692, average loss: 73.8191
+[09/26 08:17:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:17:39][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 22.35013442008402
+[09/26 08:17:46][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 6.35e-02, avg batch time: 0.5104, average train loss: 74.3487
+[09/26 08:17:48][INFO] visual_prompt:  320: Inference (val):avg data time: 3.15e-05, avg batch time: 0.1691, average loss: 100.2453
+[09/26 08:17:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:17:48][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 22.075555538987224
+[09/26 08:17:55][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 6.15e-02, avg batch time: 0.5068, average train loss: 70.0949
+[09/26 08:17:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.03e-05, avg batch time: 0.1691, average loss: 23.3919
+[09/26 08:17:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:17:56][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 21.78931031846743
+[09/26 08:18:03][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 6.04e-02, avg batch time: 0.5062, average train loss: 81.9273
+[09/26 08:18:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.94e-05, avg batch time: 0.1695, average loss: 42.0150
+[09/26 08:18:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:18:05][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 21.49174750423314
+[09/26 08:18:12][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 5.35e-02, avg batch time: 0.5024, average train loss: 75.2308
+[09/26 08:18:14][INFO] visual_prompt:  320: Inference (val):avg data time: 3.39e-05, avg batch time: 0.1694, average loss: 87.1465
+[09/26 08:18:14][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:18:14][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 21.183229630737465
+[09/26 08:18:21][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 6.82e-02, avg batch time: 0.5144, average train loss: 89.6778
+[09/26 08:18:22][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1690, average loss: 64.0718
+[09/26 08:18:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:18:22][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 20.864132579485727
+[09/26 08:18:29][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 5.53e-02, avg batch time: 0.5036, average train loss: 74.4494
+[09/26 08:18:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.82e-05, avg batch time: 0.1688, average loss: 15.7994
+[09/26 08:18:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 16.50	top4: 100.00	
+[09/26 08:18:31][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 20.53484512108174
+[09/26 08:18:38][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 6.13e-02, avg batch time: 0.5083, average train loss: 62.4881
+[09/26 08:18:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1693, average loss: 112.4856
+[09/26 08:18:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:18:39][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 20.195768441570728
+[09/26 08:18:46][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 4.71e-02, avg batch time: 0.4929, average train loss: 84.8463
+[09/26 08:18:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1690, average loss: 53.6937
+[09/26 08:18:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:18:48][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 19.847315653655915
+[09/26 08:18:55][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 5.89e-02, avg batch time: 0.5057, average train loss: 85.2981
+[09/26 08:18:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1691, average loss: 105.8768
+[09/26 08:18:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:18:56][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 19.489911293384335
+[09/26 08:19:03][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 5.54e-02, avg batch time: 0.5025, average train loss: 87.2690
+[09/26 08:19:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1687, average loss: 126.7121
+[09/26 08:19:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:19:05][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 19.12399080291506
+[09/26 08:19:12][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 4.96e-02, avg batch time: 0.4986, average train loss: 64.2390
+[09/26 08:19:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.66e-05, avg batch time: 0.1693, average loss: 77.7342
+[09/26 08:19:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 6.50	top4: 100.00	
+[09/26 08:19:13][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 18.75
+[09/26 08:19:20][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 6.19e-02, avg batch time: 0.5082, average train loss: 65.3216
+[09/26 08:19:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.36e-05, avg batch time: 0.1690, average loss: 42.4909
+[09/26 08:19:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:19:22][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 18.368394534823633
+[09/26 08:19:29][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 5.31e-02, avg batch time: 0.5028, average train loss: 83.9573
+[09/26 08:19:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1690, average loss: 47.9746
+[09/26 08:19:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:19:31][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 17.979639334863467
+[09/26 08:19:37][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 5.82e-02, avg batch time: 0.5050, average train loss: 56.8349
+[09/26 08:19:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1693, average loss: 102.1222
+[09/26 08:19:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:19:39][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 17.584208038447503
+[09/26 08:19:46][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 4.59e-02, avg batch time: 0.4945, average train loss: 50.8749
+[09/26 08:19:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1692, average loss: 49.6607
+[09/26 08:19:47][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:19:47][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 17.182582417698903
+[09/26 08:19:54][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 6.17e-02, avg batch time: 0.5100, average train loss: 61.1914
+[09/26 08:19:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1688, average loss: 35.5277
+[09/26 08:19:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:19:56][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 16.77525179157086
+[09/26 08:20:03][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 5.59e-02, avg batch time: 0.5044, average train loss: 68.3911
+[09/26 08:20:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.17e-05, avg batch time: 0.1690, average loss: 111.8380
+[09/26 08:20:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:20:05][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 16.362712429686844
+[09/26 08:20:12][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 5.91e-02, avg batch time: 0.5082, average train loss: 66.0369
+[09/26 08:20:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1694, average loss: 87.7557
+[09/26 08:20:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:20:13][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 15.94546694771249
+[09/26 08:20:20][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 5.68e-02, avg batch time: 0.5059, average train loss: 65.6617
+[09/26 08:20:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.39e-05, avg batch time: 0.1691, average loss: 63.2957
+[09/26 08:20:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:20:22][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 15.524023694995845
+[09/26 08:20:29][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 6.12e-02, avg batch time: 0.5101, average train loss: 52.4169
+[09/26 08:20:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.48e-05, avg batch time: 0.1691, average loss: 24.7517
+[09/26 08:20:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:20:30][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 15.09889613522199
+[09/26 08:20:37][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 5.02e-02, avg batch time: 0.4997, average train loss: 39.8324
+[09/26 08:20:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1690, average loss: 91.3387
+[09/26 08:20:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:20:39][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 14.670602220836631
+[09/26 08:20:46][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 6.06e-02, avg batch time: 0.5083, average train loss: 56.2004
+[09/26 08:20:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1689, average loss: 23.6311
+[09/26 08:20:47][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:20:47][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 14.239663762000818
+[09/26 08:20:54][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 4.87e-02, avg batch time: 0.4959, average train loss: 46.6673
+[09/26 08:20:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1691, average loss: 27.4775
+[09/26 08:20:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:20:56][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 13.80660579084567
+[09/26 08:21:03][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 6.16e-02, avg batch time: 0.5089, average train loss: 53.1265
+[09/26 08:21:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1688, average loss: 57.9195
+[09/26 08:21:04][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:21:04][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 13.371955921801565
+[09/26 08:21:11][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 5.66e-02, avg batch time: 0.5043, average train loss: 39.5294
+[09/26 08:21:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1692, average loss: 44.2962
+[09/26 08:21:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:21:13][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 12.936243708781264
+[09/26 08:21:20][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 5.56e-02, avg batch time: 0.5038, average train loss: 48.1257
+[09/26 08:21:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1691, average loss: 54.9572
+[09/26 08:21:21][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 39.50	top4: 100.00	
+[09/26 08:21:21][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 12.5
+[09/26 08:21:28][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 6.50e-02, avg batch time: 0.5130, average train loss: 56.5423
+[09/26 08:21:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.70e-05, avg batch time: 0.1691, average loss: 29.8313
+[09/26 08:21:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:21:30][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 12.063756291218741
+[09/26 08:21:37][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 4.74e-02, avg batch time: 0.4970, average train loss: 40.2782
+[09/26 08:21:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1691, average loss: 5.3838
+[09/26 08:21:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 45.00	top4: 100.00	
+[09/26 08:21:39][INFO] visual_prompt:  245: Best epoch 57: best metric: 0.450
+[09/26 08:21:39][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 11.628044078198434
+[09/26 08:21:45][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 6.12e-02, avg batch time: 0.5085, average train loss: 30.0386
+[09/26 08:21:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1690, average loss: 50.6985
+[09/26 08:21:47][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:21:47][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 11.193394209154334
+[09/26 08:21:54][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 6.23e-02, avg batch time: 0.5096, average train loss: 51.5660
+[09/26 08:21:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1689, average loss: 17.3250
+[09/26 08:21:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 46.00	top4: 100.00	
+[09/26 08:21:56][INFO] visual_prompt:  245: Best epoch 59: best metric: 0.460
+[09/26 08:21:56][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 10.760336237999185
+[09/26 08:22:03][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 6.31e-02, avg batch time: 0.5111, average train loss: 46.0711
+[09/26 08:22:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1692, average loss: 18.3988
+[09/26 08:22:04][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:22:04][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 10.32939777916337
+[09/26 08:22:11][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 6.51e-02, avg batch time: 0.5115, average train loss: 41.4964
+[09/26 08:22:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1690, average loss: 34.2369
+[09/26 08:22:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:22:13][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 9.90110386477801
+[09/26 08:22:20][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 6.04e-02, avg batch time: 0.5074, average train loss: 41.4194
+[09/26 08:22:22][INFO] visual_prompt:  320: Inference (val):avg data time: 3.06e-05, avg batch time: 0.1689, average loss: 38.1922
+[09/26 08:22:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:22:22][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 9.475976305004155
+[09/26 08:22:29][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 6.06e-02, avg batch time: 0.5076, average train loss: 30.8983
+[09/26 08:22:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1696, average loss: 18.8159
+[09/26 08:22:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:22:30][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 9.05453305228751
+[09/26 08:22:37][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 5.66e-02, avg batch time: 0.5054, average train loss: 35.9911
+[09/26 08:22:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.96e-05, avg batch time: 0.1692, average loss: 6.0112
+[09/26 08:22:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 28.50	top4: 100.00	
+[09/26 08:22:39][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 8.637287570313159
+[09/26 08:22:46][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 6.01e-02, avg batch time: 0.5078, average train loss: 52.3594
+[09/26 08:22:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1691, average loss: 26.1814
+[09/26 08:22:47][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 6.50	top4: 100.00	
+[09/26 08:22:47][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 8.224748208429142
+[09/26 08:22:54][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 6.38e-02, avg batch time: 0.5106, average train loss: 28.0296
+[09/26 08:22:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.82e-05, avg batch time: 0.1696, average loss: 48.2547
+[09/26 08:22:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:22:56][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 7.817417582301099
+[09/26 08:23:03][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 5.96e-02, avg batch time: 0.5076, average train loss: 22.0879
+[09/26 08:23:05][INFO] visual_prompt:  320: Inference (val):avg data time: 3.06e-05, avg batch time: 0.1694, average loss: 9.6960
+[09/26 08:23:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 6.50	top4: 100.00	
+[09/26 08:23:05][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 7.415791961552499
+[09/26 08:23:12][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 5.61e-02, avg batch time: 0.5043, average train loss: 23.4895
+[09/26 08:23:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.28e-05, avg batch time: 0.1692, average loss: 15.1924
+[09/26 08:23:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:23:13][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 7.020360665136531
+[09/26 08:23:20][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 6.04e-02, avg batch time: 0.5077, average train loss: 22.1173
+[09/26 08:23:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1696, average loss: 21.4690
+[09/26 08:23:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:23:22][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 6.631605465176368
+[09/26 08:23:29][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 6.07e-02, avg batch time: 0.5075, average train loss: 18.4696
+[09/26 08:23:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.60e-05, avg batch time: 0.1693, average loss: 10.2991
+[09/26 08:23:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 35.50	top4: 100.00	
+[09/26 08:23:30][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 6.250000000000003
+[09/26 08:23:37][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 5.97e-02, avg batch time: 0.5073, average train loss: 15.3244
+[09/26 08:23:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1688, average loss: 22.4440
+[09/26 08:23:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:23:39][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 5.87600919708494
+[09/26 08:23:46][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 5.27e-02, avg batch time: 0.5027, average train loss: 20.3397
+[09/26 08:23:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.54e-05, avg batch time: 0.1691, average loss: 13.6061
+[09/26 08:23:47][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:23:47][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 5.510088706615666
+[09/26 08:23:54][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 6.09e-02, avg batch time: 0.5092, average train loss: 20.6334
+[09/26 08:23:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.36e-05, avg batch time: 0.1690, average loss: 22.9423
+[09/26 08:23:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:23:56][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 5.1526843463440875
+[09/26 08:24:03][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 6.09e-02, avg batch time: 0.5103, average train loss: 14.3683
+[09/26 08:24:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1687, average loss: 10.2734
+[09/26 08:24:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:24:05][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 4.804231558429271
+[09/26 08:24:12][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 5.86e-02, avg batch time: 0.5068, average train loss: 11.0581
+[09/26 08:24:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.62e-05, avg batch time: 0.1693, average loss: 8.4744
+[09/26 08:24:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:24:13][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 4.465154878918258
+[09/26 08:24:20][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 4.94e-02, avg batch time: 0.4972, average train loss: 16.7106
+[09/26 08:24:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1688, average loss: 4.7135
+[09/26 08:24:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:24:22][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 4.135867420514276
+[09/26 08:24:29][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 6.44e-02, avg batch time: 0.5117, average train loss: 15.6862
+[09/26 08:24:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.19e-05, avg batch time: 0.1693, average loss: 23.9941
+[09/26 08:24:30][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:24:30][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 3.816770369262533
+[09/26 08:24:37][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 6.40e-02, avg batch time: 0.5135, average train loss: 9.6589
+[09/26 08:24:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.24e-05, avg batch time: 0.1692, average loss: 6.9440
+[09/26 08:24:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:24:39][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 3.508252495766863
+[09/26 08:24:46][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 5.33e-02, avg batch time: 0.5023, average train loss: 8.7903
+[09/26 08:24:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.51e-05, avg batch time: 0.1691, average loss: 5.3483
+[09/26 08:24:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:24:48][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 3.2106896815325707
+[09/26 08:24:55][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 6.54e-02, avg batch time: 0.5131, average train loss: 8.8825
+[09/26 08:24:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1693, average loss: 8.6320
+[09/26 08:24:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:24:56][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 2.924444461012776
+[09/26 08:25:03][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 5.86e-02, avg batch time: 0.5069, average train loss: 6.4213
+[09/26 08:25:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1694, average loss: 16.1431
+[09/26 08:25:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:25:05][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 2.6498655799159763
+[09/26 08:25:12][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 6.09e-02, avg batch time: 0.5094, average train loss: 10.7464
+[09/26 08:25:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1689, average loss: 11.5907
+[09/26 08:25:13][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:25:13][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 2.387287570313158
+[09/26 08:25:20][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 6.26e-02, avg batch time: 0.5101, average train loss: 14.2704
+[09/26 08:25:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1691, average loss: 42.4836
+[09/26 08:25:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 8.00	top4: 100.00	
+[09/26 08:25:22][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 2.13703034306198
+[09/26 08:25:29][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 6.77e-02, avg batch time: 0.5150, average train loss: 8.6904
+[09/26 08:25:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1687, average loss: 2.9931
+[09/26 08:25:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:25:31][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 1.8993987980446756
+[09/26 08:25:38][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 4.86e-02, avg batch time: 0.4969, average train loss: 3.8292
+[09/26 08:25:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.24e-05, avg batch time: 0.1692, average loss: 2.3219
+[09/26 08:25:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 43.50	top4: 100.00	
+[09/26 08:25:39][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 1.674682452694516
+[09/26 08:25:46][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 4.94e-02, avg batch time: 0.4967, average train loss: 4.2430
+[09/26 08:25:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.70e-05, avg batch time: 0.1692, average loss: 1.3947
+[09/26 08:25:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:25:48][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 1.4631550892634126
+[09/26 08:25:55][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 5.95e-02, avg batch time: 0.5070, average train loss: 1.8018
+[09/26 08:25:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.05e-05, avg batch time: 0.1693, average loss: 1.6258
+[09/26 08:25:56][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:25:56][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 1.2650744212604148
+[09/26 08:26:03][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 6.87e-02, avg batch time: 0.5164, average train loss: 1.5659
+[09/26 08:26:05][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1693, average loss: 1.9944
+[09/26 08:26:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:26:05][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 1.0806817794674877
+[09/26 08:26:12][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 6.66e-02, avg batch time: 0.5135, average train loss: 1.5016
+[09/26 08:26:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.97e-05, avg batch time: 0.1691, average loss: 1.7135
+[09/26 08:26:14][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:26:14][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.9102018179151585
+[09/26 08:26:21][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 5.56e-02, avg batch time: 0.5034, average train loss: 2.2973
+[09/26 08:26:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.72e-05, avg batch time: 0.1692, average loss: 1.4551
+[09/26 08:26:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:26:22][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.753842240176146
+[09/26 08:26:29][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 6.26e-02, avg batch time: 0.5100, average train loss: 1.3966
+[09/26 08:26:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1694, average loss: 1.3400
+[09/26 08:26:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:26:31][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.6117935463105808
+[09/26 08:26:38][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 6.45e-02, avg batch time: 0.5122, average train loss: 1.3553
+[09/26 08:26:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1692, average loss: 1.3162
+[09/26 08:26:39][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:26:39][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.4842288007710138
+[09/26 08:26:46][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 5.84e-02, avg batch time: 0.5062, average train loss: 1.3465
+[09/26 08:26:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1691, average loss: 1.4321
+[09/26 08:26:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:26:48][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.3713034215500441
+[09/26 08:26:55][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 6.27e-02, avg batch time: 0.5108, average train loss: 1.3794
+[09/26 08:26:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1689, average loss: 1.3475
+[09/26 08:26:57][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:26:57][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.2731549908274289
+[09/26 08:27:04][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 5.88e-02, avg batch time: 0.5064, average train loss: 1.3384
+[09/26 08:27:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1687, average loss: 1.3782
+[09/26 08:27:05][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:27:05][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.18990308734739975
+[09/26 08:27:12][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 5.95e-02, avg batch time: 0.5071, average train loss: 1.3250
+[09/26 08:27:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.32e-05, avg batch time: 0.1691, average loss: 1.2896
+[09/26 08:27:14][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 30.00	top4: 100.00	
+[09/26 08:27:14][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.12164914073037048
+[09/26 08:27:21][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 6.90e-02, avg batch time: 0.5158, average train loss: 1.3167
+[09/26 08:27:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.34e-05, avg batch time: 0.1689, average loss: 1.2569
+[09/26 08:27:22][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 31.50	top4: 100.00	
+[09/26 08:27:22][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.06847630789658388
+[09/26 08:27:29][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 6.03e-02, avg batch time: 0.5083, average train loss: 1.3073
+[09/26 08:27:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1688, average loss: 1.3574
+[09/26 08:27:31][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:27:31][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.03044937175219753
+[09/26 08:27:38][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 6.66e-02, avg batch time: 0.5148, average train loss: 1.3142
+[09/26 08:27:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1688, average loss: 1.2773
+[09/26 08:27:40][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	
+[09/26 08:27:40][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 0.0076146622613029735
+[09/26 08:27:46][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 5.21e-02, avg batch time: 0.4998, average train loss: 1.3065
+[09/26 08:27:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.33e-05, avg batch time: 0.1688, average loss: 1.2782
+[09/26 08:27:48][INFO] visual_prompt:  113: Classification results with val_vtab-kitti(task="closest_vehicle_distance"): top1: 18.50	top4: 100.00	

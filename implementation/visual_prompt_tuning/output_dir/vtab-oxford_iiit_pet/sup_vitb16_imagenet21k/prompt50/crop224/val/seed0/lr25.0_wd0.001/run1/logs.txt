@@ -1,0 +1,464 @@
+[09/25 23:09:28][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[09/25 23:09:28][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              2
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[09/25 23:09:28][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-oxford_iiit_pet', 'DATA.NUMBER_CLASSES', '37', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[09/25 23:09:28][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/25 23:09:28][INFO] visual_prompt:  108: Training with config:
+[09/25 23:09:28][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-oxford_iiit_pet/sup_vitb16_imagenet21k/prompt50/crop224/val/seed0/lr25.0_wd0.001/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 0, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.001, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 25.0, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-oxford_iiit_pet', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 37, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[09/25 23:09:28][INFO] visual_prompt:   89: Loading training data...
+[09/25 23:09:28][INFO] visual_prompt:   68: Constructing vtab-oxford_iiit_pet dataset train...
+[09/25 23:09:31][INFO] visual_prompt:   88: Number of images: 800
+[09/25 23:09:31][INFO] visual_prompt:   89: Number of classes: 37 / 37
+[09/25 23:09:31][INFO] visual_prompt:   94: Loading validation data...
+[09/25 23:09:31][INFO] visual_prompt:   68: Constructing vtab-oxford_iiit_pet dataset val...
+[09/25 23:09:31][INFO] visual_prompt:   88: Number of images: 200
+[09/25 23:09:31][INFO] visual_prompt:   89: Number of classes: 37 / 37
+[09/25 23:09:31][INFO] visual_prompt:  120: Constructing models...
+[09/25 23:09:34][INFO] visual_prompt:   52: Total Parameters: 86287909	 Gradient Parameters: 489253
+[09/25 23:09:34][INFO] visual_prompt:   54: tuned percent:0.567
+[09/25 23:09:34][INFO] visual_prompt:   40: Device used for model: 0
+[09/25 23:09:34][INFO] visual_prompt:  122: Setting up Evaluator...
+[09/25 23:09:34][INFO] visual_prompt:  124: Setting up Trainer...
+[09/25 23:09:34][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[09/25 23:09:34][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[09/25 23:09:41][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 5.27e-02, avg batch time: 0.5009, average train loss: 3.6993
+[09/25 23:09:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1691, average loss: 3.6861
+[09/25 23:09:42][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 15.00	
+[09/25 23:09:42][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.025
+[09/25 23:09:42][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 2.5
+[09/25 23:09:49][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 4.05e-02, avg batch time: 0.4885, average train loss: 4.2981
+[09/25 23:09:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1689, average loss: 4.0877
+[09/25 23:09:50][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 15.00	
+[09/25 23:09:50][INFO] visual_prompt:  245: Best epoch 2: best metric: 0.040
+[09/25 23:09:50][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 5.0
+[09/25 23:09:57][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 6.18e-02, avg batch time: 0.5098, average train loss: 4.2999
+[09/25 23:09:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1688, average loss: 4.2713
+[09/25 23:09:58][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 16.50	
+[09/25 23:09:58][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 7.5
+[09/25 23:10:05][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 4.48e-02, avg batch time: 0.4957, average train loss: 6.5381
+[09/25 23:10:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1691, average loss: 10.1426
+[09/25 23:10:06][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.00	top5: 17.50	
+[09/25 23:10:06][INFO] visual_prompt:  245: Best epoch 4: best metric: 0.050
+[09/25 23:10:06][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 10.0
+[09/25 23:10:13][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 4.95e-02, avg batch time: 0.4982, average train loss: 15.6240
+[09/25 23:10:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.90e-05, avg batch time: 0.1693, average loss: 18.1366
+[09/25 23:10:15][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 16.00	
+[09/25 23:10:15][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 12.5
+[09/25 23:10:21][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 5.85e-02, avg batch time: 0.5067, average train loss: 23.5417
+[09/25 23:10:23][INFO] visual_prompt:  320: Inference (val):avg data time: 3.29e-05, avg batch time: 0.1695, average loss: 27.5021
+[09/25 23:10:23][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 17.50	
+[09/25 23:10:23][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 15.0
+[09/25 23:10:30][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 5.47e-02, avg batch time: 0.5034, average train loss: 51.9830
+[09/25 23:10:31][INFO] visual_prompt:  320: Inference (val):avg data time: 3.30e-05, avg batch time: 0.1692, average loss: 60.6030
+[09/25 23:10:31][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.00	
+[09/25 23:10:31][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 17.5
+[09/25 23:10:38][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 5.04e-02, avg batch time: 0.5000, average train loss: 120.3983
+[09/25 23:10:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.01e-05, avg batch time: 0.1691, average loss: 169.5421
+[09/25 23:10:39][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 13.00	
+[09/25 23:10:39][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 20.0
+[09/25 23:10:46][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 4.62e-02, avg batch time: 0.4944, average train loss: 153.7324
+[09/25 23:10:47][INFO] visual_prompt:  320: Inference (val):avg data time: 3.56e-05, avg batch time: 0.1694, average loss: 127.2712
+[09/25 23:10:47][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 14.50	
+[09/25 23:10:47][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 22.5
+[09/25 23:10:54][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 5.65e-02, avg batch time: 0.5060, average train loss: 127.1514
+[09/25 23:10:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.34e-05, avg batch time: 0.1690, average loss: 79.6719
+[09/25 23:10:56][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 12.00	
+[09/25 23:10:56][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 25.0
+[09/25 23:11:02][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 5.22e-02, avg batch time: 0.5006, average train loss: 130.8341
+[09/25 23:11:04][INFO] visual_prompt:  320: Inference (val):avg data time: 3.14e-05, avg batch time: 0.1689, average loss: 116.9923
+[09/25 23:11:04][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 14.50	
+[09/25 23:11:04][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 24.9923853377387
+[09/25 23:11:11][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 4.62e-02, avg batch time: 0.4960, average train loss: 151.6917
+[09/25 23:11:12][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1690, average loss: 122.8805
+[09/25 23:11:12][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 16.50	
+[09/25 23:11:12][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 24.969550628247802
+[09/25 23:11:19][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 5.05e-02, avg batch time: 0.5002, average train loss: 171.1464
+[09/25 23:11:20][INFO] visual_prompt:  320: Inference (val):avg data time: 3.66e-05, avg batch time: 0.1693, average loss: 214.7633
+[09/25 23:11:20][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 11.50	
+[09/25 23:11:20][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 24.931523692103415
+[09/25 23:11:27][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 4.50e-02, avg batch time: 0.4948, average train loss: 164.4952
+[09/25 23:11:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.82e-05, avg batch time: 0.1690, average loss: 112.6931
+[09/25 23:11:28][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 17.50	
+[09/25 23:11:28][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 24.87835085926963
+[09/25 23:11:35][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 5.25e-02, avg batch time: 0.5004, average train loss: 122.7399
+[09/25 23:11:37][INFO] visual_prompt:  320: Inference (val):avg data time: 3.06e-05, avg batch time: 0.1691, average loss: 107.4117
+[09/25 23:11:37][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 11.00	
+[09/25 23:11:37][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 24.8100969126526
+[09/25 23:11:43][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 5.13e-02, avg batch time: 0.5004, average train loss: 134.3594
+[09/25 23:11:45][INFO] visual_prompt:  320: Inference (val):avg data time: 3.24e-05, avg batch time: 0.1695, average loss: 193.9029
+[09/25 23:11:45][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 14.00	
+[09/25 23:11:45][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 24.72684500917257
+[09/25 23:11:52][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 4.70e-02, avg batch time: 0.4979, average train loss: 201.2135
+[09/25 23:11:53][INFO] visual_prompt:  320: Inference (val):avg data time: 3.70e-05, avg batch time: 0.1693, average loss: 136.4540
+[09/25 23:11:53][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 17.00	
+[09/25 23:11:53][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 24.628696578449954
+[09/25 23:12:00][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 5.17e-02, avg batch time: 0.5011, average train loss: 129.8950
+[09/25 23:12:01][INFO] visual_prompt:  320: Inference (val):avg data time: 3.88e-05, avg batch time: 0.1691, average loss: 131.2491
+[09/25 23:12:01][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:12:01][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 24.515771199228986
+[09/25 23:12:08][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 4.90e-02, avg batch time: 0.4974, average train loss: 134.6290
+[09/25 23:12:10][INFO] visual_prompt:  320: Inference (val):avg data time: 3.59e-05, avg batch time: 0.1693, average loss: 144.7599
+[09/25 23:12:10][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.00	
+[09/25 23:12:10][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 24.38820645368942
+[09/25 23:12:16][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 5.69e-02, avg batch time: 0.5054, average train loss: 130.2931
+[09/25 23:12:18][INFO] visual_prompt:  320: Inference (val):avg data time: 3.68e-05, avg batch time: 0.1692, average loss: 291.4752
+[09/25 23:12:18][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.00	
+[09/25 23:12:18][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 24.246157759823856
+[09/25 23:12:24][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 4.93e-02, avg batch time: 0.4977, average train loss: 196.1143
+[09/25 23:12:26][INFO] visual_prompt:  320: Inference (val):avg data time: 3.77e-05, avg batch time: 0.1691, average loss: 128.0785
+[09/25 23:12:26][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 19.00	
+[09/25 23:12:26][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 24.08979818208484
+[09/25 23:12:33][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 5.49e-02, avg batch time: 0.5040, average train loss: 142.5284
+[09/25 23:12:34][INFO] visual_prompt:  320: Inference (val):avg data time: 3.54e-05, avg batch time: 0.1692, average loss: 126.1047
+[09/25 23:12:34][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:12:34][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 23.91931822053251
+[09/25 23:12:41][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 5.72e-02, avg batch time: 0.5064, average train loss: 134.0747
+[09/25 23:12:43][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1693, average loss: 173.8165
+[09/25 23:12:43][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 13.00	
+[09/25 23:12:43][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 23.73492557873959
+[09/25 23:12:49][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 5.26e-02, avg batch time: 0.5018, average train loss: 131.3530
+[09/25 23:12:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1687, average loss: 92.9998
+[09/25 23:12:51][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 16.00	
+[09/25 23:12:51][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 23.536844910736587
+[09/25 23:12:58][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 5.26e-02, avg batch time: 0.5008, average train loss: 123.0506
+[09/25 23:12:59][INFO] visual_prompt:  320: Inference (val):avg data time: 4.23e-05, avg batch time: 0.1693, average loss: 149.2490
+[09/25 23:12:59][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 13.50	
+[09/25 23:12:59][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 23.325317547305485
+[09/25 23:13:06][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 5.59e-02, avg batch time: 0.5051, average train loss: 134.3559
+[09/25 23:13:07][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1693, average loss: 156.1588
+[09/25 23:13:07][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 15.50	
+[09/25 23:13:07][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 23.100601201955325
+[09/25 23:13:14][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 5.22e-02, avg batch time: 0.5006, average train loss: 123.4793
+[09/25 23:13:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.90e-05, avg batch time: 0.1690, average loss: 110.7368
+[09/25 23:13:16][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 14.50	
+[09/25 23:13:16][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 22.86296965693802
+[09/25 23:13:22][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 4.04e-02, avg batch time: 0.4928, average train loss: 111.6480
+[09/25 23:13:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.77e-05, avg batch time: 0.1694, average loss: 125.6034
+[09/25 23:13:24][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 12.00	
+[09/25 23:13:24][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 22.612712429686844
+[09/25 23:13:30][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 4.76e-02, avg batch time: 0.4970, average train loss: 160.1391
+[09/25 23:13:32][INFO] visual_prompt:  320: Inference (val):avg data time: 3.11e-05, avg batch time: 0.1699, average loss: 332.8454
+[09/25 23:13:32][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 13.00	
+[09/25 23:13:32][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 22.35013442008402
+[09/25 23:13:38][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 4.00e-02, avg batch time: 0.4898, average train loss: 136.0044
+[09/25 23:13:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1693, average loss: 117.6438
+[09/25 23:13:40][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 12.00	
+[09/25 23:13:40][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 22.075555538987224
+[09/25 23:13:47][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 4.83e-02, avg batch time: 0.4977, average train loss: 113.0405
+[09/25 23:13:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1694, average loss: 108.6085
+[09/25 23:13:48][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.00	top5: 16.00	
+[09/25 23:13:48][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 21.78931031846743
+[09/25 23:13:55][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 5.27e-02, avg batch time: 0.5013, average train loss: 100.6857
+[09/25 23:13:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1697, average loss: 160.7057
+[09/25 23:13:56][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:13:56][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 21.49174750423314
+[09/25 23:14:03][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 5.63e-02, avg batch time: 0.5047, average train loss: 115.2687
+[09/25 23:14:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1691, average loss: 158.7679
+[09/25 23:14:05][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.50	
+[09/25 23:14:05][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 21.183229630737465
+[09/25 23:14:11][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 4.44e-02, avg batch time: 0.4952, average train loss: 156.3620
+[09/25 23:14:13][INFO] visual_prompt:  320: Inference (val):avg data time: 4.10e-05, avg batch time: 0.1691, average loss: 86.9757
+[09/25 23:14:13][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 14.50	
+[09/25 23:14:13][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 20.864132579485727
+[09/25 23:14:20][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 5.06e-02, avg batch time: 0.4999, average train loss: 104.8109
+[09/25 23:14:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1690, average loss: 106.9402
+[09/25 23:14:21][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 16.00	
+[09/25 23:14:21][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 20.53484512108174
+[09/25 23:14:28][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 4.63e-02, avg batch time: 0.4976, average train loss: 148.1486
+[09/25 23:14:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.67e-05, avg batch time: 0.1691, average loss: 172.8254
+[09/25 23:14:29][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 15.50	
+[09/25 23:14:29][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 20.195768441570728
+[09/25 23:14:36][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 5.76e-02, avg batch time: 0.5076, average train loss: 150.7961
+[09/25 23:14:37][INFO] visual_prompt:  320: Inference (val):avg data time: 2.72e-05, avg batch time: 0.1690, average loss: 127.4913
+[09/25 23:14:37][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 11.00	
+[09/25 23:14:37][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 19.847315653655915
+[09/25 23:14:44][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 5.19e-02, avg batch time: 0.5008, average train loss: 123.4710
+[09/25 23:14:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.85e-05, avg batch time: 0.1690, average loss: 95.7510
+[09/25 23:14:46][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 12.00	
+[09/25 23:14:46][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 19.489911293384335
+[09/25 23:14:52][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 5.92e-02, avg batch time: 0.5088, average train loss: 105.0520
+[09/25 23:14:54][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1695, average loss: 115.0244
+[09/25 23:14:54][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 14.00	
+[09/25 23:14:54][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 19.12399080291506
+[09/25 23:15:01][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 5.75e-02, avg batch time: 0.5063, average train loss: 123.8361
+[09/25 23:15:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1687, average loss: 105.4608
+[09/25 23:15:02][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 14.50	
+[09/25 23:15:02][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 18.75
+[09/25 23:15:09][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 5.52e-02, avg batch time: 0.5043, average train loss: 128.5145
+[09/25 23:15:10][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1694, average loss: 119.0355
+[09/25 23:15:10][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 14.50	
+[09/25 23:15:10][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 18.368394534823633
+[09/25 23:15:17][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 5.19e-02, avg batch time: 0.5003, average train loss: 125.1720
+[09/25 23:15:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.99e-05, avg batch time: 0.1701, average loss: 104.3987
+[09/25 23:15:19][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 13.00	
+[09/25 23:15:19][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 17.979639334863467
+[09/25 23:15:25][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 5.08e-02, avg batch time: 0.5012, average train loss: 89.5306
+[09/25 23:15:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.93e-05, avg batch time: 0.1697, average loss: 81.2744
+[09/25 23:15:27][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.00	top5: 16.00	
+[09/25 23:15:27][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 17.584208038447503
+[09/25 23:15:34][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 5.18e-02, avg batch time: 0.5010, average train loss: 118.5609
+[09/25 23:15:35][INFO] visual_prompt:  320: Inference (val):avg data time: 3.34e-05, avg batch time: 0.1694, average loss: 94.9981
+[09/25 23:15:35][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 15.00	
+[09/25 23:15:35][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 17.182582417698903
+[09/25 23:15:42][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 4.24e-02, avg batch time: 0.4922, average train loss: 126.1288
+[09/25 23:15:43][INFO] visual_prompt:  320: Inference (val):avg data time: 3.47e-05, avg batch time: 0.1693, average loss: 131.0674
+[09/25 23:15:43][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 14.50	
+[09/25 23:15:43][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 16.77525179157086
+[09/25 23:15:50][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 4.52e-02, avg batch time: 0.4958, average train loss: 88.1272
+[09/25 23:15:51][INFO] visual_prompt:  320: Inference (val):avg data time: 3.15e-05, avg batch time: 0.1690, average loss: 98.3783
+[09/25 23:15:51][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 12.50	
+[09/25 23:15:51][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 16.362712429686844
+[09/25 23:15:58][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 4.20e-02, avg batch time: 0.4929, average train loss: 89.4296
+[09/25 23:15:59][INFO] visual_prompt:  320: Inference (val):avg data time: 3.04e-05, avg batch time: 0.1695, average loss: 112.4063
+[09/25 23:15:59][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 16.00	
+[09/25 23:15:59][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 15.94546694771249
+[09/25 23:16:06][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 4.86e-02, avg batch time: 0.4998, average train loss: 89.0041
+[09/25 23:16:08][INFO] visual_prompt:  320: Inference (val):avg data time: 3.03e-05, avg batch time: 0.1694, average loss: 83.9029
+[09/25 23:16:08][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 14.00	
+[09/25 23:16:08][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 15.524023694995845
+[09/25 23:16:14][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 4.06e-02, avg batch time: 0.4898, average train loss: 74.0830
+[09/25 23:16:16][INFO] visual_prompt:  320: Inference (val):avg data time: 3.71e-05, avg batch time: 0.1701, average loss: 95.1640
+[09/25 23:16:16][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 19.00	
+[09/25 23:16:16][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 15.09889613522199
+[09/25 23:16:22][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 4.48e-02, avg batch time: 0.4950, average train loss: 85.6098
+[09/25 23:16:24][INFO] visual_prompt:  320: Inference (val):avg data time: 3.43e-05, avg batch time: 0.1692, average loss: 109.7081
+[09/25 23:16:24][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 12.50	
+[09/25 23:16:24][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 14.670602220836631
+[09/25 23:16:30][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 4.13e-02, avg batch time: 0.4919, average train loss: 93.8885
+[09/25 23:16:32][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1693, average loss: 62.0756
+[09/25 23:16:32][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 14.00	
+[09/25 23:16:32][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 14.239663762000818
+[09/25 23:16:39][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 4.40e-02, avg batch time: 0.4936, average train loss: 85.0157
+[09/25 23:16:40][INFO] visual_prompt:  320: Inference (val):avg data time: 3.70e-05, avg batch time: 0.1690, average loss: 62.3500
+[09/25 23:16:40][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 15.00	
+[09/25 23:16:40][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 13.80660579084567
+[09/25 23:16:47][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 5.13e-02, avg batch time: 0.4997, average train loss: 66.5983
+[09/25 23:16:48][INFO] visual_prompt:  320: Inference (val):avg data time: 3.18e-05, avg batch time: 0.1692, average loss: 79.1250
+[09/25 23:16:48][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.00	
+[09/25 23:16:48][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 13.371955921801565
+[09/25 23:16:55][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 4.78e-02, avg batch time: 0.4969, average train loss: 81.9199
+[09/25 23:16:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.81e-05, avg batch time: 0.1687, average loss: 153.6531
+[09/25 23:16:57][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 11.50	
+[09/25 23:16:57][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 12.936243708781264
+[09/25 23:17:03][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 4.45e-02, avg batch time: 0.4942, average train loss: 95.7807
+[09/25 23:17:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.64e-05, avg batch time: 0.1692, average loss: 83.1168
+[09/25 23:17:05][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 17.00	
+[09/25 23:17:05][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 12.5
+[09/25 23:17:11][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 4.75e-02, avg batch time: 0.4974, average train loss: 89.5036
+[09/25 23:17:13][INFO] visual_prompt:  320: Inference (val):avg data time: 3.18e-05, avg batch time: 0.1692, average loss: 104.0283
+[09/25 23:17:13][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.00	top5: 12.50	
+[09/25 23:17:13][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 12.063756291218741
+[09/25 23:17:20][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 4.39e-02, avg batch time: 0.4931, average train loss: 86.1225
+[09/25 23:17:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.96e-05, avg batch time: 0.1693, average loss: 82.9223
+[09/25 23:17:21][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 14.00	
+[09/25 23:17:21][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 11.628044078198434
+[09/25 23:17:28][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 4.42e-02, avg batch time: 0.4952, average train loss: 53.7816
+[09/25 23:17:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1690, average loss: 57.9493
+[09/25 23:17:29][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 12.50	
+[09/25 23:17:29][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 11.193394209154334
+[09/25 23:17:36][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 3.86e-02, avg batch time: 0.4885, average train loss: 61.4906
+[09/25 23:17:37][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1691, average loss: 64.6242
+[09/25 23:17:37][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 14.50	
+[09/25 23:17:37][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 10.760336237999185
+[09/25 23:17:44][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 3.81e-02, avg batch time: 0.4894, average train loss: 50.0137
+[09/25 23:17:45][INFO] visual_prompt:  320: Inference (val):avg data time: 3.32e-05, avg batch time: 0.1694, average loss: 35.5987
+[09/25 23:17:45][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 10.50	
+[09/25 23:17:45][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 10.32939777916337
+[09/25 23:17:52][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 5.32e-02, avg batch time: 0.5031, average train loss: 54.1171
+[09/25 23:17:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.98e-05, avg batch time: 0.1697, average loss: 48.0348
+[09/25 23:17:53][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.00	top5: 14.00	
+[09/25 23:17:53][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 9.90110386477801
+[09/25 23:18:00][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 5.65e-02, avg batch time: 0.5053, average train loss: 49.3569
+[09/25 23:18:02][INFO] visual_prompt:  320: Inference (val):avg data time: 5.85e-05, avg batch time: 0.1695, average loss: 40.5579
+[09/25 23:18:02][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 15.00	
+[09/25 23:18:02][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 9.475976305004155
+[09/25 23:18:09][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 5.39e-02, avg batch time: 0.5032, average train loss: 61.8208
+[09/25 23:18:10][INFO] visual_prompt:  320: Inference (val):avg data time: 5.38e-05, avg batch time: 0.1692, average loss: 40.8386
+[09/25 23:18:10][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 13.00	
+[09/25 23:18:10][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 9.05453305228751
+[09/25 23:18:17][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 4.75e-02, avg batch time: 0.4965, average train loss: 41.1546
+[09/25 23:18:18][INFO] visual_prompt:  320: Inference (val):avg data time: 3.08e-05, avg batch time: 0.1698, average loss: 35.9382
+[09/25 23:18:18][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 18.00	
+[09/25 23:18:18][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 8.637287570313159
+[09/25 23:18:25][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 5.01e-02, avg batch time: 0.4991, average train loss: 39.0516
+[09/25 23:18:26][INFO] visual_prompt:  320: Inference (val):avg data time: 3.17e-05, avg batch time: 0.1691, average loss: 32.4590
+[09/25 23:18:26][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 16.00	
+[09/25 23:18:26][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 8.224748208429142
+[09/25 23:18:33][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 5.62e-02, avg batch time: 0.5045, average train loss: 38.6344
+[09/25 23:18:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.89e-05, avg batch time: 0.1693, average loss: 60.1330
+[09/25 23:18:35][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 12.00	
+[09/25 23:18:35][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 7.817417582301099
+[09/25 23:18:41][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 3.84e-02, avg batch time: 0.4881, average train loss: 48.8958
+[09/25 23:18:43][INFO] visual_prompt:  320: Inference (val):avg data time: 3.61e-05, avg batch time: 0.1694, average loss: 30.4609
+[09/25 23:18:43][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 14.00	
+[09/25 23:18:43][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 7.415791961552499
+[09/25 23:18:49][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 4.53e-02, avg batch time: 0.4953, average train loss: 36.9872
+[09/25 23:18:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1692, average loss: 28.4491
+[09/25 23:18:51][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 15.00	
+[09/25 23:18:51][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 7.020360665136531
+[09/25 23:18:57][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 3.57e-02, avg batch time: 0.4875, average train loss: 35.6738
+[09/25 23:18:59][INFO] visual_prompt:  320: Inference (val):avg data time: 2.97e-05, avg batch time: 0.1691, average loss: 38.8025
+[09/25 23:18:59][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 14.50	
+[09/25 23:18:59][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 6.631605465176368
+[09/25 23:19:06][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 4.21e-02, avg batch time: 0.4912, average train loss: 37.6619
+[09/25 23:19:07][INFO] visual_prompt:  320: Inference (val):avg data time: 4.13e-05, avg batch time: 0.1696, average loss: 30.0816
+[09/25 23:19:07][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.50	top5: 15.00	
+[09/25 23:19:07][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 6.250000000000003
+[09/25 23:19:14][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 4.50e-02, avg batch time: 0.4964, average train loss: 38.2429
+[09/25 23:19:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1690, average loss: 27.5355
+[09/25 23:19:15][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.00	
+[09/25 23:19:15][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 5.87600919708494
+[09/25 23:19:22][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 5.62e-02, avg batch time: 0.5041, average train loss: 25.8527
+[09/25 23:19:24][INFO] visual_prompt:  320: Inference (val):avg data time: 3.06e-05, avg batch time: 0.1693, average loss: 23.7316
+[09/25 23:19:24][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 15.50	
+[09/25 23:19:24][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 5.510088706615666
+[09/25 23:19:30][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 4.20e-02, avg batch time: 0.4927, average train loss: 22.3057
+[09/25 23:19:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1692, average loss: 15.4776
+[09/25 23:19:32][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.00	top5: 16.00	
+[09/25 23:19:32][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 5.1526843463440875
+[09/25 23:19:38][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 4.12e-02, avg batch time: 0.4915, average train loss: 13.0580
+[09/25 23:19:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.70e-05, avg batch time: 0.1692, average loss: 9.6272
+[09/25 23:19:40][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:19:40][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 4.804231558429271
+[09/25 23:19:46][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 4.73e-02, avg batch time: 0.4964, average train loss: 10.0973
+[09/25 23:19:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1693, average loss: 8.2349
+[09/25 23:19:48][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 13.00	
+[09/25 23:19:48][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 4.465154878918258
+[09/25 23:19:55][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 4.58e-02, avg batch time: 0.4950, average train loss: 6.8537
+[09/25 23:19:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.61e-05, avg batch time: 0.1694, average loss: 4.8163
+[09/25 23:19:56][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:19:56][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 4.135867420514276
+[09/25 23:20:03][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 4.09e-02, avg batch time: 0.4922, average train loss: 4.8013
+[09/25 23:20:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1694, average loss: 4.4708
+[09/25 23:20:04][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 16.50	
+[09/25 23:20:04][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 3.816770369262533
+[09/25 23:20:11][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 5.15e-02, avg batch time: 0.5009, average train loss: 4.3308
+[09/25 23:20:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.79e-05, avg batch time: 0.1691, average loss: 4.0090
+[09/25 23:20:12][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 12.50	
+[09/25 23:20:12][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 3.508252495766863
+[09/25 23:20:19][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 4.71e-02, avg batch time: 0.4962, average train loss: 3.9785
+[09/25 23:20:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1694, average loss: 4.0835
+[09/25 23:20:20][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.00	top5: 11.50	
+[09/25 23:20:20][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 3.2106896815325707
+[09/25 23:20:27][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 4.59e-02, avg batch time: 0.4968, average train loss: 3.8986
+[09/25 23:20:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.72e-05, avg batch time: 0.1692, average loss: 3.7638
+[09/25 23:20:29][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 16.50	
+[09/25 23:20:29][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 2.924444461012776
+[09/25 23:20:35][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 4.55e-02, avg batch time: 0.4947, average train loss: 3.8275
+[09/25 23:20:37][INFO] visual_prompt:  320: Inference (val):avg data time: 2.95e-05, avg batch time: 0.1693, average loss: 3.7545
+[09/25 23:20:37][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 13.50	
+[09/25 23:20:37][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 2.6498655799159763
+[09/25 23:20:43][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 4.00e-02, avg batch time: 0.4928, average train loss: 3.7721
+[09/25 23:20:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1692, average loss: 3.7502
+[09/25 23:20:45][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.50	
+[09/25 23:20:45][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 2.387287570313158
+[09/25 23:20:51][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 4.54e-02, avg batch time: 0.4946, average train loss: 3.7604
+[09/25 23:20:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1692, average loss: 3.8010
+[09/25 23:20:53][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.50	top5: 12.50	
+[09/25 23:20:53][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 2.13703034306198
+[09/25 23:21:00][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 5.12e-02, avg batch time: 0.5010, average train loss: 3.7574
+[09/25 23:21:01][INFO] visual_prompt:  320: Inference (val):avg data time: 3.02e-05, avg batch time: 0.1692, average loss: 3.6837
+[09/25 23:21:01][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 12.50	
+[09/25 23:21:01][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 1.8993987980446756
+[09/25 23:21:08][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 5.55e-02, avg batch time: 0.5072, average train loss: 3.6976
+[09/25 23:21:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1689, average loss: 3.6641
+[09/25 23:21:09][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 18.00	
+[09/25 23:21:09][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 1.674682452694516
+[09/25 23:21:16][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 5.79e-02, avg batch time: 0.5084, average train loss: 3.6881
+[09/25 23:21:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1696, average loss: 3.7040
+[09/25 23:21:18][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.00	top5: 13.50	
+[09/25 23:21:18][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 1.4631550892634126
+[09/25 23:21:24][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 5.75e-02, avg batch time: 0.5067, average train loss: 3.7489
+[09/25 23:21:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.62e-05, avg batch time: 0.1693, average loss: 3.6753
+[09/25 23:21:26][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 14.50	
+[09/25 23:21:26][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 1.2650744212604148
+[09/25 23:21:33][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 4.24e-02, avg batch time: 0.4922, average train loss: 3.7104
+[09/25 23:21:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.61e-05, avg batch time: 0.1693, average loss: 3.6907
+[09/25 23:21:34][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 15.50	
+[09/25 23:21:34][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 1.0806817794674877
+[09/25 23:21:41][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 4.76e-02, avg batch time: 0.4964, average train loss: 3.6677
+[09/25 23:21:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1692, average loss: 3.6202
+[09/25 23:21:42][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.50	top5: 15.00	
+[09/25 23:21:42][INFO] visual_prompt:  245: Best epoch 89: best metric: 0.055
+[09/25 23:21:42][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.9102018179151585
+[09/25 23:21:49][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 5.42e-02, avg batch time: 0.5023, average train loss: 3.6579
+[09/25 23:21:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1693, average loss: 3.6500
+[09/25 23:21:51][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 13.50	
+[09/25 23:21:51][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.753842240176146
+[09/25 23:21:57][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 5.74e-02, avg batch time: 0.5065, average train loss: 3.6403
+[09/25 23:21:59][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1692, average loss: 3.6255
+[09/25 23:21:59][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 3.00	top5: 14.50	
+[09/25 23:21:59][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.6117935463105808
+[09/25 23:22:06][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 5.64e-02, avg batch time: 0.5053, average train loss: 3.6550
+[09/25 23:22:07][INFO] visual_prompt:  320: Inference (val):avg data time: 3.34e-05, avg batch time: 0.1692, average loss: 3.6233
+[09/25 23:22:07][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 1.50	top5: 15.50	
+[09/25 23:22:07][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.4842288007710138
+[09/25 23:22:14][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 5.06e-02, avg batch time: 0.4987, average train loss: 3.6078
+[09/25 23:22:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1690, average loss: 3.6141
+[09/25 23:22:15][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 2.00	top5: 15.50	
+[09/25 23:22:15][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.3713034215500441
+[09/25 23:22:22][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 4.84e-02, avg batch time: 0.4968, average train loss: 3.5869
+[09/25 23:22:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.75e-05, avg batch time: 0.1692, average loss: 3.5687
+[09/25 23:22:23][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.00	top5: 22.00	
+[09/25 23:22:23][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.2731549908274289
+[09/25 23:22:30][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 4.76e-02, avg batch time: 0.4979, average train loss: 3.5560
+[09/25 23:22:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.69e-05, avg batch time: 0.1691, average loss: 3.5477
+[09/25 23:22:31][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.00	top5: 22.50	
+[09/25 23:22:31][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.18990308734739975
+[09/25 23:22:38][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 4.38e-02, avg batch time: 0.4934, average train loss: 3.5223
+[09/25 23:22:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1690, average loss: 3.5831
+[09/25 23:22:40][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 21.50	
+[09/25 23:22:40][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.12164914073037048
+[09/25 23:22:46][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 5.15e-02, avg batch time: 0.5015, average train loss: 3.5636
+[09/25 23:22:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1692, average loss: 3.5751
+[09/25 23:22:48][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 4.50	top5: 24.00	
+[09/25 23:22:48][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.06847630789658388
+[09/25 23:22:55][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 5.16e-02, avg batch time: 0.5003, average train loss: 3.5183
+[09/25 23:22:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1694, average loss: 3.5298
+[09/25 23:22:56][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 5.00	top5: 26.00	
+[09/25 23:22:56][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.03044937175219753
+[09/25 23:23:03][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 4.63e-02, avg batch time: 0.4951, average train loss: 3.4914
+[09/25 23:23:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.86e-05, avg batch time: 0.1695, average loss: 3.5254
+[09/25 23:23:04][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 7.00	top5: 28.50	
+[09/25 23:23:04][INFO] visual_prompt:  245: Best epoch 99: best metric: 0.070
+[09/25 23:23:04][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 0.0076146622613029735
+[09/25 23:23:11][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 3.94e-02, avg batch time: 0.4912, average train loss: 3.4749
+[09/25 23:23:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1696, average loss: 3.5212
+[09/25 23:23:12][INFO] visual_prompt:  113: Classification results with val_vtab-oxford_iiit_pet: top1: 6.50	top5: 29.00	

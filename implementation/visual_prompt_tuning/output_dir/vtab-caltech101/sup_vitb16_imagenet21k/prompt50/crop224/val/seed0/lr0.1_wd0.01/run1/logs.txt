@@ -1,0 +1,476 @@
+[09/26 04:44:17][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[09/26 04:44:17][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              2
+GPU 0                NVIDIA A100-PCIE-40GB
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[09/26 04:44:17][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-caltech101', 'DATA.NUMBER_CLASSES', '102', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[09/26 04:44:17][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/26 04:44:17][INFO] visual_prompt:  108: Training with config:
+[09/26 04:44:17][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-caltech101/sup_vitb16_imagenet21k/prompt50/crop224/val/seed0/lr0.1_wd0.01/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 0, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.01, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 0.1, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-caltech101', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 102, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[09/26 04:44:17][INFO] visual_prompt:   89: Loading training data...
+[09/26 04:44:17][INFO] visual_prompt:   68: Constructing vtab-caltech101 dataset train...
+[09/26 04:44:18][INFO] visual_prompt:   88: Number of images: 800
+[09/26 04:44:18][INFO] visual_prompt:   89: Number of classes: 102 / 102
+[09/26 04:44:18][INFO] visual_prompt:   94: Loading validation data...
+[09/26 04:44:18][INFO] visual_prompt:   68: Constructing vtab-caltech101 dataset val...
+[09/26 04:44:19][INFO] visual_prompt:   88: Number of images: 200
+[09/26 04:44:19][INFO] visual_prompt:   89: Number of classes: 91 / 102
+[09/26 04:44:19][INFO] visual_prompt:  120: Constructing models...
+[09/26 04:44:21][INFO] visual_prompt:   52: Total Parameters: 86337894	 Gradient Parameters: 539238
+[09/26 04:44:21][INFO] visual_prompt:   54: tuned percent:0.625
+[09/26 04:44:21][INFO] visual_prompt:   40: Device used for model: 0
+[09/26 04:44:21][INFO] visual_prompt:  122: Setting up Evaluator...
+[09/26 04:44:21][INFO] visual_prompt:  124: Setting up Trainer...
+[09/26 04:44:21][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[09/26 04:44:21][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[09/26 04:44:28][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 7.20e-02, avg batch time: 0.4891, average train loss: 4.6644
+[09/26 04:44:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1583, average loss: 4.6780
+[09/26 04:44:30][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 1.00	top5: 4.00	
+[09/26 04:44:30][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.010
+[09/26 04:44:30][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 0.010000000000000002
+[09/26 04:44:36][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 7.36e-02, avg batch time: 0.4858, average train loss: 4.6506
+[09/26 04:44:38][INFO] visual_prompt:  320: Inference (val):avg data time: 3.28e-05, avg batch time: 0.1584, average loss: 4.6357
+[09/26 04:44:38][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 1.00	top5: 6.50	
+[09/26 04:44:38][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 0.020000000000000004
+[09/26 04:44:45][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 6.59e-02, avg batch time: 0.4784, average train loss: 4.5923
+[09/26 04:44:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.16e-05, avg batch time: 0.1580, average loss: 4.5914
+[09/26 04:44:46][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 1.50	top5: 6.00	
+[09/26 04:44:46][INFO] visual_prompt:  245: Best epoch 3: best metric: 0.015
+[09/26 04:44:46][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 0.03
+[09/26 04:44:53][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 6.74e-02, avg batch time: 0.4808, average train loss: 4.4692
+[09/26 04:44:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1579, average loss: 4.4588
+[09/26 04:44:55][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 4.50	top5: 15.00	
+[09/26 04:44:55][INFO] visual_prompt:  245: Best epoch 4: best metric: 0.045
+[09/26 04:44:55][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 0.04000000000000001
+[09/26 04:45:02][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 7.42e-02, avg batch time: 0.4877, average train loss: 4.1761
+[09/26 04:45:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.39e-05, avg batch time: 0.1584, average loss: 4.1612
+[09/26 04:45:03][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 11.00	top5: 29.00	
+[09/26 04:45:03][INFO] visual_prompt:  245: Best epoch 5: best metric: 0.110
+[09/26 04:45:03][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 0.05
+[09/26 04:45:10][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 6.72e-02, avg batch time: 0.4809, average train loss: 3.7189
+[09/26 04:45:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1574, average loss: 3.6151
+[09/26 04:45:12][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 21.00	top5: 44.50	
+[09/26 04:45:12][INFO] visual_prompt:  245: Best epoch 6: best metric: 0.210
+[09/26 04:45:12][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 0.06
+[09/26 04:45:19][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 7.23e-02, avg batch time: 0.4864, average train loss: 3.1148
+[09/26 04:45:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1587, average loss: 3.0780
+[09/26 04:45:20][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 33.00	top5: 65.00	
+[09/26 04:45:20][INFO] visual_prompt:  245: Best epoch 7: best metric: 0.330
+[09/26 04:45:20][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 0.06999999999999999
+[09/26 04:45:27][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 5.19e-02, avg batch time: 0.4661, average train loss: 2.5352
+[09/26 04:45:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1578, average loss: 2.6390
+[09/26 04:45:28][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 44.50	top5: 71.50	
+[09/26 04:45:28][INFO] visual_prompt:  245: Best epoch 8: best metric: 0.445
+[09/26 04:45:28][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 0.08000000000000002
+[09/26 04:45:35][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 5.97e-02, avg batch time: 0.4725, average train loss: 1.9967
+[09/26 04:45:37][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1588, average loss: 2.0750
+[09/26 04:45:37][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 60.50	top5: 82.50	
+[09/26 04:45:37][INFO] visual_prompt:  245: Best epoch 9: best metric: 0.605
+[09/26 04:45:37][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 0.09000000000000001
+[09/26 04:45:43][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 6.09e-02, avg batch time: 0.4766, average train loss: 1.4641
+[09/26 04:45:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.79e-05, avg batch time: 0.1579, average loss: 1.6628
+[09/26 04:45:45][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 70.00	top5: 90.00	
+[09/26 04:45:45][INFO] visual_prompt:  245: Best epoch 10: best metric: 0.700
+[09/26 04:45:45][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 0.1
+[09/26 04:45:52][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 6.48e-02, avg batch time: 0.4786, average train loss: 1.0864
+[09/26 04:45:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1584, average loss: 1.3514
+[09/26 04:45:53][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 77.00	top5: 92.00	
+[09/26 04:45:53][INFO] visual_prompt:  245: Best epoch 11: best metric: 0.770
+[09/26 04:45:53][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 0.0999695413509548
+[09/26 04:46:00][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 6.29e-02, avg batch time: 0.4781, average train loss: 0.8405
+[09/26 04:46:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1582, average loss: 1.2481
+[09/26 04:46:02][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 79.50	top5: 93.00	
+[09/26 04:46:02][INFO] visual_prompt:  245: Best epoch 12: best metric: 0.795
+[09/26 04:46:02][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 0.09987820251299122
+[09/26 04:46:08][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 6.42e-02, avg batch time: 0.4785, average train loss: 0.6766
+[09/26 04:46:10][INFO] visual_prompt:  320: Inference (val):avg data time: 3.90e-05, avg batch time: 0.1576, average loss: 1.1216
+[09/26 04:46:10][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 82.50	top5: 93.50	
+[09/26 04:46:10][INFO] visual_prompt:  245: Best epoch 13: best metric: 0.825
+[09/26 04:46:10][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 0.09972609476841367
+[09/26 04:46:17][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 6.65e-02, avg batch time: 0.4797, average train loss: 0.5840
+[09/26 04:46:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.42e-05, avg batch time: 0.1587, average loss: 1.0415
+[09/26 04:46:19][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 85.50	top5: 94.50	
+[09/26 04:46:19][INFO] visual_prompt:  245: Best epoch 14: best metric: 0.855
+[09/26 04:46:19][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 0.09951340343707853
+[09/26 04:46:25][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 6.22e-02, avg batch time: 0.4760, average train loss: 0.5156
+[09/26 04:46:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1583, average loss: 0.9709
+[09/26 04:46:27][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 96.00	
+[09/26 04:46:27][INFO] visual_prompt:  245: Best epoch 15: best metric: 0.885
+[09/26 04:46:27][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 0.09924038765061041
+[09/26 04:46:34][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 7.68e-02, avg batch time: 0.4908, average train loss: 0.4777
+[09/26 04:46:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1586, average loss: 0.9586
+[09/26 04:46:35][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 85.50	top5: 96.50	
+[09/26 04:46:35][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 0.09890738003669029
+[09/26 04:46:42][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 6.69e-02, avg batch time: 0.4800, average train loss: 0.4655
+[09/26 04:46:44][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1584, average loss: 0.9840
+[09/26 04:46:44][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 86.00	top5: 94.50	
+[09/26 04:46:44][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 0.09851478631379983
+[09/26 04:46:51][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 6.47e-02, avg batch time: 0.4789, average train loss: 0.4720
+[09/26 04:46:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1584, average loss: 1.0457
+[09/26 04:46:52][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 86.00	top5: 95.00	
+[09/26 04:46:52][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 0.09806308479691594
+[09/26 04:46:59][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 6.62e-02, avg batch time: 0.4803, average train loss: 0.4879
+[09/26 04:47:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1583, average loss: 1.0299
+[09/26 04:47:01][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 87.00	top5: 95.50	
+[09/26 04:47:01][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 0.09755282581475769
+[09/26 04:47:07][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 6.52e-02, avg batch time: 0.4786, average train loss: 0.5192
+[09/26 04:47:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.36e-05, avg batch time: 0.1585, average loss: 0.9397
+[09/26 04:47:09][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 95.50	
+[09/26 04:47:09][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 0.09698463103929543
+[09/26 04:47:16][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 7.35e-02, avg batch time: 0.4887, average train loss: 0.4777
+[09/26 04:47:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.16e-05, avg batch time: 0.1586, average loss: 0.9900
+[09/26 04:47:18][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.00	top5: 94.50	
+[09/26 04:47:18][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 0.09635919272833937
+[09/26 04:47:24][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 6.51e-02, avg batch time: 0.4804, average train loss: 0.5038
+[09/26 04:47:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1586, average loss: 0.9824
+[09/26 04:47:26][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 85.50	top5: 96.00	
+[09/26 04:47:26][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 0.09567727288213004
+[09/26 04:47:33][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 6.24e-02, avg batch time: 0.4762, average train loss: 0.4514
+[09/26 04:47:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1585, average loss: 0.9363
+[09/26 04:47:34][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 95.50	
+[09/26 04:47:34][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 0.09493970231495835
+[09/26 04:47:41][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 6.44e-02, avg batch time: 0.4787, average train loss: 0.4657
+[09/26 04:47:43][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1587, average loss: 0.8903
+[09/26 04:47:43][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 87.50	top5: 94.50	
+[09/26 04:47:43][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 0.09414737964294635
+[09/26 04:47:49][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 6.60e-02, avg batch time: 0.4804, average train loss: 0.4485
+[09/26 04:47:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.72e-05, avg batch time: 0.1586, average loss: 0.8778
+[09/26 04:47:51][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 89.50	top5: 95.00	
+[09/26 04:47:51][INFO] visual_prompt:  245: Best epoch 25: best metric: 0.895
+[09/26 04:47:51][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 0.09330127018922195
+[09/26 04:47:58][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 6.68e-02, avg batch time: 0.4810, average train loss: 0.4018
+[09/26 04:48:00][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1589, average loss: 0.7824
+[09/26 04:48:00][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 97.50	
+[09/26 04:48:00][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 0.0924024048078213
+[09/26 04:48:06][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 6.52e-02, avg batch time: 0.4787, average train loss: 0.3350
+[09/26 04:48:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.39e-05, avg batch time: 0.1583, average loss: 0.7591
+[09/26 04:48:08][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:48:08][INFO] visual_prompt:  245: Best epoch 27: best metric: 0.905
+[09/26 04:48:08][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 0.09145187862775209
+[09/26 04:48:15][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 7.05e-02, avg batch time: 0.4857, average train loss: 0.3325
+[09/26 04:48:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1585, average loss: 0.7586
+[09/26 04:48:16][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 96.50	
+[09/26 04:48:16][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 0.09045084971874738
+[09/26 04:48:23][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 6.53e-02, avg batch time: 0.4787, average train loss: 0.3339
+[09/26 04:48:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1580, average loss: 0.7785
+[09/26 04:48:25][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:48:25][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 0.0894005376803361
+[09/26 04:48:31][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 6.36e-02, avg batch time: 0.4780, average train loss: 0.3702
+[09/26 04:48:33][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1585, average loss: 0.8499
+[09/26 04:48:33][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.00	top5: 94.50	
+[09/26 04:48:33][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 0.0883022221559489
+[09/26 04:48:40][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 6.44e-02, avg batch time: 0.4781, average train loss: 0.4204
+[09/26 04:48:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.27e-05, avg batch time: 0.1583, average loss: 0.8986
+[09/26 04:48:42][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.00	top5: 96.00	
+[09/26 04:48:42][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 0.08715724127386971
+[09/26 04:48:48][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 7.08e-02, avg batch time: 0.4843, average train loss: 0.4073
+[09/26 04:48:50][INFO] visual_prompt:  320: Inference (val):avg data time: 3.82e-05, avg batch time: 0.1585, average loss: 0.8424
+[09/26 04:48:50][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.00	top5: 96.00	
+[09/26 04:48:50][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 0.08596699001693256
+[09/26 04:48:57][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 6.90e-02, avg batch time: 0.4823, average train loss: 0.3696
+[09/26 04:48:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1582, average loss: 0.8063
+[09/26 04:48:58][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 87.50	top5: 95.50	
+[09/26 04:48:58][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 0.08473291852294987
+[09/26 04:49:05][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 6.28e-02, avg batch time: 0.4772, average train loss: 0.3414
+[09/26 04:49:07][INFO] visual_prompt:  320: Inference (val):avg data time: 2.42e-05, avg batch time: 0.1582, average loss: 0.8031
+[09/26 04:49:07][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 95.50	
+[09/26 04:49:07][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 0.08345653031794292
+[09/26 04:49:13][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 6.88e-02, avg batch time: 0.4822, average train loss: 0.3607
+[09/26 04:49:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1586, average loss: 0.8225
+[09/26 04:49:15][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.00	top5: 95.50	
+[09/26 04:49:15][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 0.08213938048432697
+[09/26 04:49:22][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 6.16e-02, avg batch time: 0.4750, average train loss: 0.3517
+[09/26 04:49:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1585, average loss: 0.8769
+[09/26 04:49:23][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 89.50	top5: 95.00	
+[09/26 04:49:23][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 0.08078307376628291
+[09/26 04:49:30][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 7.07e-02, avg batch time: 0.4848, average train loss: 0.3828
+[09/26 04:49:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.48e-05, avg batch time: 0.1585, average loss: 0.7385
+[09/26 04:49:32][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 93.00	top5: 97.50	
+[09/26 04:49:32][INFO] visual_prompt:  245: Best epoch 37: best metric: 0.930
+[09/26 04:49:32][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 0.07938926261462366
+[09/26 04:49:39][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 7.17e-02, avg batch time: 0.4859, average train loss: 0.3882
+[09/26 04:49:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1581, average loss: 0.7549
+[09/26 04:49:40][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.00	top5: 96.50	
+[09/26 04:49:40][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 0.07795964517353735
+[09/26 04:49:47][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 6.58e-02, avg batch time: 0.4797, average train loss: 0.3683
+[09/26 04:49:49][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1587, average loss: 0.8268
+[09/26 04:49:49][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 85.00	top5: 97.00	
+[09/26 04:49:49][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 0.07649596321166025
+[09/26 04:49:55][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 6.34e-02, avg batch time: 0.4773, average train loss: 0.3586
+[09/26 04:49:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.30e-05, avg batch time: 0.1579, average loss: 0.8038
+[09/26 04:49:57][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 89.00	top5: 96.00	
+[09/26 04:49:57][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 0.07500000000000001
+[09/26 04:50:04][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 6.65e-02, avg batch time: 0.4805, average train loss: 0.3438
+[09/26 04:50:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1586, average loss: 0.8021
+[09/26 04:50:06][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 88.50	top5: 96.50	
+[09/26 04:50:06][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 0.07347357813929455
+[09/26 04:50:12][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 7.36e-02, avg batch time: 0.4875, average train loss: 0.3344
+[09/26 04:50:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1584, average loss: 0.7175
+[09/26 04:50:14][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 89.50	top5: 96.00	
+[09/26 04:50:14][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 0.07191855733945388
+[09/26 04:50:21][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 7.00e-02, avg batch time: 0.4841, average train loss: 0.3131
+[09/26 04:50:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.10e-05, avg batch time: 0.1577, average loss: 0.7280
+[09/26 04:50:23][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 95.00	
+[09/26 04:50:23][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 0.07033683215379002
+[09/26 04:50:29][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 7.19e-02, avg batch time: 0.4854, average train loss: 0.2812
+[09/26 04:50:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1578, average loss: 0.6816
+[09/26 04:50:31][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 96.50	
+[09/26 04:50:31][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 0.0687303296707956
+[09/26 04:50:38][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 6.47e-02, avg batch time: 0.4783, average train loss: 0.2606
+[09/26 04:50:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.24e-05, avg batch time: 0.1584, average loss: 0.6320
+[09/26 04:50:40][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 93.00	top5: 96.00	
+[09/26 04:50:40][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 0.06710100716628345
+[09/26 04:50:46][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 6.67e-02, avg batch time: 0.4795, average train loss: 0.2459
+[09/26 04:50:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.42e-05, avg batch time: 0.1587, average loss: 0.6280
+[09/26 04:50:48][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.50	
+[09/26 04:50:48][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 0.06545084971874737
+[09/26 04:50:54][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 5.32e-02, avg batch time: 0.4683, average train loss: 0.2422
+[09/26 04:50:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.59e-05, avg batch time: 0.1581, average loss: 0.6431
+[09/26 04:50:56][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 93.00	top5: 96.50	
+[09/26 04:50:56][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 0.06378186779084996
+[09/26 04:51:03][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 5.56e-02, avg batch time: 0.4707, average train loss: 0.2417
+[09/26 04:51:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1586, average loss: 0.6283
+[09/26 04:51:04][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.50	top5: 97.00	
+[09/26 04:51:04][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 0.06209609477998338
+[09/26 04:51:11][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 6.08e-02, avg batch time: 0.4766, average train loss: 0.2456
+[09/26 04:51:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1586, average loss: 0.6537
+[09/26 04:51:13][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.00	
+[09/26 04:51:13][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 0.06039558454088796
+[09/26 04:51:19][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 6.86e-02, avg batch time: 0.4814, average train loss: 0.2478
+[09/26 04:51:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.45e-05, avg batch time: 0.1586, average loss: 0.6937
+[09/26 04:51:21][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:51:21][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 0.058682408883346526
+[09/26 04:51:28][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 6.42e-02, avg batch time: 0.4782, average train loss: 0.2533
+[09/26 04:51:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1584, average loss: 0.7089
+[09/26 04:51:30][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:51:30][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 0.05695865504800327
+[09/26 04:51:36][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 6.86e-02, avg batch time: 0.4825, average train loss: 0.2550
+[09/26 04:51:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1581, average loss: 0.6712
+[09/26 04:51:38][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 96.50	
+[09/26 04:51:38][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 0.05522642316338268
+[09/26 04:51:45][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 6.16e-02, avg batch time: 0.4755, average train loss: 0.3339
+[09/26 04:51:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1579, average loss: 0.9563
+[09/26 04:51:46][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 85.50	top5: 96.50	
+[09/26 04:51:46][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 0.05348782368720626
+[09/26 04:51:53][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 6.60e-02, avg batch time: 0.4793, average train loss: 0.9335
+[09/26 04:51:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1585, average loss: 1.4999
+[09/26 04:51:55][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 77.00	top5: 96.00	
+[09/26 04:51:55][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 0.05174497483512506
+[09/26 04:52:01][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 6.85e-02, avg batch time: 0.4820, average train loss: 0.9950
+[09/26 04:52:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.45e-05, avg batch time: 0.1582, average loss: 1.1558
+[09/26 04:52:03][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 87.50	top5: 94.50	
+[09/26 04:52:03][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 0.05
+[09/26 04:52:10][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 5.80e-02, avg batch time: 0.4722, average train loss: 0.5680
+[09/26 04:52:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1575, average loss: 0.7723
+[09/26 04:52:11][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 93.00	top5: 97.00	
+[09/26 04:52:11][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 0.04825502516487497
+[09/26 04:52:18][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 6.31e-02, avg batch time: 0.4769, average train loss: 0.3812
+[09/26 04:52:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1580, average loss: 0.6885
+[09/26 04:52:20][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.50	top5: 97.00	
+[09/26 04:52:20][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 0.04651217631279374
+[09/26 04:52:26][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 6.60e-02, avg batch time: 0.4799, average train loss: 0.2949
+[09/26 04:52:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1587, average loss: 0.6406
+[09/26 04:52:28][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.50	
+[09/26 04:52:28][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 0.04477357683661734
+[09/26 04:52:35][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 6.07e-02, avg batch time: 0.4758, average train loss: 0.2580
+[09/26 04:52:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1584, average loss: 0.6395
+[09/26 04:52:36][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.50	top5: 97.00	
+[09/26 04:52:36][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 0.04304134495199674
+[09/26 04:52:43][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 6.74e-02, avg batch time: 0.4813, average train loss: 0.2431
+[09/26 04:52:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.24e-05, avg batch time: 0.1580, average loss: 0.6219
+[09/26 04:52:45][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 97.00	
+[09/26 04:52:45][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 0.041317591116653486
+[09/26 04:52:51][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 6.81e-02, avg batch time: 0.4815, average train loss: 0.2344
+[09/26 04:52:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1586, average loss: 0.6419
+[09/26 04:52:53][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 97.00	
+[09/26 04:52:53][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 0.039604415459112044
+[09/26 04:53:00][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 6.56e-02, avg batch time: 0.4796, average train loss: 0.2359
+[09/26 04:53:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1583, average loss: 0.6248
+[09/26 04:53:02][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 97.50	
+[09/26 04:53:02][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 0.037903905220016625
+[09/26 04:53:08][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 6.60e-02, avg batch time: 0.4792, average train loss: 0.2377
+[09/26 04:53:10][INFO] visual_prompt:  320: Inference (val):avg data time: 3.67e-05, avg batch time: 0.1586, average loss: 0.6419
+[09/26 04:53:10][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 97.00	
+[09/26 04:53:10][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 0.036218132209150045
+[09/26 04:53:17][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 6.42e-02, avg batch time: 0.4773, average train loss: 0.2367
+[09/26 04:53:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1586, average loss: 0.6358
+[09/26 04:53:18][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 97.50	
+[09/26 04:53:18][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 0.03454915028125263
+[09/26 04:53:25][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 4.84e-02, avg batch time: 0.4634, average train loss: 0.2364
+[09/26 04:53:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1586, average loss: 0.6302
+[09/26 04:53:26][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 96.50	
+[09/26 04:53:26][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 0.03289899283371657
+[09/26 04:53:33][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 5.78e-02, avg batch time: 0.4725, average train loss: 0.2367
+[09/26 04:53:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.45e-05, avg batch time: 0.1588, average loss: 0.6441
+[09/26 04:53:35][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:53:35][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 0.0312696703292044
+[09/26 04:53:41][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 7.05e-02, avg batch time: 0.4835, average train loss: 0.2364
+[09/26 04:53:43][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1582, average loss: 0.6531
+[09/26 04:53:43][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 96.00	
+[09/26 04:53:43][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 0.02966316784621
+[09/26 04:53:50][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 6.70e-02, avg batch time: 0.4800, average train loss: 0.2363
+[09/26 04:53:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1583, average loss: 0.6557
+[09/26 04:53:51][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:53:51][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 0.028081442660546126
+[09/26 04:53:58][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 6.21e-02, avg batch time: 0.4753, average train loss: 0.2362
+[09/26 04:54:00][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1585, average loss: 0.6683
+[09/26 04:54:00][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.00	top5: 96.50	
+[09/26 04:54:00][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 0.026526421860705474
+[09/26 04:54:06][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 6.69e-02, avg batch time: 0.4809, average train loss: 0.2354
+[09/26 04:54:08][INFO] visual_prompt:  320: Inference (val):avg data time: 3.85e-05, avg batch time: 0.1584, average loss: 0.6612
+[09/26 04:54:08][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:54:08][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 0.025000000000000012
+[09/26 04:54:15][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 6.91e-02, avg batch time: 0.4844, average train loss: 0.2371
+[09/26 04:54:17][INFO] visual_prompt:  320: Inference (val):avg data time: 3.58e-05, avg batch time: 0.1583, average loss: 0.6876
+[09/26 04:54:17][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.50	
+[09/26 04:54:17][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 0.02350403678833976
+[09/26 04:54:23][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 7.08e-02, avg batch time: 0.4835, average train loss: 0.2367
+[09/26 04:54:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1583, average loss: 0.6644
+[09/26 04:54:25][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:54:25][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 0.022040354826462667
+[09/26 04:54:32][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 6.49e-02, avg batch time: 0.4778, average train loss: 0.2369
+[09/26 04:54:33][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1580, average loss: 0.6926
+[09/26 04:54:33][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 90.50	top5: 96.00	
+[09/26 04:54:33][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 0.02061073738537635
+[09/26 04:54:40][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 6.78e-02, avg batch time: 0.4809, average train loss: 0.2361
+[09/26 04:54:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.23e-05, avg batch time: 0.1583, average loss: 0.6731
+[09/26 04:54:42][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.50	
+[09/26 04:54:42][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 0.019216926233717086
+[09/26 04:54:48][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 5.60e-02, avg batch time: 0.4708, average train loss: 0.2352
+[09/26 04:54:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.32e-05, avg batch time: 0.1584, average loss: 0.6793
+[09/26 04:54:50][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:54:50][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 0.017860619515673033
+[09/26 04:54:57][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 6.55e-02, avg batch time: 0.4782, average train loss: 0.2348
+[09/26 04:54:59][INFO] visual_prompt:  320: Inference (val):avg data time: 2.42e-05, avg batch time: 0.1583, average loss: 0.6716
+[09/26 04:54:59][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:54:59][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 0.016543469682057107
+[09/26 04:55:05][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 6.48e-02, avg batch time: 0.4797, average train loss: 0.2339
+[09/26 04:55:07][INFO] visual_prompt:  320: Inference (val):avg data time: 3.46e-05, avg batch time: 0.1580, average loss: 0.6739
+[09/26 04:55:07][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.00	
+[09/26 04:55:07][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 0.015267081477050132
+[09/26 04:55:14][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 6.49e-02, avg batch time: 0.4789, average train loss: 0.2336
+[09/26 04:55:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.66e-05, avg batch time: 0.1582, average loss: 0.6717
+[09/26 04:55:15][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.00	
+[09/26 04:55:15][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 0.014033009983067453
+[09/26 04:55:22][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 5.91e-02, avg batch time: 0.4728, average train loss: 0.2335
+[09/26 04:55:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1584, average loss: 0.6876
+[09/26 04:55:24][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 96.00	
+[09/26 04:55:24][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 0.012842758726130284
+[09/26 04:55:30][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 5.19e-02, avg batch time: 0.4662, average train loss: 0.2330
+[09/26 04:55:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1585, average loss: 0.6956
+[09/26 04:55:32][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 97.00	
+[09/26 04:55:32][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 0.011697777844051106
+[09/26 04:55:38][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 6.58e-02, avg batch time: 0.4794, average train loss: 0.2326
+[09/26 04:55:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.48e-05, avg batch time: 0.1582, average loss: 0.6856
+[09/26 04:55:40][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 92.00	top5: 96.50	
+[09/26 04:55:40][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 0.010599462319663905
+[09/26 04:55:47][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 6.54e-02, avg batch time: 0.4785, average train loss: 0.2321
+[09/26 04:55:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1584, average loss: 0.6970
+[09/26 04:55:48][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 97.00	
+[09/26 04:55:48][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 0.009549150281252633
+[09/26 04:55:55][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 6.58e-02, avg batch time: 0.4794, average train loss: 0.2319
+[09/26 04:55:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.60e-05, avg batch time: 0.1584, average loss: 0.6933
+[09/26 04:55:57][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 97.00	
+[09/26 04:55:57][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 0.008548121372247919
+[09/26 04:56:03][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 6.59e-02, avg batch time: 0.4797, average train loss: 0.2317
+[09/26 04:56:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1577, average loss: 0.6836
+[09/26 04:56:05][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 96.50	
+[09/26 04:56:05][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 0.007597595192178702
+[09/26 04:56:12][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 6.67e-02, avg batch time: 0.4804, average train loss: 0.2312
+[09/26 04:56:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1579, average loss: 0.7037
+[09/26 04:56:14][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 95.50	
+[09/26 04:56:14][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 0.006698729810778065
+[09/26 04:56:20][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 6.45e-02, avg batch time: 0.4792, average train loss: 0.2308
+[09/26 04:56:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1576, average loss: 0.6970
+[09/26 04:56:22][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.50	
+[09/26 04:56:22][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 0.005852620357053651
+[09/26 04:56:29][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 6.86e-02, avg batch time: 0.4822, average train loss: 0.2310
+[09/26 04:56:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1582, average loss: 0.6962
+[09/26 04:56:30][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:56:30][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 0.00506029768504166
+[09/26 04:56:37][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 7.54e-02, avg batch time: 0.4896, average train loss: 0.2305
+[09/26 04:56:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.75e-05, avg batch time: 0.1583, average loss: 0.7135
+[09/26 04:56:39][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 95.50	
+[09/26 04:56:39][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 0.004322727117869951
+[09/26 04:56:46][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 7.13e-02, avg batch time: 0.4842, average train loss: 0.2307
+[09/26 04:56:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.32e-05, avg batch time: 0.1581, average loss: 0.6945
+[09/26 04:56:47][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.00	top5: 96.50	
+[09/26 04:56:47][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.0036408072716606343
+[09/26 04:56:54][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 6.47e-02, avg batch time: 0.4798, average train loss: 0.2300
+[09/26 04:56:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.50e-05, avg batch time: 0.1581, average loss: 0.7010
+[09/26 04:56:56][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:56:56][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.0030153689607045845
+[09/26 04:57:02][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 6.24e-02, avg batch time: 0.4764, average train loss: 0.2298
+[09/26 04:57:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.51e-05, avg batch time: 0.1582, average loss: 0.6962
+[09/26 04:57:04][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:04][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.0024471741852423235
+[09/26 04:57:11][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 6.54e-02, avg batch time: 0.4786, average train loss: 0.2297
+[09/26 04:57:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1585, average loss: 0.6930
+[09/26 04:57:12][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:12][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.0019369152030840554
+[09/26 04:57:19][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 7.01e-02, avg batch time: 0.4835, average train loss: 0.2292
+[09/26 04:57:21][INFO] visual_prompt:  320: Inference (val):avg data time: 3.70e-05, avg batch time: 0.1582, average loss: 0.6924
+[09/26 04:57:21][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:21][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.0014852136862001765
+[09/26 04:57:28][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 6.66e-02, avg batch time: 0.4808, average train loss: 0.2294
+[09/26 04:57:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1584, average loss: 0.6875
+[09/26 04:57:29][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:29][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.0010926199633097156
+[09/26 04:57:36][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 6.73e-02, avg batch time: 0.4815, average train loss: 0.2295
+[09/26 04:57:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.93e-05, avg batch time: 0.1583, average loss: 0.6879
+[09/26 04:57:38][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:38][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.0007596123493895991
+[09/26 04:57:44][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 6.23e-02, avg batch time: 0.4755, average train loss: 0.2293
+[09/26 04:57:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1584, average loss: 0.6901
+[09/26 04:57:46][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:46][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.00048659656292148194
+[09/26 04:57:53][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 6.62e-02, avg batch time: 0.4808, average train loss: 0.2295
+[09/26 04:57:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1587, average loss: 0.6926
+[09/26 04:57:55][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:57:55][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.0002739052315863355
+[09/26 04:58:01][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 7.00e-02, avg batch time: 0.4841, average train loss: 0.2299
+[09/26 04:58:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.60e-05, avg batch time: 0.1584, average loss: 0.6934
+[09/26 04:58:03][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:58:03][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.00012179748700879012
+[09/26 04:58:10][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 6.77e-02, avg batch time: 0.4807, average train loss: 0.2293
+[09/26 04:58:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1580, average loss: 0.6937
+[09/26 04:58:11][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
+[09/26 04:58:11][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 3.0458649045211895e-05
+[09/26 04:58:18][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 6.96e-02, avg batch time: 0.4843, average train loss: 0.2292
+[09/26 04:58:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1581, average loss: 0.6937
+[09/26 04:58:20][INFO] visual_prompt:  113: Classification results with val_vtab-caltech101: top1: 91.50	top5: 96.00	
