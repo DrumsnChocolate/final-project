@@ -134,9 +134,11 @@ def seed(cfg):
     SEED = cfg.SEED
     assert SEED is not None, "No seed was configured"
     torch.manual_seed(SEED)
+    torch.cuda.manual_seed(SEED)
+    torch.cuda.manual_seed_all(SEED)
     np.random.seed(SEED)
     random.seed(SEED)
-    # TODO: complete this with more seeding calls to make sure everything becomes reproducible
+    # todo: also make the dataset loader deterministic using a generator? Is this necessary?
 
 
 def construct_output_dir(cfg, test=True):
