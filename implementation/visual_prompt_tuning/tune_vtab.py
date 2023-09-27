@@ -278,6 +278,7 @@ def main(args):
     lr, wd = get_best_lrwd(args)
     random_seeds = np.random.randint(10000, size=5)
     for seed in random_seeds:
+        seed = int(seed)  # convert from np.int64 to int
         try:
             cfg = setup(args, lr, wd, seed=seed)
         except ValueError:
