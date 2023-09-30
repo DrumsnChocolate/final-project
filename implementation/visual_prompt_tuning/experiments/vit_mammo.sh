@@ -40,4 +40,6 @@ python visual_prompt_tuning/tune_cbis.py \
   DATA.CROPSIZE "224" \
   MODEL.MODEL_ROOT "${model_root}" \
   DATA.DATAPATH "${data_path}" \
-  OUTPUT_DIR "${output_dir}"
+  OUTPUT_DIR "${output_dir}" \
+  SOLVER.PATIENCE "7" \
+  SOLVER.CRITERION "loss"
