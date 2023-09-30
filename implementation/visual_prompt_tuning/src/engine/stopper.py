@@ -15,7 +15,7 @@ def get_stopper(cfg):
 
 class EarlyStopper:
     """Indicates whether we should stop training early based on a stopping criterion and a patience."""
-    def __int__(self, cfg):
+    def __init__(self, cfg):
         # todo: implement stopping based on validation loss
         self.cfg = cfg  # general config
         self.criterion = cfg.SOLVER.CRITERION  # metric to use for early stopping
@@ -38,7 +38,6 @@ class EarlyStopper:
         self.counter += 1
         if self.counter >= self.patience:
             if self.cfg.DBG:
-                # todo: is it necessary to improve this log?
                 logger.info(f"Stopping early.")
             return True
         return False

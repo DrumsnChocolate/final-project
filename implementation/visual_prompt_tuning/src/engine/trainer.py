@@ -17,7 +17,7 @@ from ..solver.optimizer import make_optimizer
 from ..solver.losses import build_loss
 from ..utils import logging
 from ..utils.train_utils import AverageMeter, gpu_mem_usage
-from stopper import get_stopper
+from ..engine.stopper import get_stopper
 
 logger = logging.get_logger("visual_prompt")
 
@@ -234,22 +234,23 @@ class Trainer():
                 self.eval_classifier(
                     test_loader, "test", epoch == total_epoch - 1)
 
-            # check the patience
-            t_name = "val_" + val_loader.dataset.name
-            try:
-                curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
-            except KeyError:
-                return
+            if epoch >= self.cfg.SOLVER.WARMUP_EPOCH:
 
-            # prepare metrics for stopper
-            metrics = {"epoch": epoch}
-            # we choose not to use test metrics for stopping, because we should behave
-            # as if we don't have access to test data. Otherwise, the test is not a true test.
-            metrics["loss"] = avg_val_loss
-            metrics["accuracy"] = curr_acc
+                t_name = "val_" + val_loader.dataset.name
+                try:
+                    curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
+                except KeyError:
+                    return
 
-            if self.stopper(metrics):
-                break
+                # prepare metrics for stopper
+                metrics = {"epoch": epoch}
+                # we choose not to use test metrics for stopping, because we should behave
+                # as if we don't have access to test data. Otherwise, the test is not a true test.
+                metrics["loss"] = avg_val_loss
+                metrics["accuracy"] = curr_acc
+
+                if self.stopper(metrics):
+                    break
 
         # save the last checkpoints
         # if self.cfg.MODEL.SAVE_CKPT:
