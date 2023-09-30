@@ -30,7 +30,7 @@ def get_meta(job_path):
     # output_root
     # dataset
     # feature type (e.g. sup_vitb16_imagenet21k)
-    # transfer type (e.g. full, linear, prompt{num_tokens})
+    # transfer type (e.g. end2end, linear, prompt{num_tokens})
     # crop{size}
     # evaluation set: val or test
     # seed{seed}
