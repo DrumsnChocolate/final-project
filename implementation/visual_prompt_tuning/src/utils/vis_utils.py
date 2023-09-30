@@ -16,6 +16,7 @@ LOG_NAME = "logs.txt"
 
 
 def remove_trailing(eval_dict):
+    # todo: rewrite?
     min_num = min([len(v) for k, v in eval_dict.items() if "top5" not in k])
     new_dict ={}
     for k, v in eval_dict.items():
@@ -24,17 +25,32 @@ def remove_trailing(eval_dict):
     return new_dict
 
 
-def get_meta(job_root, job_path, model_type):
-    # get lr, wd, feature-type, dataset
-    j_data = job_path.split("/run")[0].split(
-        job_root + "/" + model_type)[-1].split("/")
-    data_name, feat_type, opt_params = j_data[1], j_data[2], j_data[3]
-    lr = float(opt_params.split("_")[0].split("lr")[-1])
-    wd = float(opt_params.split("_")[1].split("wd")[-1])
-    return data_name, feat_type, lr, wd
+def get_meta(job_path):
+    # for now, path consists of
+    # output_root
+    # dataset
+    # feature type (e.g. sup_vitb16_imagenet21k)
+    # transfer type (e.g. full, linear, prompt{num_tokens})
+    # crop{size}
+    # evaluation set: val or test
+    # seed{seed}
+    # lr{lr}_wd{wd}
+    """Return the dataset, feature type, lr, wd."""
+    path_items = job_path.split("/")
+    # output_root = path_items[0]
+    dataset = path_items[1]
+    feature_type = path_items[2]
+    transfer_type = path_items[3]
+    crop_size = int(path_items[4].split("crop")[-1])
+    eval_set = path_items[5]
+    seed = int(s) if (s := path_items[6].split("seed")[-1]) != "None" else None
+    lr = float(path_items[7].split("_")[0].split("lr")[-1])
+    wd = float(path_items[7].split("_")[1].split("wd")[-1])
+    return dataset, feature_type, transfer_type, crop_size, eval_set, seed, lr, wd
 
 
-def update_eval(line, eval_dict, data_name):        
+def update_eval(line, eval_dict, data_name):
+    # todo: rewrite?
     if "top1" in line and "top" in line.split(": top1:")[-1]:
         metric = "top"     
     else:
@@ -46,6 +62,7 @@ def update_eval(line, eval_dict, data_name):
 
 
 def get_nmi(job_path):
+    # todo: rewrite?
     with open(job_path) as f:
         lines = f.readlines()
     nmi_dict = defaultdict(list)
@@ -67,6 +84,7 @@ def get_nmi(job_path):
 
 
 def get_mean_accuracy(job_path, data_name):
+    # todo: rewrite?
     val_data = torch.load(
         job_path.replace("logs.txt", f"val_{data_name}_logits.pth"))
     test_data = torch.load(
@@ -82,8 +100,8 @@ def get_mean_accuracy(job_path, data_name):
     return np.mean(v_matrix.diagonal()/v_matrix.sum(axis=1) ) * 100, np.mean(t_matrix.diagonal()/t_matrix.sum(axis=1) ) * 100
 
 
-def get_training_data(job_path, model_type, job_root):
-    data_name, feat_type, lr, wd = get_meta(job_root, job_path, model_type)
+def get_training_data(job_path):
+    data_name, feat_type, transfer_type, crop_size, eval_set, seed, lr, wd = get_meta(job_path)
     with open(job_path) as f:
         lines = f.readlines()
 
@@ -91,7 +109,6 @@ def get_training_data(job_path, model_type, job_root):
     # cls results for both val and test
     train_loss = []
     eval_dict = defaultdict(list)
-#     best_epoch = -1
     num_jobs = 0
     total_params = -1
     gradiented_params = -1
@@ -117,7 +134,11 @@ def get_training_data(job_path, model_type, job_root):
     meta_dict = {
         "data": data_name,
         "feature": feat_type,
-        "lr": float(lr) * 256 / int(batch_size),
+        "transfer": transfer_type,
+        "crop": crop_size,
+        "eval_set": eval_set,
+        "seed": seed,
+        "lr": lr,
         "wd": wd,
         "total_params": total_params,
         "tuned_params": gradiented_params,
@@ -155,10 +176,11 @@ def get_time(file):
     return datetime.timedelta(seconds=(end_time-start_time).total_seconds()), np.mean(per_batch), np.mean(per_batch_train)
 
 
-def get_df(files, model_type, root, is_best=True, is_last=True, max_epoch=300):
+def get_df(files, is_best=True, is_last=True):
+    # todo: rewrite?
     pd_dict = defaultdict(list)
-    for job_path in tqdm(files, desc=model_type):
-        train_loss, eval_results, meta_dict, (v_top1, t_top1) = get_training_data(job_path, model_type, root)
+    for job_path in tqdm(files):
+        train_loss, eval_results, meta_dict, (v_top1, t_top1) = get_training_data(job_path)
         batch_size = meta_dict["batch_size"]
         
         if len(eval_results) == 0:
@@ -214,7 +236,7 @@ def get_df(files, model_type, root, is_best=True, is_last=True, max_epoch=300):
     result_df = None
     if len(pd_dict) > 0:
         result_df = pd.DataFrame(pd_dict)
-        result_df = result_df.sort_values(['data', "feature", "lr", "wd"])
+        result_df = result_df.sort_values(['data', "feature", "transfer", "crop", "eval_set", "lr", "wd"])
     return result_df
 
 
@@ -230,9 +252,9 @@ def average_df(df, metric_names=["l-val_top1", "l-val_base_top1"], take_average=
     # for each data and features and train type, display the averaged results
     data_names = set(list(df["data"]))
     f_names = set(list(df["feature"]))
-    t_names = set(list(df["type"]))
+    t_names = set(list(df["transfer"]))
     hp_names = [
-        c for c in df.columns if c not in ["data", "feature", "type", "file", "best_epoch"] + metric_names]
+        c for c in df.columns if c not in ["data", "feature", "transfer", "file", "best_epoch"] + metric_names]
     data_dict = defaultdict(list)
     for d_name in data_names:
         for f_name in f_names:
@@ -240,13 +262,13 @@ def average_df(df, metric_names=["l-val_top1", "l-val_base_top1"], take_average=
 
                 result = df[df.data == d_name]
                 result = result[result.feature == f_name]
-                result = result[result.type == t_name]
+                result = result[result.transfer == t_name]
                 # take average here
                 if len(result) == 0:
                     continue
                 data_dict["data"].append(d_name)
                 data_dict["feature"].append(f_name)
-                data_dict["type"].append(t_name)
+                data_dict["transfer"].append(t_name)
                 data_dict["total_runs"].append(len(result))
         
                 for m in metric_names:
@@ -265,22 +287,23 @@ def average_df(df, metric_names=["l-val_top1", "l-val_base_top1"], take_average=
                     data_dict[h_name].append(result[h_name].iloc[0])
 
     df = pd.DataFrame(data_dict)
-    df = df.sort_values(["data", "feature", "type"])
+    df = df.sort_values(["data", "feature", "transfer"])
     return df
 
 
 def filter_df(df, sorted_cols, max_num):
+    # todo: rewrite?
     # for each data and features, display only top max_num runs
     data_names = set(list(df["data"]))
     f_names = set(list(df["feature"]))
-    t_names = set(list(df["type"]))
+    t_names = set(list(df["transfer"]))
     df_list = []
     for d_name in data_names:
         for f_name in f_names:
             for t_name in t_names:
                 result = df[df.data == d_name]
                 result = result[result.feature == f_name]
-                result = result[result.type == t_name]
+                result = result[result.transfer == t_name]
                 if len(result) == 0:
                     continue
                 cols = [c for c in sorted_cols if c in result.columns]
@@ -292,7 +315,8 @@ def filter_df(df, sorted_cols, max_num):
     return pd.concat(df_list)
 
 
-def display_results(df, sorted_cols=["data", "feature", "type", "l-val_top1"], max_num=1):
+def display_results(df, sorted_cols=["data", "feature", "transfer", "l-val_top1"], max_num=1):
+    # todo: rewrite?
     cols = [c for c in df.columns if c not in []]
     df = df[cols]
     if max_num is not None:
