@@ -30,15 +30,16 @@ class EarlyStopper:
             score = -score  # invert the score because that simplifies comparisons
         if self.best_score is None:
             self.best_score = score
+            self.counter = 0
             return False
         if score > self.best_score:
             logger.info(f'Best epoch {metrics["epoch"] + 1}: best metric: {score:.3f}')
             self.best_score = score
+            self.counter = 0
             return False
         self.counter += 1
         if self.counter >= self.patience:
-            if self.cfg.DBG:
-                logger.info(f"Stopping early.")
+            logger.info(f"Stopping early.")
             return True
         return False
 
@@ -50,8 +51,7 @@ class EpochStopper:
     def __call__(self, metrics: dict) -> bool:
         if metrics["epoch"] < self.cfg.SOLVER.TOTAL_EPOCH:
             return False
-        if self.cfg.DBG:
-            logger.info(f"Stopping at epoch limit.")
+        logger.info(f"Stopping at epoch limit.")
         return True
 
 class EarlyEpochStopper(EarlyStopper):
@@ -61,8 +61,7 @@ class EarlyEpochStopper(EarlyStopper):
     def __call__(self, metrics: dict) -> bool:
         if metrics["epoch"] < self.cfg.SOLVER.TOTAL_EPOCH:
             return super().__call__(metrics)  # only consider early stopping if we are not at the epoch limit
-        if self.cfg.DBG:
-            logger.info(f"Stopping at epoch limit.")
+        logger.info(f"Stopping at epoch limit.")
         return True
 
 
