@@ -1,0 +1,973 @@
+[10/01 02:01:04][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[10/01 02:01:04][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              3
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[10/01 02:01:04][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-sun397', 'DATA.NUMBER_CLASSES', '397', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[10/01 02:01:04][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[10/01 02:01:04][INFO] visual_prompt:  108: Training with config:
+[10/01 02:01:04][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-sun397/sup_vitb16_imagenet21k/prompt50/crop224/test/seed4536/lr2.5_wd0.001/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 4536, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.001, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 2.5, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-sun397', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 397, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[10/01 02:01:04][INFO] visual_prompt:   89: Loading training data...
+[10/01 02:01:04][INFO] visual_prompt:   68: Constructing vtab-sun397 dataset trainval...
+[10/01 02:01:08][INFO] visual_prompt:   88: Number of images: 1000
+[10/01 02:01:08][INFO] visual_prompt:   89: Number of classes: 325 / 397
+[10/01 02:01:08][INFO] visual_prompt:   94: Loading validation data...
+[10/01 02:01:08][INFO] visual_prompt:   68: Constructing vtab-sun397 dataset val...
+[10/01 02:01:09][INFO] visual_prompt:   88: Number of images: 200
+[10/01 02:01:09][INFO] visual_prompt:   89: Number of classes: 136 / 397
+[10/01 02:01:09][INFO] visual_prompt:   98: Loading test data...
+[10/01 02:01:09][INFO] visual_prompt:   68: Constructing vtab-sun397 dataset test...
+[10/01 02:01:49][INFO] visual_prompt:   88: Number of images: 21750
+[10/01 02:01:49][INFO] visual_prompt:   89: Number of classes: 397 / 397
+[10/01 02:01:49][INFO] visual_prompt:  120: Constructing models...
+[10/01 02:01:52][INFO] visual_prompt:   52: Total Parameters: 86564749	 Gradient Parameters: 766093
+[10/01 02:01:52][INFO] visual_prompt:   54: tuned percent:0.885
+[10/01 02:01:52][INFO] visual_prompt:   40: Device used for model: 0
+[10/01 02:01:52][INFO] visual_prompt:  122: Setting up Evaluator...
+[10/01 02:01:52][INFO] visual_prompt:  124: Setting up Trainer...
+[10/01 02:01:52][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[10/01 02:01:52][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[10/01 02:02:03][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 1.35e-01, avg batch time: 0.5763, average train loss: 5.9956
+[10/01 02:02:07][INFO] visual_prompt:  320: Inference (val):avg data time: 3.43e-05, avg batch time: 0.1631, average loss: 5.9960
+[10/01 02:02:07][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 1.50	top5: 2.50	
+[10/01 02:02:30][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.970, 0.2101 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 02:02:52][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.983, 0.2105 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:03:13][INFO] visual_prompt:  307: 	Test 300/340. loss: 6.000, 0.2119 s / batch. (data: 3.24e-05)max mem: 7.82369 GB 
+[10/01 02:03:23][INFO] visual_prompt:  320: Inference (test):avg data time: 1.01e-04, avg batch time: 0.2110, average loss: 5.9920
+[10/01 02:03:24][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 0.35	top5: 1.20	
+[10/01 02:03:24][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.015
+[10/01 02:03:24][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 0.25
+[10/01 02:03:35][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 1.42e-01, avg batch time: 0.5858, average train loss: 5.7963
+[10/01 02:03:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.31e-05, avg batch time: 0.1642, average loss: 5.5853
+[10/01 02:03:39][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 2.00	top5: 4.50	
+[10/01 02:04:02][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.697, 0.2113 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:04:24][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.800, 0.2127 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:04:45][INFO] visual_prompt:  307: 	Test 300/340. loss: 5.791, 0.2130 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 02:04:56][INFO] visual_prompt:  320: Inference (test):avg data time: 3.21e-05, avg batch time: 0.2120, average loss: 5.7991
+[10/01 02:04:56][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 2.06	top5: 7.63	
+[10/01 02:04:56][INFO] visual_prompt:  245: Best epoch 2: best metric: 0.020
+[10/01 02:04:56][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 0.5
+[10/01 02:05:07][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 1.42e-01, avg batch time: 0.5857, average train loss: 5.6228
+[10/01 02:05:11][INFO] visual_prompt:  320: Inference (val):avg data time: 4.64e-05, avg batch time: 0.1649, average loss: 5.4516
+[10/01 02:05:11][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 1.00	top5: 9.00	
+[10/01 02:05:35][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.620, 0.2136 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 02:05:56][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.756, 0.2123 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 02:06:18][INFO] visual_prompt:  307: 	Test 300/340. loss: 5.784, 0.2147 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:06:28][INFO] visual_prompt:  320: Inference (test):avg data time: 1.60e-04, avg batch time: 0.2126, average loss: 5.7642
+[10/01 02:06:29][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 2.74	top5: 9.51	
+[10/01 02:06:29][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 0.75
+[10/01 02:06:40][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 1.40e-01, avg batch time: 0.5871, average train loss: 5.4500
+[10/01 02:06:44][INFO] visual_prompt:  320: Inference (val):avg data time: 4.60e-05, avg batch time: 0.1693, average loss: 5.1108
+[10/01 02:06:44][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 3.50	top5: 16.50	
+[10/01 02:07:07][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.377, 0.2116 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:07:29][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.560, 0.2126 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:07:50][INFO] visual_prompt:  307: 	Test 300/340. loss: 5.509, 0.2135 s / batch. (data: 3.08e-05)max mem: 7.82369 GB 
+[10/01 02:08:00][INFO] visual_prompt:  320: Inference (test):avg data time: 9.24e-05, avg batch time: 0.2127, average loss: 5.5284
+[10/01 02:08:01][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 3.85	top5: 12.96	
+[10/01 02:08:01][INFO] visual_prompt:  245: Best epoch 4: best metric: 0.035
+[10/01 02:08:01][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 1.0
+[10/01 02:08:12][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 1.24e-01, avg batch time: 0.5740, average train loss: 5.3976
+[10/01 02:08:16][INFO] visual_prompt:  320: Inference (val):avg data time: 3.19e-05, avg batch time: 0.1649, average loss: 4.9843
+[10/01 02:08:16][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 3.00	top5: 19.00	
+[10/01 02:08:39][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.317, 0.2117 s / batch. (data: 3.29e-05)max mem: 7.82369 GB 
+[10/01 02:09:01][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.567, 0.2126 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:09:22][INFO] visual_prompt:  307: 	Test 300/340. loss: 5.549, 0.2139 s / batch. (data: 3.24e-05)max mem: 7.82369 GB 
+[10/01 02:09:32][INFO] visual_prompt:  320: Inference (test):avg data time: 9.53e-05, avg batch time: 0.2128, average loss: 5.6645
+[10/01 02:09:33][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 4.40	top5: 12.74	
+[10/01 02:09:33][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 1.25
+[10/01 02:09:44][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 1.40e-01, avg batch time: 0.5849, average train loss: 4.9584
+[10/01 02:09:48][INFO] visual_prompt:  320: Inference (val):avg data time: 3.30e-05, avg batch time: 0.1648, average loss: 4.5930
+[10/01 02:09:48][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 12.00	top5: 29.00	
+[10/01 02:10:11][INFO] visual_prompt:  307: 	Test 100/340. loss: 5.222, 0.2116 s / batch. (data: 5.36e-05)max mem: 7.82369 GB 
+[10/01 02:10:33][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.722, 0.2134 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:10:54][INFO] visual_prompt:  307: 	Test 300/340. loss: 5.383, 0.2128 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 02:11:05][INFO] visual_prompt:  320: Inference (test):avg data time: 1.29e-04, avg batch time: 0.2127, average loss: 5.5197
+[10/01 02:11:05][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 6.87	top5: 18.45	
+[10/01 02:11:05][INFO] visual_prompt:  245: Best epoch 6: best metric: 0.120
+[10/01 02:11:05][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 1.5
+[10/01 02:11:16][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 1.32e-01, avg batch time: 0.5787, average train loss: 4.0773
+[10/01 02:11:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.97e-05, avg batch time: 0.1647, average loss: 3.1685
+[10/01 02:11:20][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 27.50	top5: 60.00	
+[10/01 02:11:44][INFO] visual_prompt:  307: 	Test 100/340. loss: 4.796, 0.2163 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:12:05][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.341, 0.2123 s / batch. (data: 3.12e-05)max mem: 7.82369 GB 
+[10/01 02:12:26][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.764, 0.2176 s / batch. (data: 3.12e-05)max mem: 7.82369 GB 
+[10/01 02:12:37][INFO] visual_prompt:  320: Inference (test):avg data time: 3.30e-05, avg batch time: 0.2127, average loss: 4.7559
+[10/01 02:12:37][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 15.86	top5: 32.35	
+[10/01 02:12:37][INFO] visual_prompt:  245: Best epoch 7: best metric: 0.275
+[10/01 02:12:37][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 1.75
+[10/01 02:12:48][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 1.26e-01, avg batch time: 0.5733, average train loss: 2.3879
+[10/01 02:12:52][INFO] visual_prompt:  320: Inference (val):avg data time: 3.53e-05, avg batch time: 0.1648, average loss: 0.8988
+[10/01 02:12:52][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 79.00	top5: 98.00	
+[10/01 02:13:16][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.418, 0.2113 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 02:13:37][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.774, 0.2115 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:13:59][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.709, 0.2125 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 02:14:09][INFO] visual_prompt:  320: Inference (test):avg data time: 3.15e-05, avg batch time: 0.2126, average loss: 3.5780
+[10/01 02:14:10][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 31.52	top5: 55.75	
+[10/01 02:14:10][INFO] visual_prompt:  245: Best epoch 8: best metric: 0.790
+[10/01 02:14:10][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 2.0
+[10/01 02:14:20][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 1.30e-01, avg batch time: 0.5773, average train loss: 0.9518
+[10/01 02:14:25][INFO] visual_prompt:  320: Inference (val):avg data time: 3.47e-05, avg batch time: 0.1649, average loss: 0.4062
+[10/01 02:14:25][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 95.50	top5: 100.00	
+[10/01 02:14:48][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.155, 0.2117 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:15:10][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.583, 0.2120 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:15:31][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.421, 0.2123 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:15:42][INFO] visual_prompt:  320: Inference (test):avg data time: 9.70e-05, avg batch time: 0.2128, average loss: 3.2750
+[10/01 02:15:42][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 36.29	top5: 62.24	
+[10/01 02:15:42][INFO] visual_prompt:  245: Best epoch 9: best metric: 0.955
+[10/01 02:15:42][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 2.25
+[10/01 02:15:53][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 1.42e-01, avg batch time: 0.5873, average train loss: 0.4423
+[10/01 02:15:57][INFO] visual_prompt:  320: Inference (val):avg data time: 5.98e-05, avg batch time: 0.1648, average loss: 0.2484
+[10/01 02:15:57][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 98.50	top5: 100.00	
+[10/01 02:16:21][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.083, 0.2125 s / batch. (data: 3.08e-05)max mem: 7.82369 GB 
+[10/01 02:16:42][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.389, 0.2121 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:17:03][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.444, 0.2125 s / batch. (data: 5.13e-05)max mem: 7.82369 GB 
+[10/01 02:17:14][INFO] visual_prompt:  320: Inference (test):avg data time: 9.34e-05, avg batch time: 0.2129, average loss: 3.1579
+[10/01 02:17:15][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 39.28	top5: 65.23	
+[10/01 02:17:15][INFO] visual_prompt:  245: Best epoch 10: best metric: 0.985
+[10/01 02:17:15][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 2.5
+[10/01 02:17:26][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 1.45e-01, avg batch time: 0.5919, average train loss: 0.3302
+[10/01 02:17:30][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1651, average loss: 0.2108
+[10/01 02:17:30][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:17:53][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.043, 0.2125 s / batch. (data: 3.27e-05)max mem: 7.82369 GB 
+[10/01 02:18:15][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.337, 0.2127 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:18:36][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.253, 0.2148 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:18:46][INFO] visual_prompt:  320: Inference (test):avg data time: 9.65e-05, avg batch time: 0.2129, average loss: 3.0922
+[10/01 02:18:47][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 41.20	top5: 66.40	
+[10/01 02:18:47][INFO] visual_prompt:  245: Best epoch 11: best metric: 0.995
+[10/01 02:18:47][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 2.4992385337738696
+[10/01 02:18:58][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 1.33e-01, avg batch time: 0.5802, average train loss: 0.4004
+[10/01 02:19:02][INFO] visual_prompt:  320: Inference (val):avg data time: 3.86e-05, avg batch time: 0.1646, average loss: 0.2393
+[10/01 02:19:02][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:19:26][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.824, 0.2114 s / batch. (data: 3.12e-05)max mem: 7.82369 GB 
+[10/01 02:19:47][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.263, 0.2128 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:20:08][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.053, 0.2153 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:20:19][INFO] visual_prompt:  320: Inference (test):avg data time: 1.17e-04, avg batch time: 0.2129, average loss: 3.1048
+[10/01 02:20:19][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 41.20	top5: 66.69	
+[10/01 02:20:19][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 2.4969550628247803
+[10/01 02:20:30][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 1.43e-01, avg batch time: 0.5883, average train loss: 0.4537
+[10/01 02:20:35][INFO] visual_prompt:  320: Inference (val):avg data time: 3.42e-05, avg batch time: 0.1650, average loss: 0.2450
+[10/01 02:20:35][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 98.00	top5: 100.00	
+[10/01 02:20:58][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.814, 0.2131 s / batch. (data: 3.15e-05)max mem: 7.82369 GB 
+[10/01 02:21:19][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.290, 0.2145 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:21:41][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.932, 0.2130 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 02:21:51][INFO] visual_prompt:  320: Inference (test):avg data time: 1.64e-04, avg batch time: 0.2129, average loss: 3.0217
+[10/01 02:21:52][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 43.92	top5: 68.65	
+[10/01 02:21:52][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 2.4931523692103417
+[10/01 02:22:03][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 1.39e-01, avg batch time: 0.5848, average train loss: 0.3704
+[10/01 02:22:07][INFO] visual_prompt:  320: Inference (val):avg data time: 4.04e-05, avg batch time: 0.1649, average loss: 0.1918
+[10/01 02:22:07][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 98.00	top5: 100.00	
+[10/01 02:22:31][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.762, 0.2122 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:22:52][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.222, 0.2131 s / batch. (data: 3.22e-05)max mem: 7.82369 GB 
+[10/01 02:23:13][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.030, 0.2125 s / batch. (data: 3.15e-05)max mem: 7.82369 GB 
+[10/01 02:23:24][INFO] visual_prompt:  320: Inference (test):avg data time: 9.70e-05, avg batch time: 0.2129, average loss: 2.9790
+[10/01 02:23:24][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 43.54	top5: 69.26	
+[10/01 02:23:24][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 2.487835085926963
+[10/01 02:23:35][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 1.34e-01, avg batch time: 0.5823, average train loss: 0.3700
+[10/01 02:23:39][INFO] visual_prompt:  320: Inference (val):avg data time: 3.23e-05, avg batch time: 0.1650, average loss: 0.1782
+[10/01 02:23:39][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:24:03][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.733, 0.2128 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:24:24][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.173, 0.2181 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:24:46][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.775, 0.2131 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 02:24:56][INFO] visual_prompt:  320: Inference (test):avg data time: 9.62e-05, avg batch time: 0.2127, average loss: 2.9293
+[10/01 02:24:57][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 45.51	top5: 69.68	
+[10/01 02:24:57][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 2.4810096912652604
+[10/01 02:25:07][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 1.34e-01, avg batch time: 0.5813, average train loss: 0.3201
+[10/01 02:25:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.91e-05, avg batch time: 0.1649, average loss: 0.1708
+[10/01 02:25:12][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:25:35][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.685, 0.2121 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:25:56][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.213, 0.2133 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 02:26:18][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.860, 0.2130 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:26:28][INFO] visual_prompt:  320: Inference (test):avg data time: 1.45e-04, avg batch time: 0.2128, average loss: 2.9362
+[10/01 02:26:29][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 45.98	top5: 70.47	
+[10/01 02:26:29][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 2.472684500917257
+[10/01 02:26:40][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 1.40e-01, avg batch time: 0.5853, average train loss: 0.3184
+[10/01 02:26:44][INFO] visual_prompt:  320: Inference (val):avg data time: 3.05e-05, avg batch time: 0.1648, average loss: 0.1675
+[10/01 02:26:44][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 02:27:07][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.743, 0.2122 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 02:27:29][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.014, 0.2128 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:27:50][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.932, 0.2151 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 02:28:00][INFO] visual_prompt:  320: Inference (test):avg data time: 6.73e-05, avg batch time: 0.2128, average loss: 2.9473
+[10/01 02:28:01][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 45.49	top5: 70.67	
+[10/01 02:28:01][INFO] visual_prompt:  245: Best epoch 17: best metric: 1.000
+[10/01 02:28:01][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 2.4628696578449953
+[10/01 02:28:12][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 1.32e-01, avg batch time: 0.5777, average train loss: 0.3042
+[10/01 02:28:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1648, average loss: 0.2057
+[10/01 02:28:16][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 97.50	top5: 100.00	
+[10/01 02:28:39][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.742, 0.2126 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 02:29:01][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.114, 0.2129 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 02:29:22][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.853, 0.2127 s / batch. (data: 3.10e-05)max mem: 7.82369 GB 
+[10/01 02:29:32][INFO] visual_prompt:  320: Inference (test):avg data time: 1.02e-04, avg batch time: 0.2129, average loss: 2.9137
+[10/01 02:29:33][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.60	top5: 71.14	
+[10/01 02:29:33][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 2.4515771199228986
+[10/01 02:29:44][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 1.33e-01, avg batch time: 0.5788, average train loss: 0.3186
+[10/01 02:29:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.96e-05, avg batch time: 0.1649, average loss: 0.1930
+[10/01 02:29:48][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:30:11][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.547, 0.2127 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:30:33][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.096, 0.2129 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:30:54][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.991, 0.2147 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:31:05][INFO] visual_prompt:  320: Inference (test):avg data time: 1.05e-04, avg batch time: 0.2128, average loss: 2.9205
+[10/01 02:31:05][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 46.77	top5: 71.36	
+[10/01 02:31:05][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 2.438820645368942
+[10/01 02:31:16][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 1.31e-01, avg batch time: 0.5780, average train loss: 0.3095
+[10/01 02:31:20][INFO] visual_prompt:  320: Inference (val):avg data time: 4.82e-05, avg batch time: 0.1648, average loss: 0.2014
+[10/01 02:31:20][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:31:44][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.701, 0.2127 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 02:32:05][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.116, 0.2135 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:32:26][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.956, 0.2126 s / batch. (data: 3.08e-05)max mem: 7.82369 GB 
+[10/01 02:32:37][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2127, average loss: 2.9201
+[10/01 02:32:37][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.15	top5: 70.89	
+[10/01 02:32:37][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 2.4246157759823856
+[10/01 02:32:48][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 1.35e-01, avg batch time: 0.5810, average train loss: 1.0599
+[10/01 02:32:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1648, average loss: 2.2185
+[10/01 02:32:52][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 63.00	top5: 85.50	
+[10/01 02:33:16][INFO] visual_prompt:  307: 	Test 100/340. loss: 4.108, 0.2120 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:33:37][INFO] visual_prompt:  307: 	Test 200/340. loss: 4.302, 0.2139 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 02:33:58][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.086, 0.2143 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 02:34:09][INFO] visual_prompt:  320: Inference (test):avg data time: 3.14e-05, avg batch time: 0.2126, average loss: 4.0397
+[10/01 02:34:09][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 26.16	top5: 49.72	
+[10/01 02:34:09][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 2.4089798182084845
+[10/01 02:34:20][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 1.37e-01, avg batch time: 0.5833, average train loss: 1.0324
+[10/01 02:34:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1650, average loss: 0.2121
+[10/01 02:34:24][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 98.00	top5: 100.00	
+[10/01 02:34:48][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.732, 0.2114 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:35:09][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.238, 0.2135 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 02:35:31][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.938, 0.2114 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 02:35:41][INFO] visual_prompt:  320: Inference (test):avg data time: 9.34e-05, avg batch time: 0.2128, average loss: 2.9032
+[10/01 02:35:41][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 45.73	top5: 69.54	
+[10/01 02:35:41][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 2.391931822053251
+[10/01 02:35:52][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 1.38e-01, avg batch time: 0.5844, average train loss: 2.3827
+[10/01 02:35:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1648, average loss: 4.0196
+[10/01 02:35:56][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 30.00	top5: 63.00	
+[10/01 02:36:20][INFO] visual_prompt:  307: 	Test 100/340. loss: 4.960, 0.2116 s / batch. (data: 3.05e-05)max mem: 7.82369 GB 
+[10/01 02:36:41][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.189, 0.2127 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 02:37:03][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.897, 0.2136 s / batch. (data: 3.12e-05)max mem: 7.82369 GB 
+[10/01 02:37:13][INFO] visual_prompt:  320: Inference (test):avg data time: 1.18e-04, avg batch time: 0.2129, average loss: 4.9706
+[10/01 02:37:14][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 12.64	top5: 30.28	
+[10/01 02:37:14][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 2.3734925578739587
+[10/01 02:37:25][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 1.36e-01, avg batch time: 0.5821, average train loss: 1.6922
+[10/01 02:37:30][INFO] visual_prompt:  320: Inference (val):avg data time: 3.35e-05, avg batch time: 0.1669, average loss: 0.3276
+[10/01 02:37:30][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 97.50	top5: 100.00	
+[10/01 02:37:53][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.934, 0.2121 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:38:14][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.639, 0.2131 s / batch. (data: 3.39e-05)max mem: 7.82369 GB 
+[10/01 02:38:36][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.087, 0.2139 s / batch. (data: 3.15e-05)max mem: 7.82369 GB 
+[10/01 02:38:46][INFO] visual_prompt:  320: Inference (test):avg data time: 3.45e-05, avg batch time: 0.2128, average loss: 3.0839
+[10/01 02:38:47][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 43.37	top5: 67.19	
+[10/01 02:38:47][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 2.3536844910736585
+[10/01 02:38:58][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 1.35e-01, avg batch time: 0.5805, average train loss: 1.0981
+[10/01 02:39:02][INFO] visual_prompt:  320: Inference (val):avg data time: 3.34e-05, avg batch time: 0.1653, average loss: 0.4260
+[10/01 02:39:02][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 93.00	top5: 99.50	
+[10/01 02:39:25][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.004, 0.2123 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 02:39:47][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.321, 0.2133 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 02:40:08][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.073, 0.2118 s / batch. (data: 2.38e-05)max mem: 7.82369 GB 
+[10/01 02:40:18][INFO] visual_prompt:  320: Inference (test):avg data time: 8.40e-05, avg batch time: 0.2128, average loss: 3.1235
+[10/01 02:40:19][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 40.71	top5: 66.49	
+[10/01 02:40:19][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 2.3325317547305486
+[10/01 02:40:30][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 1.20e-01, avg batch time: 0.5661, average train loss: 0.6412
+[10/01 02:40:34][INFO] visual_prompt:  320: Inference (val):avg data time: 4.63e-05, avg batch time: 0.1650, average loss: 0.3333
+[10/01 02:40:34][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 96.00	top5: 99.50	
+[10/01 02:40:57][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.025, 0.2124 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 02:41:19][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.462, 0.2137 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 02:41:40][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.003, 0.2126 s / batch. (data: 3.70e-05)max mem: 7.82369 GB 
+[10/01 02:41:50][INFO] visual_prompt:  320: Inference (test):avg data time: 3.04e-05, avg batch time: 0.2128, average loss: 3.1524
+[10/01 02:41:51][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 41.09	top5: 65.98	
+[10/01 02:41:51][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 2.310060120195532
+[10/01 02:42:02][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 1.43e-01, avg batch time: 0.5885, average train loss: 0.3677
+[10/01 02:42:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.92e-05, avg batch time: 0.1684, average loss: 0.2607
+[10/01 02:42:06][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 98.50	top5: 99.50	
+[10/01 02:42:30][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.786, 0.2123 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 02:42:51][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.240, 0.2123 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 02:43:12][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.924, 0.2134 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 02:43:23][INFO] visual_prompt:  320: Inference (test):avg data time: 6.61e-05, avg batch time: 0.2127, average loss: 3.0096
+[10/01 02:43:23][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 44.23	top5: 69.87	
+[10/01 02:43:23][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 2.286296965693802
+[10/01 02:43:34][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 1.28e-01, avg batch time: 0.5746, average train loss: 0.3220
+[10/01 02:43:38][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1649, average loss: 0.1632
+[10/01 02:43:38][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.00	top5: 100.00	
+[10/01 02:44:02][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.816, 0.2113 s / batch. (data: 3.10e-05)max mem: 7.82369 GB 
+[10/01 02:44:23][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.168, 0.2133 s / batch. (data: 2.31e-05)max mem: 7.82369 GB 
+[10/01 02:44:44][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.854, 0.2120 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 02:44:55][INFO] visual_prompt:  320: Inference (test):avg data time: 6.05e-05, avg batch time: 0.2128, average loss: 2.9002
+[10/01 02:44:55][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.26	top5: 72.00	
+[10/01 02:44:55][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 2.261271242968684
+[10/01 02:45:06][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 1.43e-01, avg batch time: 0.5883, average train loss: 0.2888
+[10/01 02:45:11][INFO] visual_prompt:  320: Inference (val):avg data time: 4.86e-05, avg batch time: 0.1647, average loss: 0.1719
+[10/01 02:45:11][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.00	top5: 100.00	
+[10/01 02:45:34][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.600, 0.2111 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:45:55][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.063, 0.2122 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:46:17][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.889, 0.2138 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 02:46:27][INFO] visual_prompt:  320: Inference (test):avg data time: 7.27e-05, avg batch time: 0.2128, average loss: 2.8838
+[10/01 02:46:28][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 48.23	top5: 72.00	
+[10/01 02:46:28][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 2.2350134420084022
+[10/01 02:46:39][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 1.25e-01, avg batch time: 0.5735, average train loss: 0.3225
+[10/01 02:46:43][INFO] visual_prompt:  320: Inference (val):avg data time: 3.11e-05, avg batch time: 0.1650, average loss: 0.2748
+[10/01 02:46:43][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:47:07][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.865, 0.2123 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 02:47:28][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.281, 0.2121 s / batch. (data: 2.46e-05)max mem: 7.82369 GB 
+[10/01 02:47:49][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.990, 0.2127 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 02:48:00][INFO] visual_prompt:  320: Inference (test):avg data time: 9.96e-05, avg batch time: 0.2127, average loss: 3.0015
+[10/01 02:48:00][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 45.78	top5: 70.34	
+[10/01 02:48:00][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 2.2075555538987226
+[10/01 02:48:11][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 1.34e-01, avg batch time: 0.5804, average train loss: 0.3096
+[10/01 02:48:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.81e-05, avg batch time: 0.1653, average loss: 0.1668
+[10/01 02:48:15][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 02:48:39][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.667, 0.2111 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 02:49:00][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.180, 0.2125 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 02:49:21][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.918, 0.2134 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 02:49:32][INFO] visual_prompt:  320: Inference (test):avg data time: 3.02e-05, avg batch time: 0.2126, average loss: 2.9055
+[10/01 02:49:32][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.44	top5: 72.22	
+[10/01 02:49:32][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 2.178931031846743
+[10/01 02:49:43][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 1.38e-01, avg batch time: 0.5837, average train loss: 2.1206
+[10/01 02:49:47][INFO] visual_prompt:  320: Inference (val):avg data time: 5.37e-05, avg batch time: 0.1646, average loss: 1.8679
+[10/01 02:49:47][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 75.00	top5: 95.00	
+[10/01 02:50:11][INFO] visual_prompt:  307: 	Test 100/340. loss: 4.126, 0.2132 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 02:50:32][INFO] visual_prompt:  307: 	Test 200/340. loss: 4.254, 0.2133 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 02:50:53][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.085, 0.2127 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 02:51:04][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2126, average loss: 4.0704
+[10/01 02:51:05][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 27.22	top5: 48.35	
+[10/01 02:51:05][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 2.149174750423314
+[10/01 02:51:15][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 1.31e-01, avg batch time: 0.5759, average train loss: 1.0469
+[10/01 02:51:19][INFO] visual_prompt:  320: Inference (val):avg data time: 3.17e-05, avg batch time: 0.1651, average loss: 0.2209
+[10/01 02:51:19][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 97.50	top5: 100.00	
+[10/01 02:51:43][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.791, 0.2113 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 02:52:04][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.467, 0.2127 s / batch. (data: 4.82e-05)max mem: 7.82369 GB 
+[10/01 02:52:26][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.172, 0.2135 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 02:52:36][INFO] visual_prompt:  320: Inference (test):avg data time: 9.83e-05, avg batch time: 0.2128, average loss: 3.0400
+[10/01 02:52:37][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 44.61	top5: 68.59	
+[10/01 02:52:37][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 2.1183229630737466
+[10/01 02:52:47][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 1.40e-01, avg batch time: 0.5848, average train loss: 0.3447
+[10/01 02:52:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1651, average loss: 0.1579
+[10/01 02:52:52][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 02:53:15][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.744, 0.2121 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 02:53:36][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.251, 0.2117 s / batch. (data: 2.46e-05)max mem: 7.82369 GB 
+[10/01 02:53:58][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.924, 0.2125 s / batch. (data: 3.58e-05)max mem: 7.82369 GB 
+[10/01 02:54:08][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2127, average loss: 2.9886
+[10/01 02:54:09][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 44.31	top5: 69.28	
+[10/01 02:54:09][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 2.086413257948573
+[10/01 02:54:20][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 1.24e-01, avg batch time: 0.5706, average train loss: 0.2522
+[10/01 02:54:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1650, average loss: 0.1495
+[10/01 02:54:24][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.00	top5: 100.00	
+[10/01 02:54:47][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.734, 0.2123 s / batch. (data: 3.05e-05)max mem: 7.82369 GB 
+[10/01 02:55:09][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.150, 0.2121 s / batch. (data: 2.46e-05)max mem: 7.82369 GB 
+[10/01 02:55:30][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.923, 0.2129 s / batch. (data: 3.29e-05)max mem: 7.82369 GB 
+[10/01 02:55:41][INFO] visual_prompt:  320: Inference (test):avg data time: 2.93e-05, avg batch time: 0.2127, average loss: 2.9354
+[10/01 02:55:41][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.35	top5: 70.85	
+[10/01 02:55:41][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 2.053484512108174
+[10/01 02:55:52][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 1.31e-01, avg batch time: 0.5767, average train loss: 0.2505
+[10/01 02:55:57][INFO] visual_prompt:  320: Inference (val):avg data time: 4.46e-05, avg batch time: 0.1647, average loss: 0.1494
+[10/01 02:55:57][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 02:56:20][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.704, 0.2123 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 02:56:41][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.040, 0.2126 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 02:57:03][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.840, 0.2134 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 02:57:13][INFO] visual_prompt:  320: Inference (test):avg data time: 5.45e-05, avg batch time: 0.2129, average loss: 2.8893
+[10/01 02:57:14][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 48.36	top5: 72.51	
+[10/01 02:57:14][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 2.019576844157073
+[10/01 02:57:25][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 1.33e-01, avg batch time: 0.5797, average train loss: 0.2608
+[10/01 02:57:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1648, average loss: 0.1526
+[10/01 02:57:29][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.00	top5: 100.00	
+[10/01 02:57:52][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.627, 0.2128 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 02:58:14][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.193, 0.2138 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 02:58:35][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.886, 0.2128 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 02:58:46][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2127, average loss: 2.9167
+[10/01 02:58:46][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.82	top5: 72.36	
+[10/01 02:58:46][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 1.9847315653655915
+[10/01 02:58:57][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 1.36e-01, avg batch time: 0.5821, average train loss: 0.2490
+[10/01 02:59:01][INFO] visual_prompt:  320: Inference (val):avg data time: 3.30e-05, avg batch time: 0.1649, average loss: 0.1506
+[10/01 02:59:01][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 02:59:25][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.521, 0.2128 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 02:59:46][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.036, 0.2135 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 03:00:07][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.843, 0.2129 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:00:18][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2127, average loss: 2.8607
+[10/01 03:00:19][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.23	top5: 73.31	
+[10/01 03:00:19][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 1.9489911293384334
+[10/01 03:00:29][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 1.38e-01, avg batch time: 0.5841, average train loss: 0.5870
+[10/01 03:00:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.89e-05, avg batch time: 0.1681, average loss: 0.2473
+[10/01 03:00:34][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.00	top5: 100.00	
+[10/01 03:00:57][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.621, 0.2126 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 03:01:18][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.177, 0.2123 s / batch. (data: 4.77e-05)max mem: 7.82369 GB 
+[10/01 03:01:40][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.959, 0.2132 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:01:50][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2128, average loss: 2.9616
+[10/01 03:01:51][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 47.37	top5: 71.81	
+[10/01 03:01:51][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 1.912399080291506
+[10/01 03:02:01][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 1.22e-01, avg batch time: 0.5699, average train loss: 1.3334
+[10/01 03:02:06][INFO] visual_prompt:  320: Inference (val):avg data time: 4.68e-05, avg batch time: 0.1653, average loss: 0.8736
+[10/01 03:02:06][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 90.00	top5: 99.50	
+[10/01 03:02:29][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.292, 0.2130 s / batch. (data: 3.65e-05)max mem: 7.82369 GB 
+[10/01 03:02:50][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.799, 0.2128 s / batch. (data: 2.34e-05)max mem: 7.82369 GB 
+[10/01 03:03:12][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.413, 0.2138 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 03:03:22][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2127, average loss: 3.4357
+[10/01 03:03:23][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 37.74	top5: 62.25	
+[10/01 03:03:23][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 1.875
+[10/01 03:03:34][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 1.41e-01, avg batch time: 0.5862, average train loss: 0.5124
+[10/01 03:03:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.96e-05, avg batch time: 0.1650, average loss: 0.1379
+[10/01 03:03:38][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:04:01][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.610, 0.2117 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 03:04:22][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.163, 0.2130 s / batch. (data: 4.89e-05)max mem: 7.82369 GB 
+[10/01 03:04:44][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.864, 0.2127 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 03:04:54][INFO] visual_prompt:  320: Inference (test):avg data time: 5.33e-05, avg batch time: 0.2127, average loss: 2.8847
+[10/01 03:04:55][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 46.92	top5: 71.22	
+[10/01 03:04:55][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 1.8368394534823635
+[10/01 03:05:06][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 1.37e-01, avg batch time: 0.5839, average train loss: 0.2529
+[10/01 03:05:10][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1653, average loss: 0.1611
+[10/01 03:05:10][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 03:05:33][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.628, 0.2119 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 03:05:55][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.195, 0.2121 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 03:06:16][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.814, 0.2139 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 03:06:26][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2126, average loss: 2.8888
+[10/01 03:06:27][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 48.05	top5: 71.63	
+[10/01 03:06:27][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 1.7979639334863466
+[10/01 03:06:38][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 1.40e-01, avg batch time: 0.5861, average train loss: 0.2283
+[10/01 03:06:42][INFO] visual_prompt:  320: Inference (val):avg data time: 3.92e-05, avg batch time: 0.1644, average loss: 0.1295
+[10/01 03:06:42][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:07:05][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.461, 0.2125 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:07:27][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.045, 0.2123 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:07:48][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.833, 0.2134 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:07:58][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2127, average loss: 2.8370
+[10/01 03:07:59][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.42	top5: 73.06	
+[10/01 03:07:59][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 1.7584208038447504
+[10/01 03:08:10][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 1.26e-01, avg batch time: 0.5733, average train loss: 0.2132
+[10/01 03:08:14][INFO] visual_prompt:  320: Inference (val):avg data time: 3.37e-05, avg batch time: 0.1651, average loss: 0.1479
+[10/01 03:08:14][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 03:08:37][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.481, 0.2120 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:08:59][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.094, 0.2121 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:09:20][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.766, 0.2142 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:09:30][INFO] visual_prompt:  320: Inference (test):avg data time: 1.45e-04, avg batch time: 0.2128, average loss: 2.8636
+[10/01 03:09:31][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.63	top5: 73.32	
+[10/01 03:09:31][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 1.7182582417698902
+[10/01 03:09:42][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 1.37e-01, avg batch time: 0.5818, average train loss: 0.2238
+[10/01 03:09:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.73e-05, avg batch time: 0.1654, average loss: 0.1401
+[10/01 03:09:46][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:10:09][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.576, 0.2124 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 03:10:31][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.074, 0.2128 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:10:52][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.825, 0.2121 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:11:02][INFO] visual_prompt:  320: Inference (test):avg data time: 9.31e-05, avg batch time: 0.2126, average loss: 2.8694
+[10/01 03:11:03][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.63	top5: 73.41	
+[10/01 03:11:03][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 1.6775251791570862
+[10/01 03:11:14][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 1.22e-01, avg batch time: 0.5699, average train loss: 0.2359
+[10/01 03:11:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1649, average loss: 0.1573
+[10/01 03:11:18][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 03:11:41][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.645, 0.2123 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 03:12:02][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.068, 0.2127 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 03:12:24][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.739, 0.2139 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:12:34][INFO] visual_prompt:  320: Inference (test):avg data time: 2.93e-05, avg batch time: 0.2126, average loss: 2.8700
+[10/01 03:12:35][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.31	top5: 73.58	
+[10/01 03:12:35][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 1.6362712429686843
+[10/01 03:12:46][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 1.25e-01, avg batch time: 0.5697, average train loss: 0.5187
+[10/01 03:12:50][INFO] visual_prompt:  320: Inference (val):avg data time: 3.03e-05, avg batch time: 0.1650, average loss: 0.1551
+[10/01 03:12:50][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 03:13:13][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.487, 0.2126 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:13:35][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.151, 0.2129 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 03:13:56][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.733, 0.2127 s / batch. (data: 3.36e-05)max mem: 7.82369 GB 
+[10/01 03:14:06][INFO] visual_prompt:  320: Inference (test):avg data time: 2.94e-05, avg batch time: 0.2128, average loss: 2.8352
+[10/01 03:14:07][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.83	top5: 74.23	
+[10/01 03:14:07][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 1.5945466947712488
+[10/01 03:14:18][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 1.37e-01, avg batch time: 0.5828, average train loss: 0.2302
+[10/01 03:14:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1650, average loss: 0.1428
+[10/01 03:14:22][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:14:46][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.501, 0.2120 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 03:15:07][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.154, 0.2131 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 03:15:28][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.799, 0.2122 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 03:15:39][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2126, average loss: 2.8355
+[10/01 03:15:39][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.56	top5: 73.98	
+[10/01 03:15:39][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 1.5524023694995845
+[10/01 03:15:50][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 1.27e-01, avg batch time: 0.5756, average train loss: 0.2073
+[10/01 03:15:54][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1650, average loss: 0.1494
+[10/01 03:15:54][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:16:17][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.444, 0.2122 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 03:16:39][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.060, 0.2132 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:17:00][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.761, 0.2127 s / batch. (data: 3.60e-05)max mem: 7.82369 GB 
+[10/01 03:17:10][INFO] visual_prompt:  320: Inference (test):avg data time: 2.93e-05, avg batch time: 0.2124, average loss: 2.8350
+[10/01 03:17:11][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.62	top5: 73.92	
+[10/01 03:17:11][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 1.509889613522199
+[10/01 03:17:22][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 1.41e-01, avg batch time: 0.5877, average train loss: 0.2078
+[10/01 03:17:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1650, average loss: 2.3714
+[10/01 03:17:26][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 58.00	top5: 87.00	
+[10/01 03:17:49][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.962, 0.2114 s / batch. (data: 2.43e-05)max mem: 7.82369 GB 
+[10/01 03:18:11][INFO] visual_prompt:  307: 	Test 200/340. loss: 4.195, 0.2131 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 03:18:32][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.182, 0.2123 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 03:18:43][INFO] visual_prompt:  320: Inference (test):avg data time: 6.73e-05, avg batch time: 0.2124, average loss: 4.0982
+[10/01 03:18:43][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 27.40	top5: 49.88	
+[10/01 03:18:43][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 1.467060222083663
+[10/01 03:18:54][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 1.30e-01, avg batch time: 0.5753, average train loss: 1.6255
+[10/01 03:18:58][INFO] visual_prompt:  320: Inference (val):avg data time: 5.41e-05, avg batch time: 0.1640, average loss: 1.4976
+[10/01 03:18:58][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 71.00	top5: 99.50	
+[10/01 03:19:21][INFO] visual_prompt:  307: 	Test 100/340. loss: 4.241, 0.2128 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 03:19:43][INFO] visual_prompt:  307: 	Test 200/340. loss: 5.221, 0.2130 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 03:20:04][INFO] visual_prompt:  307: 	Test 300/340. loss: 4.570, 0.2106 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:20:14][INFO] visual_prompt:  320: Inference (test):avg data time: 8.54e-05, avg batch time: 0.2125, average loss: 4.3013
+[10/01 03:20:15][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 30.54	top5: 64.82	
+[10/01 03:20:15][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 1.4239663762000818
+[10/01 03:20:26][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 1.39e-01, avg batch time: 0.5836, average train loss: 0.7276
+[10/01 03:20:30][INFO] visual_prompt:  320: Inference (val):avg data time: 3.19e-05, avg batch time: 0.1652, average loss: 0.1284
+[10/01 03:20:30][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:20:54][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.483, 0.2120 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:21:15][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.076, 0.2130 s / batch. (data: 2.41e-05)max mem: 7.82369 GB 
+[10/01 03:21:36][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.781, 0.2134 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 03:21:47][INFO] visual_prompt:  320: Inference (test):avg data time: 6.24e-05, avg batch time: 0.2128, average loss: 2.8634
+[10/01 03:21:47][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 48.57	top5: 71.84	
+[10/01 03:21:47][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 1.380660579084567
+[10/01 03:21:58][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 1.31e-01, avg batch time: 0.5768, average train loss: 0.1792
+[10/01 03:22:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.70e-05, avg batch time: 0.1650, average loss: 0.1048
+[10/01 03:22:02][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 99.50	top5: 100.00	
+[10/01 03:22:25][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.555, 0.2123 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:22:47][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.073, 0.2125 s / batch. (data: 4.58e-05)max mem: 7.82369 GB 
+[10/01 03:23:08][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.716, 0.2131 s / batch. (data: 3.08e-05)max mem: 7.82369 GB 
+[10/01 03:23:18][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2124, average loss: 2.8280
+[10/01 03:23:19][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 49.59	top5: 73.15	
+[10/01 03:23:19][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 1.3371955921801564
+[10/01 03:23:30][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 1.28e-01, avg batch time: 0.5741, average train loss: 0.1610
+[10/01 03:23:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1648, average loss: 0.1269
+[10/01 03:23:34][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:23:57][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.451, 0.2119 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:24:19][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.037, 0.2134 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:24:40][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.781, 0.2126 s / batch. (data: 3.29e-05)max mem: 7.82369 GB 
+[10/01 03:24:50][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2127, average loss: 2.8096
+[10/01 03:24:51][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.04	top5: 74.41	
+[10/01 03:24:51][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 1.2936243708781263
+[10/01 03:25:02][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 1.37e-01, avg batch time: 0.5832, average train loss: 0.1852
+[10/01 03:25:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.72e-05, avg batch time: 0.1653, average loss: 0.1618
+[10/01 03:25:06][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:25:30][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.544, 0.2119 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 03:25:51][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.011, 0.2130 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 03:26:12][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.844, 0.2127 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:26:23][INFO] visual_prompt:  320: Inference (test):avg data time: 1.57e-04, avg batch time: 0.2126, average loss: 2.8566
+[10/01 03:26:23][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.23	top5: 73.83	
+[10/01 03:26:23][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 1.25
+[10/01 03:26:34][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 1.35e-01, avg batch time: 0.5791, average train loss: 0.2273
+[10/01 03:26:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.99e-05, avg batch time: 0.1642, average loss: 0.1486
+[10/01 03:26:38][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:27:02][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.509, 0.2133 s / batch. (data: 3.08e-05)max mem: 7.82369 GB 
+[10/01 03:27:23][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.019, 0.2127 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:27:44][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.800, 0.2128 s / batch. (data: 3.55e-05)max mem: 7.82369 GB 
+[10/01 03:27:55][INFO] visual_prompt:  320: Inference (test):avg data time: 3.02e-05, avg batch time: 0.2124, average loss: 2.8810
+[10/01 03:27:55][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.17	top5: 73.44	
+[10/01 03:27:55][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 1.2063756291218741
+[10/01 03:28:06][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 1.30e-01, avg batch time: 0.5765, average train loss: 0.1997
+[10/01 03:28:10][INFO] visual_prompt:  320: Inference (val):avg data time: 2.88e-05, avg batch time: 0.1643, average loss: 0.1365
+[10/01 03:28:10][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:28:34][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.499, 0.2122 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 03:28:55][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.024, 0.2130 s / batch. (data: 2.43e-05)max mem: 7.82369 GB 
+[10/01 03:29:16][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.783, 0.2134 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 03:29:27][INFO] visual_prompt:  320: Inference (test):avg data time: 9.43e-05, avg batch time: 0.2124, average loss: 2.8492
+[10/01 03:29:27][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.82	top5: 74.31	
+[10/01 03:29:27][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 1.1628044078198434
+[10/01 03:29:38][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 1.25e-01, avg batch time: 0.5705, average train loss: 0.1796
+[10/01 03:29:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1653, average loss: 0.1315
+[10/01 03:29:42][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:30:05][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.485, 0.2128 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 03:30:27][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.000, 0.2129 s / batch. (data: 2.43e-05)max mem: 7.82369 GB 
+[10/01 03:30:48][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.691, 0.2132 s / batch. (data: 2.50e-05)max mem: 7.82369 GB 
+[10/01 03:30:59][INFO] visual_prompt:  320: Inference (test):avg data time: 4.88e-05, avg batch time: 0.2124, average loss: 2.8128
+[10/01 03:30:59][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.85	top5: 74.63	
+[10/01 03:30:59][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 1.1193394209154333
+[10/01 03:31:10][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 1.41e-01, avg batch time: 0.5845, average train loss: 0.1787
+[10/01 03:31:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1669, average loss: 0.1313
+[10/01 03:31:14][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:31:38][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.504, 0.2118 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:31:59][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.072, 0.2134 s / batch. (data: 2.53e-05)max mem: 7.82369 GB 
+[10/01 03:32:21][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.713, 0.2118 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 03:32:31][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2127, average loss: 2.8666
+[10/01 03:32:32][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 50.81	top5: 73.91	
+[10/01 03:32:32][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 1.0760336237999186
+[10/01 03:32:43][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 1.41e-01, avg batch time: 0.5868, average train loss: 0.1773
+[10/01 03:32:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.94e-05, avg batch time: 0.1650, average loss: 0.1337
+[10/01 03:32:47][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:33:10][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.435, 0.2118 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:33:31][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.042, 0.2120 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 03:33:53][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.801, 0.2127 s / batch. (data: 3.50e-05)max mem: 7.82369 GB 
+[10/01 03:34:03][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2127, average loss: 2.8286
+[10/01 03:34:04][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.70	top5: 74.30	
+[10/01 03:34:04][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 1.0329397779163372
+[10/01 03:34:15][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 1.37e-01, avg batch time: 0.5831, average train loss: 0.1975
+[10/01 03:34:19][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1688, average loss: 0.1412
+[10/01 03:34:19][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:34:42][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.455, 0.2127 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:35:04][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.086, 0.2137 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 03:35:25][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.713, 0.2131 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 03:35:36][INFO] visual_prompt:  320: Inference (test):avg data time: 1.17e-04, avg batch time: 0.2129, average loss: 2.8311
+[10/01 03:35:36][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.76	top5: 74.66	
+[10/01 03:35:36][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 0.990110386477801
+[10/01 03:35:47][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 1.34e-01, avg batch time: 0.5806, average train loss: 0.1917
+[10/01 03:35:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1649, average loss: 0.1365
+[10/01 03:35:51][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:36:15][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.491, 0.2117 s / batch. (data: 2.46e-05)max mem: 7.82369 GB 
+[10/01 03:36:36][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.992, 0.2137 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:36:57][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.728, 0.2120 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 03:37:08][INFO] visual_prompt:  320: Inference (test):avg data time: 7.80e-05, avg batch time: 0.2127, average loss: 2.8254
+[10/01 03:37:08][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.68	top5: 74.66	
+[10/01 03:37:08][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 0.9475976305004155
+[10/01 03:37:19][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 1.39e-01, avg batch time: 0.5863, average train loss: 0.1691
+[10/01 03:37:23][INFO] visual_prompt:  320: Inference (val):avg data time: 4.20e-05, avg batch time: 0.1649, average loss: 0.1218
+[10/01 03:37:23][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:37:47][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.456, 0.2118 s / batch. (data: 2.86e-05)max mem: 7.82369 GB 
+[10/01 03:38:08][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.964, 0.2123 s / batch. (data: 3.19e-05)max mem: 7.82369 GB 
+[10/01 03:38:30][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.748, 0.2140 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:38:40][INFO] visual_prompt:  320: Inference (test):avg data time: 1.55e-04, avg batch time: 0.2127, average loss: 2.8250
+[10/01 03:38:41][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.66	top5: 74.42	
+[10/01 03:38:41][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 0.9054533052287511
+[10/01 03:38:52][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 1.39e-01, avg batch time: 0.5847, average train loss: 0.1550
+[10/01 03:38:56][INFO] visual_prompt:  320: Inference (val):avg data time: 3.12e-05, avg batch time: 0.1650, average loss: 0.1248
+[10/01 03:38:56][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:39:19][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.435, 0.2127 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 03:39:41][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.980, 0.2118 s / batch. (data: 5.08e-05)max mem: 7.82369 GB 
+[10/01 03:40:02][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.662, 0.2141 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:40:12][INFO] visual_prompt:  320: Inference (test):avg data time: 9.17e-05, avg batch time: 0.2123, average loss: 2.7993
+[10/01 03:40:13][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.05	top5: 74.90	
+[10/01 03:40:13][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 0.8637287570313158
+[10/01 03:40:24][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 1.22e-01, avg batch time: 0.5685, average train loss: 0.1604
+[10/01 03:40:28][INFO] visual_prompt:  320: Inference (val):avg data time: 3.46e-05, avg batch time: 0.1640, average loss: 0.1209
+[10/01 03:40:28][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:40:51][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.442, 0.2122 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 03:41:13][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.952, 0.2127 s / batch. (data: 2.46e-05)max mem: 7.82369 GB 
+[10/01 03:41:34][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.707, 0.2121 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 03:41:45][INFO] visual_prompt:  320: Inference (test):avg data time: 9.33e-05, avg batch time: 0.2123, average loss: 2.8048
+[10/01 03:41:45][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.10	top5: 75.08	
+[10/01 03:41:45][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 0.8224748208429142
+[10/01 03:41:56][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 1.45e-01, avg batch time: 0.5912, average train loss: 1.2428
+[10/01 03:42:00][INFO] visual_prompt:  320: Inference (val):avg data time: 3.06e-05, avg batch time: 0.1649, average loss: 1.6761
+[10/01 03:42:00][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 80.00	top5: 96.00	
+[10/01 03:42:24][INFO] visual_prompt:  307: 	Test 100/340. loss: 3.375, 0.2123 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:42:45][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.736, 0.2117 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 03:43:06][INFO] visual_prompt:  307: 	Test 300/340. loss: 3.661, 0.2124 s / batch. (data: 3.19e-05)max mem: 7.82369 GB 
+[10/01 03:43:17][INFO] visual_prompt:  320: Inference (test):avg data time: 4.33e-05, avg batch time: 0.2127, average loss: 3.6932
+[10/01 03:43:17][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 37.32	top5: 60.61	
+[10/01 03:43:17][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 0.7817417582301099
+[10/01 03:43:28][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 1.36e-01, avg batch time: 0.5835, average train loss: 0.5270
+[10/01 03:43:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.83e-05, avg batch time: 0.1647, average loss: 0.1890
+[10/01 03:43:32][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:43:56][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.479, 0.2124 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 03:44:17][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.025, 0.2127 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 03:44:39][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.741, 0.2135 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 03:44:49][INFO] visual_prompt:  320: Inference (test):avg data time: 7.61e-05, avg batch time: 0.2128, average loss: 2.7956
+[10/01 03:44:50][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.03	top5: 73.69	
+[10/01 03:44:50][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 0.7415791961552499
+[10/01 03:45:00][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 1.22e-01, avg batch time: 0.5675, average train loss: 0.1852
+[10/01 03:45:05][INFO] visual_prompt:  320: Inference (val):avg data time: 3.03e-05, avg batch time: 0.1649, average loss: 0.1197
+[10/01 03:45:05][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:45:28][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.374, 0.2125 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 03:45:49][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.978, 0.2132 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 03:46:11][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.661, 0.2135 s / batch. (data: 3.22e-05)max mem: 7.82369 GB 
+[10/01 03:46:21][INFO] visual_prompt:  320: Inference (test):avg data time: 2.02e-04, avg batch time: 0.2130, average loss: 2.7473
+[10/01 03:46:22][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 51.91	top5: 74.42	
+[10/01 03:46:22][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 0.7020360665136531
+[10/01 03:46:33][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 1.29e-01, avg batch time: 0.5754, average train loss: 0.1352
+[10/01 03:46:37][INFO] visual_prompt:  320: Inference (val):avg data time: 3.08e-05, avg batch time: 0.1650, average loss: 0.1149
+[10/01 03:46:37][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:47:00][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.372, 0.2116 s / batch. (data: 2.50e-05)max mem: 7.82369 GB 
+[10/01 03:47:22][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.923, 0.2136 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 03:47:43][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.678, 0.2128 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 03:47:53][INFO] visual_prompt:  320: Inference (test):avg data time: 7.77e-05, avg batch time: 0.2127, average loss: 2.7451
+[10/01 03:47:54][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.61	top5: 74.82	
+[10/01 03:47:54][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 0.6631605465176369
+[10/01 03:48:04][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 1.32e-01, avg batch time: 0.5782, average train loss: 0.1360
+[10/01 03:48:09][INFO] visual_prompt:  320: Inference (val):avg data time: 3.05e-05, avg batch time: 0.1648, average loss: 0.1148
+[10/01 03:48:09][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:48:32][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.401, 0.2128 s / batch. (data: 2.38e-05)max mem: 7.82369 GB 
+[10/01 03:48:54][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.001, 0.2123 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 03:49:15][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.666, 0.2123 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 03:49:25][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2128, average loss: 2.7694
+[10/01 03:49:26][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.54	top5: 74.78	
+[10/01 03:49:26][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 0.6250000000000002
+[10/01 03:49:37][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 1.33e-01, avg batch time: 0.5797, average train loss: 0.1479
+[10/01 03:49:41][INFO] visual_prompt:  320: Inference (val):avg data time: 4.37e-05, avg batch time: 0.1650, average loss: 0.1268
+[10/01 03:49:41][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:50:05][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.396, 0.2130 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 03:50:26][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.940, 0.2127 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 03:50:47][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.697, 0.2130 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 03:50:58][INFO] visual_prompt:  320: Inference (test):avg data time: 1.62e-04, avg batch time: 0.2129, average loss: 2.7695
+[10/01 03:50:58][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.61	top5: 74.85	
+[10/01 03:50:58][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 0.587600919708494
+[10/01 03:51:09][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 1.35e-01, avg batch time: 0.5801, average train loss: 0.1481
+[10/01 03:51:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1650, average loss: 0.1198
+[10/01 03:51:13][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:51:37][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.397, 0.2125 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:51:58][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.985, 0.2138 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 03:52:20][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.633, 0.2150 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 03:52:30][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2125, average loss: 2.7708
+[10/01 03:52:31][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.75	top5: 75.03	
+[10/01 03:52:31][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 0.5510088706615667
+[10/01 03:52:41][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 1.35e-01, avg batch time: 0.5804, average train loss: 0.1446
+[10/01 03:52:46][INFO] visual_prompt:  320: Inference (val):avg data time: 3.21e-05, avg batch time: 0.1652, average loss: 0.1178
+[10/01 03:52:46][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:53:09][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.412, 0.2122 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 03:53:31][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.963, 0.2133 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 03:53:52][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.683, 0.2129 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 03:54:02][INFO] visual_prompt:  320: Inference (test):avg data time: 9.42e-05, avg batch time: 0.2128, average loss: 2.7873
+[10/01 03:54:03][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.57	top5: 75.04	
+[10/01 03:54:03][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 0.5152684346344087
+[10/01 03:54:14][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 1.36e-01, avg batch time: 0.5820, average train loss: 0.1433
+[10/01 03:54:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.77e-05, avg batch time: 0.1648, average loss: 0.1203
+[10/01 03:54:18][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:54:41][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.451, 0.2131 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 03:55:03][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.001, 0.2133 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 03:55:24][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.659, 0.2129 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 03:55:34][INFO] visual_prompt:  320: Inference (test):avg data time: 4.79e-05, avg batch time: 0.2127, average loss: 2.7962
+[10/01 03:55:35][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.55	top5: 74.98	
+[10/01 03:55:35][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 0.48042315584292716
+[10/01 03:55:46][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 1.22e-01, avg batch time: 0.5687, average train loss: 0.1423
+[10/01 03:55:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1648, average loss: 0.1224
+[10/01 03:55:50][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:56:13][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.469, 0.2125 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 03:56:34][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.047, 0.2128 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:56:56][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.684, 0.2138 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 03:57:06][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2126, average loss: 2.7941
+[10/01 03:57:07][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.60	top5: 75.19	
+[10/01 03:57:07][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 0.4465154878918258
+[10/01 03:57:18][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 1.38e-01, avg batch time: 0.5832, average train loss: 0.1401
+[10/01 03:57:22][INFO] visual_prompt:  320: Inference (val):avg data time: 4.53e-05, avg batch time: 0.1648, average loss: 0.1206
+[10/01 03:57:22][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:57:45][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.441, 0.2131 s / batch. (data: 2.60e-05)max mem: 7.82369 GB 
+[10/01 03:58:07][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.025, 0.2134 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 03:58:28][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.678, 0.2132 s / batch. (data: 3.05e-05)max mem: 7.82369 GB 
+[10/01 03:58:38][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2127, average loss: 2.8101
+[10/01 03:58:39][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.59	top5: 75.11	
+[10/01 03:58:39][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 0.41358674205142765
+[10/01 03:58:50][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 1.26e-01, avg batch time: 0.5724, average train loss: 0.1411
+[10/01 03:58:54][INFO] visual_prompt:  320: Inference (val):avg data time: 2.69e-05, avg batch time: 0.1654, average loss: 0.1182
+[10/01 03:58:54][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 03:59:17][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.491, 0.2129 s / batch. (data: 2.50e-05)max mem: 7.82369 GB 
+[10/01 03:59:39][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.973, 0.2131 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 04:00:00][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.652, 0.2138 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 04:00:10][INFO] visual_prompt:  320: Inference (test):avg data time: 8.33e-05, avg batch time: 0.2128, average loss: 2.7923
+[10/01 04:00:11][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.69	top5: 75.25	
+[10/01 04:00:11][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 0.3816770369262533
+[10/01 04:00:22][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 1.39e-01, avg batch time: 0.5840, average train loss: 0.1375
+[10/01 04:00:26][INFO] visual_prompt:  320: Inference (val):avg data time: 4.85e-05, avg batch time: 0.1651, average loss: 0.1141
+[10/01 04:00:26][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:00:49][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.492, 0.2125 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:01:11][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.987, 0.2126 s / batch. (data: 2.53e-05)max mem: 7.82369 GB 
+[10/01 04:01:32][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.688, 0.2142 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 04:01:42][INFO] visual_prompt:  320: Inference (test):avg data time: 6.51e-05, avg batch time: 0.2127, average loss: 2.8016
+[10/01 04:01:43][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.60	top5: 75.16	
+[10/01 04:01:43][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 0.35082524957668626
+[10/01 04:01:54][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 1.31e-01, avg batch time: 0.5759, average train loss: 0.1364
+[10/01 04:01:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1651, average loss: 0.1108
+[10/01 04:01:58][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:02:21][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.483, 0.2119 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 04:02:43][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.002, 0.2127 s / batch. (data: 2.57e-05)max mem: 7.82369 GB 
+[10/01 04:03:04][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.665, 0.2138 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 04:03:14][INFO] visual_prompt:  320: Inference (test):avg data time: 9.04e-05, avg batch time: 0.2127, average loss: 2.7988
+[10/01 04:03:15][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.78	top5: 75.26	
+[10/01 04:03:15][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 0.32106896815325703
+[10/01 04:03:26][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 1.44e-01, avg batch time: 0.5889, average train loss: 0.1345
+[10/01 04:03:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.76e-05, avg batch time: 0.1648, average loss: 0.1178
+[10/01 04:03:30][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:03:54][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.504, 0.2119 s / batch. (data: 5.17e-05)max mem: 7.82369 GB 
+[10/01 04:04:15][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.057, 0.2124 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:04:36][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.720, 0.2133 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:04:47][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2126, average loss: 2.8290
+[10/01 04:04:47][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.23	top5: 75.01	
+[10/01 04:04:47][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 0.2924444461012776
+[10/01 04:04:58][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 1.35e-01, avg batch time: 0.5801, average train loss: 0.1322
+[10/01 04:05:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.99e-05, avg batch time: 0.1651, average loss: 0.1084
+[10/01 04:05:02][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:05:26][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.484, 0.2128 s / batch. (data: 3.15e-05)max mem: 7.82369 GB 
+[10/01 04:05:47][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.998, 0.2127 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:06:09][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.666, 0.2135 s / batch. (data: 2.65e-05)max mem: 7.82369 GB 
+[10/01 04:06:19][INFO] visual_prompt:  320: Inference (test):avg data time: 1.40e-04, avg batch time: 0.2127, average loss: 2.8071
+[10/01 04:06:19][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.80	top5: 75.35	
+[10/01 04:06:19][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 0.26498655799159765
+[10/01 04:06:30][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 1.45e-01, avg batch time: 0.5897, average train loss: 0.1287
+[10/01 04:06:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.99e-05, avg batch time: 0.1649, average loss: 0.1090
+[10/01 04:06:34][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:06:58][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.507, 0.2132 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:07:19][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.963, 0.2119 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:07:41][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.708, 0.2121 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 04:07:51][INFO] visual_prompt:  320: Inference (test):avg data time: 1.38e-04, avg batch time: 0.2128, average loss: 2.8123
+[10/01 04:07:52][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.59	top5: 75.05	
+[10/01 04:07:52][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 0.23872875703131582
+[10/01 04:08:02][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 1.26e-01, avg batch time: 0.5733, average train loss: 0.1251
+[10/01 04:08:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.73e-05, avg batch time: 0.1650, average loss: 0.1066
+[10/01 04:08:06][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:08:30][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.502, 0.2127 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:08:51][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.985, 0.2144 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:09:12][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.660, 0.2147 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 04:09:23][INFO] visual_prompt:  320: Inference (test):avg data time: 7.39e-05, avg batch time: 0.2128, average loss: 2.8008
+[10/01 04:09:23][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.66	top5: 75.31	
+[10/01 04:09:23][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 0.21370303430619797
+[10/01 04:09:34][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 1.20e-01, avg batch time: 0.5689, average train loss: 0.1228
+[10/01 04:09:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.92e-05, avg batch time: 0.1651, average loss: 0.1048
+[10/01 04:09:38][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:10:02][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.503, 0.2122 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 04:10:23][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.994, 0.2130 s / batch. (data: 2.93e-05)max mem: 7.82369 GB 
+[10/01 04:10:44][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.716, 0.2136 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 04:10:55][INFO] visual_prompt:  320: Inference (test):avg data time: 9.77e-05, avg batch time: 0.2128, average loss: 2.8140
+[10/01 04:10:55][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.68	top5: 75.45	
+[10/01 04:10:55][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 0.18993987980446755
+[10/01 04:11:06][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 1.30e-01, avg batch time: 0.5766, average train loss: 0.1208
+[10/01 04:11:10][INFO] visual_prompt:  320: Inference (val):avg data time: 3.01e-05, avg batch time: 0.1648, average loss: 0.1041
+[10/01 04:11:10][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:11:34][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.530, 0.2151 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 04:11:55][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.994, 0.2312 s / batch. (data: 2.06e-02)max mem: 7.82369 GB 
+[10/01 04:12:16][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.652, 0.2143 s / batch. (data: 3.17e-05)max mem: 7.82369 GB 
+[10/01 04:12:27][INFO] visual_prompt:  320: Inference (test):avg data time: 3.34e-04, avg batch time: 0.2130, average loss: 2.8043
+[10/01 04:12:28][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.69	top5: 75.40	
+[10/01 04:12:28][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 0.16746824526945162
+[10/01 04:12:38][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 1.33e-01, avg batch time: 0.5782, average train loss: 0.1194
+[10/01 04:12:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.90e-05, avg batch time: 0.1650, average loss: 0.1005
+[10/01 04:12:42][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:13:06][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.511, 0.2119 s / batch. (data: 2.84e-05)max mem: 7.82369 GB 
+[10/01 04:13:27][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.975, 0.2122 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 04:13:49][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.666, 0.2144 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 04:13:59][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2127, average loss: 2.8024
+[10/01 04:14:00][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.75	top5: 75.55	
+[10/01 04:14:00][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 0.14631550892634126
+[10/01 04:14:11][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 1.27e-01, avg batch time: 0.5747, average train loss: 0.1176
+[10/01 04:14:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.94e-05, avg batch time: 0.1651, average loss: 0.1000
+[10/01 04:14:15][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:14:38][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.531, 0.2126 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 04:14:59][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.002, 0.2118 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 04:15:21][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.671, 0.2141 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:15:31][INFO] visual_prompt:  320: Inference (test):avg data time: 1.26e-04, avg batch time: 0.2127, average loss: 2.8157
+[10/01 04:15:32][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.47	top5: 75.47	
+[10/01 04:15:32][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 0.12650744212604148
+[10/01 04:15:43][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 1.38e-01, avg batch time: 0.5837, average train loss: 0.1160
+[10/01 04:15:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.94e-05, avg batch time: 0.1650, average loss: 0.1005
+[10/01 04:15:47][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:16:10][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.539, 0.2118 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 04:16:32][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.987, 0.2126 s / batch. (data: 4.79e-05)max mem: 7.82369 GB 
+[10/01 04:16:53][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.676, 0.2143 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 04:17:04][INFO] visual_prompt:  320: Inference (test):avg data time: 1.70e-04, avg batch time: 0.2126, average loss: 2.8162
+[10/01 04:17:04][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.74	top5: 75.44	
+[10/01 04:17:04][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 0.10806817794674878
+[10/01 04:17:15][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 1.28e-01, avg batch time: 0.5772, average train loss: 0.1151
+[10/01 04:17:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1650, average loss: 0.0994
+[10/01 04:17:19][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:17:42][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.537, 0.2128 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 04:18:04][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.012, 0.2125 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 04:18:25][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.677, 0.2129 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 04:18:35][INFO] visual_prompt:  320: Inference (test):avg data time: 7.73e-05, avg batch time: 0.2127, average loss: 2.8145
+[10/01 04:18:36][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.67	top5: 75.50	
+[10/01 04:18:36][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.09102018179151586
+[10/01 04:18:47][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 1.32e-01, avg batch time: 0.5788, average train loss: 0.1144
+[10/01 04:18:51][INFO] visual_prompt:  320: Inference (val):avg data time: 4.63e-05, avg batch time: 0.1649, average loss: 0.0982
+[10/01 04:18:51][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:19:14][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.543, 0.2129 s / batch. (data: 2.48e-05)max mem: 7.82369 GB 
+[10/01 04:19:36][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.012, 0.2129 s / batch. (data: 2.55e-05)max mem: 7.82369 GB 
+[10/01 04:19:57][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.693, 0.2129 s / batch. (data: 3.22e-05)max mem: 7.82369 GB 
+[10/01 04:20:08][INFO] visual_prompt:  320: Inference (test):avg data time: 7.85e-05, avg batch time: 0.2124, average loss: 2.8249
+[10/01 04:20:08][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.49	top5: 75.25	
+[10/01 04:20:08][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.0753842240176146
+[10/01 04:20:20][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 1.37e-01, avg batch time: 0.5819, average train loss: 0.1134
+[10/01 04:20:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.82e-05, avg batch time: 0.1650, average loss: 0.0976
+[10/01 04:20:24][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:20:47][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.521, 0.2130 s / batch. (data: 2.96e-05)max mem: 7.82369 GB 
+[10/01 04:21:09][INFO] visual_prompt:  307: 	Test 200/340. loss: 2.992, 0.2114 s / batch. (data: 3.12e-05)max mem: 7.82369 GB 
+[10/01 04:21:30][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.670, 0.2129 s / batch. (data: 2.53e-05)max mem: 7.82369 GB 
+[10/01 04:21:41][INFO] visual_prompt:  320: Inference (test):avg data time: 4.19e-05, avg batch time: 0.2126, average loss: 2.8212
+[10/01 04:21:41][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.62	top5: 75.43	
+[10/01 04:21:41][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.061179354631058086
+[10/01 04:21:52][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 1.22e-01, avg batch time: 0.5698, average train loss: 0.1115
+[10/01 04:21:56][INFO] visual_prompt:  320: Inference (val):avg data time: 4.48e-05, avg batch time: 0.1699, average loss: 0.0965
+[10/01 04:21:56][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:22:19][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.547, 0.2146 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:22:41][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.015, 0.2125 s / batch. (data: 3.15e-05)max mem: 7.82369 GB 
+[10/01 04:23:02][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.693, 0.2145 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 04:23:13][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2124, average loss: 2.8261
+[10/01 04:23:13][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.55	top5: 75.50	
+[10/01 04:23:13][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.04842288007710138
+[10/01 04:23:24][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 1.35e-01, avg batch time: 0.5795, average train loss: 0.1112
+[10/01 04:23:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.81e-05, avg batch time: 0.1651, average loss: 0.0961
+[10/01 04:23:28][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:23:51][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.542, 0.2126 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:24:13][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.008, 0.2130 s / batch. (data: 3.19e-05)max mem: 7.82369 GB 
+[10/01 04:24:34][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.696, 0.2124 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 04:24:45][INFO] visual_prompt:  320: Inference (test):avg data time: 8.87e-05, avg batch time: 0.2124, average loss: 2.8248
+[10/01 04:24:45][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.65	top5: 75.46	
+[10/01 04:24:45][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.03713034215500441
+[10/01 04:24:56][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 1.32e-01, avg batch time: 0.5787, average train loss: 0.1102
+[10/01 04:25:00][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1648, average loss: 0.0959
+[10/01 04:25:00][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:25:23][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.543, 0.2126 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:25:45][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.006, 0.2133 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 04:26:06][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.689, 0.2139 s / batch. (data: 2.74e-05)max mem: 7.82369 GB 
+[10/01 04:26:17][INFO] visual_prompt:  320: Inference (test):avg data time: 1.13e-04, avg batch time: 0.2127, average loss: 2.8254
+[10/01 04:26:17][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.58	top5: 75.51	
+[10/01 04:26:17][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.02731549908274289
+[10/01 04:26:28][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 1.41e-01, avg batch time: 0.5861, average train loss: 0.1096
+[10/01 04:26:32][INFO] visual_prompt:  320: Inference (val):avg data time: 3.53e-05, avg batch time: 0.1649, average loss: 0.0959
+[10/01 04:26:32][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:26:56][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.539, 0.2134 s / batch. (data: 2.53e-05)max mem: 7.82369 GB 
+[10/01 04:27:17][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.014, 0.2121 s / batch. (data: 2.53e-05)max mem: 7.82369 GB 
+[10/01 04:27:39][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.693, 0.2137 s / batch. (data: 2.79e-05)max mem: 7.82369 GB 
+[10/01 04:27:49][INFO] visual_prompt:  320: Inference (test):avg data time: 1.22e-04, avg batch time: 0.2128, average loss: 2.8275
+[10/01 04:27:50][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.64	top5: 75.42	
+[10/01 04:27:50][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.018990308734739975
+[10/01 04:28:00][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 1.33e-01, avg batch time: 0.5797, average train loss: 0.1094
+[10/01 04:28:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1649, average loss: 0.0963
+[10/01 04:28:04][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:28:28][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.542, 0.2113 s / batch. (data: 2.67e-05)max mem: 7.82369 GB 
+[10/01 04:28:49][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.009, 0.2127 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:29:11][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.694, 0.2124 s / batch. (data: 3.05e-05)max mem: 7.82369 GB 
+[10/01 04:29:21][INFO] visual_prompt:  320: Inference (test):avg data time: 3.02e-05, avg batch time: 0.2126, average loss: 2.8281
+[10/01 04:29:22][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.63	top5: 75.43	
+[10/01 04:29:22][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.012164914073037048
+[10/01 04:29:33][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 1.36e-01, avg batch time: 0.5839, average train loss: 0.1093
+[10/01 04:29:37][INFO] visual_prompt:  320: Inference (val):avg data time: 2.87e-05, avg batch time: 0.1648, average loss: 0.0961
+[10/01 04:29:37][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:30:00][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.547, 0.2119 s / batch. (data: 2.91e-05)max mem: 7.82369 GB 
+[10/01 04:30:22][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.008, 0.2118 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 04:30:43][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.695, 0.2140 s / batch. (data: 2.98e-05)max mem: 7.82369 GB 
+[10/01 04:30:53][INFO] visual_prompt:  320: Inference (test):avg data time: 9.09e-05, avg batch time: 0.2126, average loss: 2.8287
+[10/01 04:30:54][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.62	top5: 75.40	
+[10/01 04:30:54][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.006847630789658388
+[10/01 04:31:05][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 1.34e-01, avg batch time: 0.5806, average train loss: 0.1085
+[10/01 04:31:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.93e-05, avg batch time: 0.1649, average loss: 0.0959
+[10/01 04:31:09][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:31:32][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.545, 0.2121 s / batch. (data: 2.62e-05)max mem: 7.82369 GB 
+[10/01 04:31:54][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.011, 0.2128 s / batch. (data: 2.69e-05)max mem: 7.82369 GB 
+[10/01 04:32:15][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.697, 0.2125 s / batch. (data: 2.72e-05)max mem: 7.82369 GB 
+[10/01 04:32:26][INFO] visual_prompt:  320: Inference (test):avg data time: 1.90e-04, avg batch time: 0.2129, average loss: 2.8290
+[10/01 04:32:26][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.63	top5: 75.41	
+[10/01 04:32:26][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.003044937175219753
+[10/01 04:32:37][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 1.40e-01, avg batch time: 0.5846, average train loss: 0.1086
+[10/01 04:32:41][INFO] visual_prompt:  320: Inference (val):avg data time: 4.59e-05, avg batch time: 0.1650, average loss: 0.0957
+[10/01 04:32:41][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:33:05][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.545, 0.2127 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:33:26][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.011, 0.2135 s / batch. (data: 2.77e-05)max mem: 7.82369 GB 
+[10/01 04:33:47][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.695, 0.2132 s / batch. (data: 3.03e-05)max mem: 7.82369 GB 
+[10/01 04:33:58][INFO] visual_prompt:  320: Inference (test):avg data time: 9.86e-05, avg batch time: 0.2128, average loss: 2.8286
+[10/01 04:33:58][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.59	top5: 75.41	
+[10/01 04:33:58][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 0.0007614662261302974
+[10/01 04:34:09][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 1.40e-01, avg batch time: 0.5849, average train loss: 0.1084
+[10/01 04:34:13][INFO] visual_prompt:  320: Inference (val):avg data time: 3.00e-05, avg batch time: 0.1647, average loss: 0.0957
+[10/01 04:34:13][INFO] visual_prompt:  113: Classification results with val_vtab-sun397: top1: 100.00	top5: 100.00	
+[10/01 04:34:37][INFO] visual_prompt:  307: 	Test 100/340. loss: 2.546, 0.2126 s / batch. (data: 2.81e-05)max mem: 7.82369 GB 
+[10/01 04:34:58][INFO] visual_prompt:  307: 	Test 200/340. loss: 3.011, 0.2135 s / batch. (data: 2.88e-05)max mem: 7.82369 GB 
+[10/01 04:35:19][INFO] visual_prompt:  307: 	Test 300/340. loss: 2.695, 0.2144 s / batch. (data: 3.00e-05)max mem: 7.82369 GB 
+[10/01 04:35:30][INFO] visual_prompt:  320: Inference (test):avg data time: 5.12e-05, avg batch time: 0.2128, average loss: 2.8286
+[10/01 04:35:30][INFO] visual_prompt:  113: Classification results with test_vtab-sun397: top1: 52.59	top5: 75.41	
