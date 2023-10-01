@@ -242,14 +242,9 @@ class Trainer():
                 except KeyError:
                     return
 
-                # prepare metrics for stopper
-                metrics = {"epoch": epoch}
                 # we choose not to use test metrics for stopping, because we should behave
                 # as if we don't have access to test data. Otherwise, the test is not a true test.
-                metrics["loss"] = avg_val_loss
-                metrics["accuracy"] = curr_acc
-
-                if self.stopper(metrics):
+                if self.stopper({"epoch": epoch, "loss": avg_val_loss, "accuracy": curr_acc}):
                     break
 
         # save the last checkpoints
