@@ -46,10 +46,8 @@ class CBISDataset(torch.utils.data.Dataset):
         image_path = os.path.join(self.data_dir, "cbis-ddsm", "multiinstance_data_8bit", self.image_labels.loc[index]["ShortPath"])
         # image = read_image(image_path, mode=ImageReadMode.GRAY)
         image = Image.open(image_path)
-        # # todo: figure out what dimensions we need before the transform
-        # image = image.repeat(3, 1, 1)  # todo: figure out if this is the right way to do this
         image = self.transform(image)
-        label = self._class_to_id[self.image_labels.loc[index]['CaseLabel']]
+        label = self._class_to_id[self.image_labels.loc[index]['ImageLabel']]
         sample = {
             "image": image,
             "label": label,
@@ -66,7 +64,7 @@ class CBISDataset(torch.utils.data.Dataset):
             test = test.reset_index(drop=True)
             return test
         original_train = all_labels[all_labels["ShortPath"].str.contains("Train")]
-        train, val = train_test_split(original_train, test_size=0.1, shuffle=True, random_state=218, stratify=original_train["CaseLabel"])
+        train, val = train_test_split(original_train, test_size=0.1, shuffle=True, random_state=218, stratify=original_train["ImageLabel"])
         if self._split == "train":
             train = train.reset_index(drop=True)
             return pd.DataFrame(train)
@@ -85,7 +83,7 @@ class CBISDataset(torch.utils.data.Dataset):
         return 2
 
     def get_classes(self):
-        return sorted(list(set(self.image_labels["CaseLabel"])))
+        return sorted(list(set(self.image_labels["ImageLabel"])))
 
     def get_class_ids(self):
         return [self._class_to_id[c] for c in self.get_classes()]
@@ -95,10 +93,7 @@ class CBISDataset(torch.utils.data.Dataset):
             raise ValueError(f"only getting training class distribution, got split {self._split} instead")
         if weight_type == "none":
             return [1.0] * self.get_class_num()
-        # todo: fix this code, because it does not actually count anything,
-        #  since the class_ids are just the list of classes, and counting
-        #  them will always result in an array of 1s.
-        id2counts = Counter(self.image_labels["CaseLabel"])
+        id2counts = Counter(self.image_labels["ImageLabel"])
         assert len(id2counts) == self.get_class_num()
         num_per_cls = np.array([id2counts[i] for i in self.get_class_ids()])
         mu = 0
