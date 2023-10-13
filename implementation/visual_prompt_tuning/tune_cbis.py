@@ -82,6 +82,7 @@ def explore_lrwd_range(args):
 def main(args):
     explore_lrwd_range(args)
     lr, wd = get_best_lrwd(args)
+    np.random.seed(218)  # seed for random but reproducible seeds
     random_seeds = np.random.randint(10000, size=5)
     for seed in random_seeds:
         seed = int(seed)  # convert from np.int64 to int

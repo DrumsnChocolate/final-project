@@ -1,0 +1,876 @@
+[09/28 12:32:27][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[09/28 12:32:27][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              1
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[09/28 12:32:27][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="closest_object_distance")', 'DATA.NUMBER_CLASSES', '6', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[09/28 12:32:27][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/28 12:32:27][INFO] visual_prompt:  108: Training with config:
+[09/28 12:32:27][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-clevr(task="closest_object_distance")/sup_vitb16_imagenet21k/prompt50/crop224/test/seed6183/lr5.0_wd0.001/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 6183, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.001, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 5.0, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-clevr(task="closest_object_distance")', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 6, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[09/28 12:32:27][INFO] visual_prompt:   89: Loading training data...
+[09/28 12:32:27][INFO] visual_prompt:   68: Constructing vtab-clevr(task="closest_object_distance") dataset trainval...
+[09/28 12:32:31][INFO] visual_prompt:   88: Number of images: 1000
+[09/28 12:32:31][INFO] visual_prompt:   89: Number of classes: 6 / 6
+[09/28 12:32:31][INFO] visual_prompt:   94: Loading validation data...
+[09/28 12:32:31][INFO] visual_prompt:   68: Constructing vtab-clevr(task="closest_object_distance") dataset val...
+[09/28 12:32:32][INFO] visual_prompt:   88: Number of images: 200
+[09/28 12:32:32][INFO] visual_prompt:   89: Number of classes: 6 / 6
+[09/28 12:32:32][INFO] visual_prompt:   98: Loading test data...
+[09/28 12:32:32][INFO] visual_prompt:   68: Constructing vtab-clevr(task="closest_object_distance") dataset test...
+[09/28 12:33:39][INFO] visual_prompt:   88: Number of images: 15000
+[09/28 12:33:39][INFO] visual_prompt:   89: Number of classes: 6 / 6
+[09/28 12:33:39][INFO] visual_prompt:  120: Constructing models...
+[09/28 12:33:41][INFO] visual_prompt:   52: Total Parameters: 86264070	 Gradient Parameters: 465414
+[09/28 12:33:41][INFO] visual_prompt:   54: tuned percent:0.540
+[09/28 12:33:41][INFO] visual_prompt:   40: Device used for model: 0
+[09/28 12:33:41][INFO] visual_prompt:  122: Setting up Evaluator...
+[09/28 12:33:41][INFO] visual_prompt:  124: Setting up Trainer...
+[09/28 12:33:41][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[09/28 12:33:41][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[09/28 12:33:51][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 1.01e-01, avg batch time: 0.5488, average train loss: 2.4702
+[09/28 12:33:54][INFO] visual_prompt:  320: Inference (val):avg data time: 2.34e-05, avg batch time: 0.1664, average loss: 2.3852
+[09/28 12:33:54][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 76.00	
+[09/28 12:34:17][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.469, 0.2146 s / batch. (data: 6.34e-05)max mem: 7.81877 GB 
+[09/28 12:34:39][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.451, 0.2165 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 12:34:48][INFO] visual_prompt:  320: Inference (test):avg data time: 3.52e-05, avg batch time: 0.2153, average loss: 2.3907
+[09/28 12:34:48][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 80.03	
+[09/28 12:34:48][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.120
+[09/28 12:34:48][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 0.5
+[09/28 12:34:58][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 9.55e-02, avg batch time: 0.5505, average train loss: 5.2767
+[09/28 12:35:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1679, average loss: 4.1337
+[09/28 12:35:01][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 12:35:24][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.142, 0.2187 s / batch. (data: 2.84e-05)max mem: 7.81877 GB 
+[09/28 12:35:46][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.224, 0.2197 s / batch. (data: 6.20e-05)max mem: 7.81877 GB 
+[09/28 12:35:55][INFO] visual_prompt:  320: Inference (test):avg data time: 3.22e-05, avg batch time: 0.2178, average loss: 3.5360
+[09/28 12:35:55][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 90.95	
+[09/28 12:35:55][INFO] visual_prompt:  245: Best epoch 2: best metric: 0.220
+[09/28 12:35:55][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 1.0
+[09/28 12:36:05][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 1.03e-01, avg batch time: 0.5602, average train loss: 2.2284
+[09/28 12:36:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1683, average loss: 2.0307
+[09/28 12:36:09][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.00	top5: 78.00	
+[09/28 12:36:32][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.968, 0.2199 s / batch. (data: 7.37e-05)max mem: 7.81877 GB 
+[09/28 12:36:54][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.989, 0.2196 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 12:37:03][INFO] visual_prompt:  320: Inference (test):avg data time: 3.16e-05, avg batch time: 0.2188, average loss: 2.0357
+[09/28 12:37:03][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 16.66	top5: 75.49	
+[09/28 12:37:03][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 1.5
+[09/28 12:37:13][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 1.05e-01, avg batch time: 0.5614, average train loss: 2.9316
+[09/28 12:37:17][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1690, average loss: 2.5906
+[09/28 12:37:17][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.50	
+[09/28 12:37:40][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.508, 0.2201 s / batch. (data: 7.53e-05)max mem: 7.81877 GB 
+[09/28 12:38:02][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.655, 0.2195 s / batch. (data: 2.84e-05)max mem: 7.81877 GB 
+[09/28 12:38:11][INFO] visual_prompt:  320: Inference (test):avg data time: 4.08e-05, avg batch time: 0.2188, average loss: 2.8157
+[09/28 12:38:11][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.81	
+[09/28 12:38:11][INFO] visual_prompt:  245: Best epoch 4: best metric: 0.240
+[09/28 12:38:11][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 2.0
+[09/28 12:38:21][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 9.28e-02, avg batch time: 0.5494, average train loss: 3.9116
+[09/28 12:38:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.64e-05, avg batch time: 0.1688, average loss: 3.0548
+[09/28 12:38:25][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 12:38:48][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.672, 0.2198 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 12:39:10][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.908, 0.2203 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 12:39:19][INFO] visual_prompt:  320: Inference (test):avg data time: 3.09e-05, avg batch time: 0.2187, average loss: 3.2562
+[09/28 12:39:19][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 12:39:19][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 2.5
+[09/28 12:39:29][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 9.67e-02, avg batch time: 0.5536, average train loss: 2.5258
+[09/28 12:39:33][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1693, average loss: 2.8817
+[09/28 12:39:33][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 78.00	
+[09/28 12:39:56][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.511, 0.2196 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 12:40:18][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.748, 0.2203 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 12:40:27][INFO] visual_prompt:  320: Inference (test):avg data time: 4.11e-05, avg batch time: 0.2188, average loss: 2.8604
+[09/28 12:40:27][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 75.49	
+[09/28 12:40:27][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 3.0
+[09/28 12:40:37][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 1.03e-01, avg batch time: 0.5603, average train loss: 2.9787
+[09/28 12:40:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1691, average loss: 3.0927
+[09/28 12:40:40][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 89.50	
+[09/28 12:41:04][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.679, 0.2192 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 12:41:26][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.613, 0.2200 s / batch. (data: 8.37e-05)max mem: 7.81877 GB 
+[09/28 12:41:35][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2188, average loss: 2.7235
+[09/28 12:41:35][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 91.87	
+[09/28 12:41:35][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 3.5
+[09/28 12:41:45][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 1.01e-01, avg batch time: 0.5579, average train loss: 3.0319
+[09/28 12:41:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.62e-05, avg batch time: 0.1692, average loss: 3.4512
+[09/28 12:41:48][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 12:42:12][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.744, 0.2196 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 12:42:34][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.983, 0.2205 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 12:42:43][INFO] visual_prompt:  320: Inference (test):avg data time: 3.09e-05, avg batch time: 0.2188, average loss: 3.3107
+[09/28 12:42:43][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 91.87	
+[09/28 12:42:43][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 4.0
+[09/28 12:42:53][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 1.03e-01, avg batch time: 0.5611, average train loss: 10.8568
+[09/28 12:42:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.36e-05, avg batch time: 0.1692, average loss: 28.9837
+[09/28 12:42:56][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 12:43:20][INFO] visual_prompt:  307: 	Test 100/235. loss: 25.552, 0.2205 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 12:43:42][INFO] visual_prompt:  307: 	Test 200/235. loss: 25.509, 0.2199 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 12:43:51][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2189, average loss: 27.8596
+[09/28 12:43:51][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 12:43:51][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 4.5
+[09/28 12:44:01][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 9.63e-02, avg batch time: 0.5549, average train loss: 15.3874
+[09/28 12:44:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1692, average loss: 14.9460
+[09/28 12:44:04][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 78.00	
+[09/28 12:44:28][INFO] visual_prompt:  307: 	Test 100/235. loss: 16.218, 0.2199 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 12:44:50][INFO] visual_prompt:  307: 	Test 200/235. loss: 15.026, 0.2190 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 12:44:58][INFO] visual_prompt:  320: Inference (test):avg data time: 3.41e-05, avg batch time: 0.2191, average loss: 14.5407
+[09/28 12:44:59][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 77.46	
+[09/28 12:44:59][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 5.0
+[09/28 12:45:09][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 1.05e-01, avg batch time: 0.5622, average train loss: 13.7861
+[09/28 12:45:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1693, average loss: 9.0349
+[09/28 12:45:12][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 12:45:36][INFO] visual_prompt:  307: 	Test 100/235. loss: 9.542, 0.2191 s / batch. (data: 3.22e-05)max mem: 7.81877 GB 
+[09/28 12:45:58][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.395, 0.2198 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 12:46:07][INFO] visual_prompt:  320: Inference (test):avg data time: 8.18e-05, avg batch time: 0.2188, average loss: 8.8289
+[09/28 12:46:07][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 12:46:07][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 4.998477067547739
+[09/28 12:46:17][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 1.08e-01, avg batch time: 0.5671, average train loss: 10.2610
+[09/28 12:46:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1693, average loss: 8.4841
+[09/28 12:46:20][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 12:46:44][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.281, 0.2193 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 12:47:06][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.581, 0.2198 s / batch. (data: 2.17e-05)max mem: 7.81877 GB 
+[09/28 12:47:15][INFO] visual_prompt:  320: Inference (test):avg data time: 2.93e-05, avg batch time: 0.2191, average loss: 7.4899
+[09/28 12:47:15][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 90.95	
+[09/28 12:47:15][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 4.993910125649561
+[09/28 12:47:25][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 1.03e-01, avg batch time: 0.5598, average train loss: 12.8947
+[09/28 12:47:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.78e-05, avg batch time: 0.1695, average loss: 20.7421
+[09/28 12:47:28][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 12:47:52][INFO] visual_prompt:  307: 	Test 100/235. loss: 20.871, 0.2195 s / batch. (data: 6.32e-05)max mem: 7.81877 GB 
+[09/28 12:48:14][INFO] visual_prompt:  307: 	Test 200/235. loss: 21.066, 0.2193 s / batch. (data: 3.46e-05)max mem: 7.81877 GB 
+[09/28 12:48:22][INFO] visual_prompt:  320: Inference (test):avg data time: 2.94e-05, avg batch time: 0.2189, average loss: 21.1439
+[09/28 12:48:22][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 84.20	
+[09/28 12:48:22][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 4.986304738420683
+[09/28 12:48:32][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 9.73e-02, avg batch time: 0.5560, average train loss: 24.2036
+[09/28 12:48:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1698, average loss: 29.2784
+[09/28 12:48:36][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 12:48:59][INFO] visual_prompt:  307: 	Test 100/235. loss: 31.117, 0.2205 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 12:49:21][INFO] visual_prompt:  307: 	Test 200/235. loss: 28.776, 0.2202 s / batch. (data: 6.32e-05)max mem: 7.81877 GB 
+[09/28 12:49:30][INFO] visual_prompt:  320: Inference (test):avg data time: 3.11e-05, avg batch time: 0.2193, average loss: 29.9064
+[09/28 12:49:30][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 91.86	
+[09/28 12:49:30][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 4.975670171853926
+[09/28 12:49:41][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 9.92e-02, avg batch time: 0.5581, average train loss: 21.0693
+[09/28 12:49:44][INFO] visual_prompt:  320: Inference (val):avg data time: 2.19e-05, avg batch time: 0.1703, average loss: 23.8072
+[09/28 12:49:44][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 12:50:07][INFO] visual_prompt:  307: 	Test 100/235. loss: 19.501, 0.2215 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 12:50:29][INFO] visual_prompt:  307: 	Test 200/235. loss: 20.802, 0.2197 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 12:50:38][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2190, average loss: 23.0764
+[09/28 12:50:38][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 91.87	
+[09/28 12:50:38][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 4.962019382530521
+[09/28 12:50:49][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 1.10e-01, avg batch time: 0.5688, average train loss: 16.1655
+[09/28 12:50:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.28e-05, avg batch time: 0.1694, average loss: 14.9654
+[09/28 12:50:52][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 12:51:15][INFO] visual_prompt:  307: 	Test 100/235. loss: 12.393, 0.2194 s / batch. (data: 2.74e-05)max mem: 7.81877 GB 
+[09/28 12:51:37][INFO] visual_prompt:  307: 	Test 200/235. loss: 13.895, 0.2199 s / batch. (data: 2.26e-05)max mem: 7.81877 GB 
+[09/28 12:51:46][INFO] visual_prompt:  320: Inference (test):avg data time: 3.42e-05, avg batch time: 0.2191, average loss: 15.0822
+[09/28 12:51:46][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 90.95	
+[09/28 12:51:46][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 4.945369001834514
+[09/28 12:51:57][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 1.03e-01, avg batch time: 0.5610, average train loss: 14.0253
+[09/28 12:52:00][INFO] visual_prompt:  320: Inference (val):avg data time: 2.33e-05, avg batch time: 0.1694, average loss: 13.9155
+[09/28 12:52:00][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 88.00	
+[09/28 12:52:24][INFO] visual_prompt:  307: 	Test 100/235. loss: 11.546, 0.2201 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 12:52:46][INFO] visual_prompt:  307: 	Test 200/235. loss: 10.828, 0.2200 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 12:52:54][INFO] visual_prompt:  320: Inference (test):avg data time: 3.33e-05, avg batch time: 0.2187, average loss: 11.9069
+[09/28 12:52:55][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 90.95	
+[09/28 12:52:55][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 4.925739315689991
+[09/28 12:53:04][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 9.31e-02, avg batch time: 0.5502, average train loss: 17.8930
+[09/28 12:53:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1698, average loss: 26.4315
+[09/28 12:53:08][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 90.50	
+[09/28 12:53:31][INFO] visual_prompt:  307: 	Test 100/235. loss: 25.255, 0.2192 s / batch. (data: 2.77e-05)max mem: 7.81877 GB 
+[09/28 12:53:53][INFO] visual_prompt:  307: 	Test 200/235. loss: 28.045, 0.2198 s / batch. (data: 3.53e-05)max mem: 7.81877 GB 
+[09/28 12:54:02][INFO] visual_prompt:  320: Inference (test):avg data time: 3.08e-05, avg batch time: 0.2189, average loss: 30.1359
+[09/28 12:54:02][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 84.20	
+[09/28 12:54:02][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 4.903154239845797
+[09/28 12:54:12][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 9.93e-02, avg batch time: 0.5576, average train loss: 16.3033
+[09/28 12:54:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1693, average loss: 17.1489
+[09/28 12:54:15][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 76.00	
+[09/28 12:54:39][INFO] visual_prompt:  307: 	Test 100/235. loss: 17.214, 0.2197 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 12:55:01][INFO] visual_prompt:  307: 	Test 200/235. loss: 16.376, 0.2199 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 12:55:10][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2189, average loss: 15.3191
+[09/28 12:55:10][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 80.03	
+[09/28 12:55:10][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 4.877641290737884
+[09/28 12:55:20][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 9.83e-02, avg batch time: 0.5563, average train loss: 20.8046
+[09/28 12:55:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1693, average loss: 13.6771
+[09/28 12:55:23][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 12:55:47][INFO] visual_prompt:  307: 	Test 100/235. loss: 12.479, 0.2200 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 12:56:09][INFO] visual_prompt:  307: 	Test 200/235. loss: 13.584, 0.2200 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 12:56:18][INFO] visual_prompt:  320: Inference (test):avg data time: 3.23e-05, avg batch time: 0.2187, average loss: 14.4828
+[09/28 12:56:18][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 12:56:18][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 4.849231551964771
+[09/28 12:56:28][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 9.59e-02, avg batch time: 0.5539, average train loss: 12.6255
+[09/28 12:56:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1694, average loss: 14.0752
+[09/28 12:56:31][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 78.00	
+[09/28 12:56:55][INFO] visual_prompt:  307: 	Test 100/235. loss: 12.826, 0.2197 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 12:57:17][INFO] visual_prompt:  307: 	Test 200/235. loss: 14.670, 0.2197 s / batch. (data: 2.38e-05)max mem: 7.81877 GB 
+[09/28 12:57:26][INFO] visual_prompt:  320: Inference (test):avg data time: 3.32e-05, avg batch time: 0.2184, average loss: 15.7080
+[09/28 12:57:26][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 75.49	
+[09/28 12:57:26][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 4.817959636416969
+[09/28 12:57:36][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 9.66e-02, avg batch time: 0.5553, average train loss: 13.4652
+[09/28 12:57:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1693, average loss: 9.3618
+[09/28 12:57:39][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 12:58:03][INFO] visual_prompt:  307: 	Test 100/235. loss: 8.415, 0.2187 s / batch. (data: 2.48e-05)max mem: 7.81877 GB 
+[09/28 12:58:25][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.133, 0.2191 s / batch. (data: 2.74e-05)max mem: 7.81877 GB 
+[09/28 12:58:34][INFO] visual_prompt:  320: Inference (test):avg data time: 3.27e-05, avg batch time: 0.2187, average loss: 8.2174
+[09/28 12:58:34][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 12:58:34][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 4.783863644106502
+[09/28 12:58:44][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 1.04e-01, avg batch time: 0.5622, average train loss: 11.8725
+[09/28 12:58:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.68e-05, avg batch time: 0.1696, average loss: 10.9354
+[09/28 12:58:47][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 76.00	
+[09/28 12:59:11][INFO] visual_prompt:  307: 	Test 100/235. loss: 10.646, 0.2191 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 12:59:33][INFO] visual_prompt:  307: 	Test 200/235. loss: 11.283, 0.2198 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 12:59:41][INFO] visual_prompt:  320: Inference (test):avg data time: 3.48e-05, avg batch time: 0.2188, average loss: 10.8393
+[09/28 12:59:41][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 80.03	
+[09/28 12:59:41][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 4.7469851157479175
+[09/28 12:59:52][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 1.06e-01, avg batch time: 0.5634, average train loss: 9.9053
+[09/28 12:59:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.32e-05, avg batch time: 0.1696, average loss: 7.9606
+[09/28 12:59:55][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 13:00:19][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.606, 0.2194 s / batch. (data: 2.43e-05)max mem: 7.81877 GB 
+[09/28 13:00:41][INFO] visual_prompt:  307: 	Test 200/235. loss: 7.430, 0.2200 s / batch. (data: 2.48e-05)max mem: 7.81877 GB 
+[09/28 13:00:49][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2190, average loss: 8.2449
+[09/28 13:00:50][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 91.87	
+[09/28 13:00:50][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 4.707368982147317
+[09/28 13:01:00][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 1.02e-01, avg batch time: 0.5587, average train loss: 10.2930
+[09/28 13:01:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.60e-05, avg batch time: 0.1699, average loss: 11.4910
+[09/28 13:01:03][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 78.00	
+[09/28 13:01:26][INFO] visual_prompt:  307: 	Test 100/235. loss: 13.647, 0.2189 s / batch. (data: 2.43e-05)max mem: 7.81877 GB 
+[09/28 13:01:48][INFO] visual_prompt:  307: 	Test 200/235. loss: 12.608, 0.2198 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:01:57][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2189, average loss: 12.1377
+[09/28 13:01:57][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 77.46	
+[09/28 13:01:57][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 4.665063509461097
+[09/28 13:02:07][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 9.62e-02, avg batch time: 0.5536, average train loss: 8.0753
+[09/28 13:02:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1734, average loss: 9.0378
+[09/28 13:02:11][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 88.00	
+[09/28 13:02:34][INFO] visual_prompt:  307: 	Test 100/235. loss: 8.310, 0.2200 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 13:02:56][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.312, 0.2197 s / batch. (data: 2.43e-05)max mem: 7.81877 GB 
+[09/28 13:03:05][INFO] visual_prompt:  320: Inference (test):avg data time: 3.29e-05, avg batch time: 0.2189, average loss: 8.1513
+[09/28 13:03:05][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 90.95	
+[09/28 13:03:05][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 4.620120240391064
+[09/28 13:03:15][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 9.11e-02, avg batch time: 0.5489, average train loss: 9.7668
+[09/28 13:03:18][INFO] visual_prompt:  320: Inference (val):avg data time: 3.03e-05, avg batch time: 0.1691, average loss: 6.5235
+[09/28 13:03:18][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:03:42][INFO] visual_prompt:  307: 	Test 100/235. loss: 7.656, 0.2187 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:04:04][INFO] visual_prompt:  307: 	Test 200/235. loss: 7.256, 0.2197 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:04:13][INFO] visual_prompt:  320: Inference (test):avg data time: 3.05e-05, avg batch time: 0.2187, average loss: 7.0958
+[09/28 13:04:13][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 84.20	
+[09/28 13:04:13][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 4.572593931387604
+[09/28 13:04:23][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 1.04e-01, avg batch time: 0.5625, average train loss: 7.0412
+[09/28 13:04:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1697, average loss: 8.9182
+[09/28 13:04:26][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 90.50	
+[09/28 13:04:50][INFO] visual_prompt:  307: 	Test 100/235. loss: 9.144, 0.2191 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:05:12][INFO] visual_prompt:  307: 	Test 200/235. loss: 10.090, 0.2192 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:05:21][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2190, average loss: 10.2818
+[09/28 13:05:21][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 84.20	
+[09/28 13:05:21][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 4.522542485937368
+[09/28 13:05:31][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 1.02e-01, avg batch time: 0.5599, average train loss: 11.0648
+[09/28 13:05:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.84e-05, avg batch time: 0.1693, average loss: 7.5672
+[09/28 13:05:34][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 13:05:58][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.915, 0.2190 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:06:20][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.695, 0.2194 s / batch. (data: 3.03e-05)max mem: 7.81877 GB 
+[09/28 13:06:29][INFO] visual_prompt:  320: Inference (test):avg data time: 2.94e-05, avg batch time: 0.2188, average loss: 7.2222
+[09/28 13:06:29][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 13:06:29][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 4.4700268840168045
+[09/28 13:06:39][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 9.94e-02, avg batch time: 0.5573, average train loss: 12.2848
+[09/28 13:06:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.36e-05, avg batch time: 0.1694, average loss: 9.2508
+[09/28 13:06:42][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 11.00	top5: 89.50	
+[09/28 13:07:06][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.545, 0.2196 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:07:28][INFO] visual_prompt:  307: 	Test 200/235. loss: 5.685, 0.2193 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:07:37][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2188, average loss: 7.9530
+[09/28 13:07:37][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 10.22	top5: 91.87	
+[09/28 13:07:37][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 4.415111107797445
+[09/28 13:07:47][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 1.01e-01, avg batch time: 0.5589, average train loss: 14.2614
+[09/28 13:07:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1697, average loss: 9.3569
+[09/28 13:07:50][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 13:08:14][INFO] visual_prompt:  307: 	Test 100/235. loss: 8.495, 0.2194 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:08:36][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.159, 0.2201 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:08:44][INFO] visual_prompt:  320: Inference (test):avg data time: 2.68e-05, avg batch time: 0.2189, average loss: 8.5391
+[09/28 13:08:44][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 13:08:44][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 4.357862063693486
+[09/28 13:08:55][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 1.03e-01, avg batch time: 0.5601, average train loss: 10.7194
+[09/28 13:08:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1693, average loss: 23.3898
+[09/28 13:08:58][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 88.00	
+[09/28 13:09:21][INFO] visual_prompt:  307: 	Test 100/235. loss: 22.030, 0.2199 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 13:09:43][INFO] visual_prompt:  307: 	Test 200/235. loss: 21.214, 0.2200 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:09:52][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2190, average loss: 20.6744
+[09/28 13:09:52][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 90.95	
+[09/28 13:09:52][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 4.298349500846628
+[09/28 13:10:02][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 1.06e-01, avg batch time: 0.5633, average train loss: 9.7945
+[09/28 13:10:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1721, average loss: 3.0824
+[09/28 13:10:06][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 13:10:29][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.747, 0.2199 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 13:10:51][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.913, 0.2196 s / batch. (data: 3.22e-05)max mem: 7.81877 GB 
+[09/28 13:11:00][INFO] visual_prompt:  320: Inference (test):avg data time: 2.74e-05, avg batch time: 0.2189, average loss: 3.2203
+[09/28 13:11:00][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 91.47	
+[09/28 13:11:00][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 4.236645926147493
+[09/28 13:11:10][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 1.00e-01, avg batch time: 0.5587, average train loss: 17.8004
+[09/28 13:11:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1695, average loss: 9.2631
+[09/28 13:11:14][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 89.50	
+[09/28 13:11:37][INFO] visual_prompt:  307: 	Test 100/235. loss: 8.053, 0.2196 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:11:59][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.362, 0.2201 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:12:08][INFO] visual_prompt:  320: Inference (test):avg data time: 2.71e-05, avg batch time: 0.2189, average loss: 9.2555
+[09/28 13:12:08][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 91.87	
+[09/28 13:12:08][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 4.172826515897146
+[09/28 13:12:18][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 1.09e-01, avg batch time: 0.5670, average train loss: 20.4236
+[09/28 13:12:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.42e-05, avg batch time: 0.1696, average loss: 15.0981
+[09/28 13:12:22][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:12:45][INFO] visual_prompt:  307: 	Test 100/235. loss: 13.971, 0.2198 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:13:07][INFO] visual_prompt:  307: 	Test 200/235. loss: 15.617, 0.2198 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:13:16][INFO] visual_prompt:  320: Inference (test):avg data time: 3.04e-05, avg batch time: 0.2189, average loss: 16.0336
+[09/28 13:13:16][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 84.20	
+[09/28 13:13:16][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 4.106969024216348
+[09/28 13:13:26][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 1.03e-01, avg batch time: 0.5618, average train loss: 16.5277
+[09/28 13:13:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.54e-05, avg batch time: 0.1692, average loss: 15.2086
+[09/28 13:13:30][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 13:13:53][INFO] visual_prompt:  307: 	Test 100/235. loss: 14.080, 0.2197 s / batch. (data: 2.34e-05)max mem: 7.81877 GB 
+[09/28 13:14:15][INFO] visual_prompt:  307: 	Test 200/235. loss: 15.043, 0.2192 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:14:24][INFO] visual_prompt:  320: Inference (test):avg data time: 2.78e-05, avg batch time: 0.2188, average loss: 16.1712
+[09/28 13:14:24][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 13:14:24][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 4.039153688314146
+[09/28 13:14:34][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 9.48e-02, avg batch time: 0.5523, average train loss: 7.0628
+[09/28 13:14:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1694, average loss: 4.4903
+[09/28 13:14:38][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:15:01][INFO] visual_prompt:  307: 	Test 100/235. loss: 5.489, 0.2263 s / batch. (data: 7.49e-05)max mem: 7.81877 GB 
+[09/28 13:15:23][INFO] visual_prompt:  307: 	Test 200/235. loss: 5.838, 0.2201 s / batch. (data: 3.29e-05)max mem: 7.81877 GB 
+[09/28 13:15:32][INFO] visual_prompt:  320: Inference (test):avg data time: 3.28e-05, avg batch time: 0.2187, average loss: 5.7870
+[09/28 13:15:32][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 84.20	
+[09/28 13:15:32][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 3.969463130731183
+[09/28 13:15:42][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 9.21e-02, avg batch time: 0.5499, average train loss: 9.2690
+[09/28 13:15:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1695, average loss: 12.7924
+[09/28 13:15:45][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 78.00	
+[09/28 13:16:09][INFO] visual_prompt:  307: 	Test 100/235. loss: 15.377, 0.2202 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:16:31][INFO] visual_prompt:  307: 	Test 200/235. loss: 13.886, 0.2198 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:16:39][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2187, average loss: 13.7077
+[09/28 13:16:39][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 77.46	
+[09/28 13:16:39][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 3.897982258676867
+[09/28 13:16:50][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 1.08e-01, avg batch time: 0.5647, average train loss: 10.6570
+[09/28 13:16:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.62e-05, avg batch time: 0.1687, average loss: 10.9150
+[09/28 13:16:53][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 90.50	
+[09/28 13:17:16][INFO] visual_prompt:  307: 	Test 100/235. loss: 12.101, 0.2195 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 13:17:38][INFO] visual_prompt:  307: 	Test 200/235. loss: 12.648, 0.2195 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:17:47][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2187, average loss: 12.3019
+[09/28 13:17:47][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 84.20	
+[09/28 13:17:47][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 3.824798160583012
+[09/28 13:17:57][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 9.89e-02, avg batch time: 0.5587, average train loss: 7.4179
+[09/28 13:18:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1690, average loss: 7.2347
+[09/28 13:18:01][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 13:18:24][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.479, 0.2190 s / batch. (data: 2.84e-05)max mem: 7.81877 GB 
+[09/28 13:18:46][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.791, 0.2202 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:18:55][INFO] visual_prompt:  320: Inference (test):avg data time: 2.78e-05, avg batch time: 0.2187, average loss: 7.1817
+[09/28 13:18:55][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 13:18:55][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 3.75
+[09/28 13:19:05][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 1.04e-01, avg batch time: 0.5606, average train loss: 6.7988
+[09/28 13:19:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1690, average loss: 3.4857
+[09/28 13:19:08][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 89.50	
+[09/28 13:19:32][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.143, 0.2201 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:19:54][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.102, 0.2198 s / batch. (data: 2.38e-05)max mem: 7.81877 GB 
+[09/28 13:20:03][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2188, average loss: 3.3079
+[09/28 13:20:03][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 91.87	
+[09/28 13:20:03][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 3.673678906964727
+[09/28 13:20:13][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 9.59e-02, avg batch time: 0.5534, average train loss: 8.4682
+[09/28 13:20:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1688, average loss: 12.6113
+[09/28 13:20:16][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 13:20:40][INFO] visual_prompt:  307: 	Test 100/235. loss: 9.967, 0.2204 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:21:02][INFO] visual_prompt:  307: 	Test 200/235. loss: 10.666, 0.2199 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 13:21:11][INFO] visual_prompt:  320: Inference (test):avg data time: 2.93e-05, avg batch time: 0.2186, average loss: 12.0362
+[09/28 13:21:11][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 13:21:11][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 3.5959278669726933
+[09/28 13:21:21][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 1.05e-01, avg batch time: 0.5620, average train loss: 6.8004
+[09/28 13:21:24][INFO] visual_prompt:  320: Inference (val):avg data time: 3.01e-05, avg batch time: 0.1694, average loss: 7.3970
+[09/28 13:21:24][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 78.00	
+[09/28 13:21:48][INFO] visual_prompt:  307: 	Test 100/235. loss: 7.376, 0.2195 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 13:22:10][INFO] visual_prompt:  307: 	Test 200/235. loss: 7.016, 0.2200 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:22:18][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2187, average loss: 6.9377
+[09/28 13:22:19][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 77.46	
+[09/28 13:22:19][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 3.516841607689501
+[09/28 13:22:28][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 9.44e-02, avg batch time: 0.5524, average train loss: 7.1174
+[09/28 13:22:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.60e-05, avg batch time: 0.1693, average loss: 6.2921
+[09/28 13:22:32][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:22:55][INFO] visual_prompt:  307: 	Test 100/235. loss: 7.156, 0.2203 s / batch. (data: 2.77e-05)max mem: 7.81877 GB 
+[09/28 13:23:17][INFO] visual_prompt:  307: 	Test 200/235. loss: 8.009, 0.2206 s / batch. (data: 3.98e-05)max mem: 7.81877 GB 
+[09/28 13:23:26][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2191, average loss: 7.9008
+[09/28 13:23:26][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 84.20	
+[09/28 13:23:26][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 3.4365164835397803
+[09/28 13:23:36][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 1.03e-01, avg batch time: 0.5608, average train loss: 6.7902
+[09/28 13:23:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1691, average loss: 7.9285
+[09/28 13:23:40][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 13:24:03][INFO] visual_prompt:  307: 	Test 100/235. loss: 7.232, 0.2192 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:24:25][INFO] visual_prompt:  307: 	Test 200/235. loss: 7.438, 0.2198 s / batch. (data: 3.03e-05)max mem: 7.81877 GB 
+[09/28 13:24:34][INFO] visual_prompt:  320: Inference (test):avg data time: 2.78e-05, avg batch time: 0.2189, average loss: 8.2341
+[09/28 13:24:34][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 13:24:34][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 3.3550503583141724
+[09/28 13:24:44][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 9.81e-02, avg batch time: 0.5562, average train loss: 7.2108
+[09/28 13:24:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1687, average loss: 6.6762
+[09/28 13:24:48][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 89.50	
+[09/28 13:25:11][INFO] visual_prompt:  307: 	Test 100/235. loss: 5.401, 0.2201 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 13:25:33][INFO] visual_prompt:  307: 	Test 200/235. loss: 5.468, 0.2199 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 13:25:42][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2188, average loss: 5.8259
+[09/28 13:25:42][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 91.87	
+[09/28 13:25:42][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 3.2725424859373686
+[09/28 13:25:52][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 1.07e-01, avg batch time: 0.5649, average train loss: 7.3925
+[09/28 13:25:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1701, average loss: 5.7458
+[09/28 13:25:56][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 78.00	
+[09/28 13:26:19][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.459, 0.2192 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:26:41][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.079, 0.2198 s / batch. (data: 3.39e-05)max mem: 7.81877 GB 
+[09/28 13:26:50][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2187, average loss: 5.8704
+[09/28 13:26:50][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 77.46	
+[09/28 13:26:50][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 3.1890933895424975
+[09/28 13:27:00][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 1.00e-01, avg batch time: 0.5578, average train loss: 4.6717
+[09/28 13:27:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.39e-05, avg batch time: 0.1690, average loss: 7.4395
+[09/28 13:27:03][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 88.00	
+[09/28 13:27:27][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.729, 0.2198 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:27:49][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.693, 0.2198 s / batch. (data: 2.98e-05)max mem: 7.81877 GB 
+[09/28 13:27:58][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2187, average loss: 6.8210
+[09/28 13:27:58][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 90.95	
+[09/28 13:27:58][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 3.104804738999169
+[09/28 13:28:08][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 9.53e-02, avg batch time: 0.5556, average train loss: 5.7761
+[09/28 13:28:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.73e-05, avg batch time: 0.1691, average loss: 6.7979
+[09/28 13:28:11][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:28:35][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.656, 0.2195 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:28:57][INFO] visual_prompt:  307: 	Test 200/235. loss: 7.674, 0.2195 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:29:06][INFO] visual_prompt:  320: Inference (test):avg data time: 2.86e-05, avg batch time: 0.2186, average loss: 8.0804
+[09/28 13:29:06][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 84.20	
+[09/28 13:29:06][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 3.019779227044398
+[09/28 13:29:16][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 1.02e-01, avg batch time: 0.5593, average train loss: 4.1947
+[09/28 13:29:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1692, average loss: 2.3972
+[09/28 13:29:19][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 88.00	
+[09/28 13:29:43][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.012, 0.2197 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:30:05][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.030, 0.2195 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:30:13][INFO] visual_prompt:  320: Inference (test):avg data time: 2.94e-05, avg batch time: 0.2189, average loss: 2.1589
+[09/28 13:30:13][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 90.95	
+[09/28 13:30:13][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 2.934120444167326
+[09/28 13:30:23][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 9.59e-02, avg batch time: 0.5549, average train loss: 2.2452
+[09/28 13:30:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1697, average loss: 4.8358
+[09/28 13:30:27][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 76.00	
+[09/28 13:30:50][INFO] visual_prompt:  307: 	Test 100/235. loss: 5.473, 0.2203 s / batch. (data: 2.48e-05)max mem: 7.81877 GB 
+[09/28 13:31:12][INFO] visual_prompt:  307: 	Test 200/235. loss: 5.033, 0.2190 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 13:31:21][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2190, average loss: 4.6702
+[09/28 13:31:21][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 80.03	
+[09/28 13:31:21][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 2.8479327524001636
+[09/28 13:31:31][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 9.36e-02, avg batch time: 0.5509, average train loss: 4.3903
+[09/28 13:31:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1693, average loss: 3.3844
+[09/28 13:31:34][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 90.50	
+[09/28 13:31:58][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.591, 0.2193 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:32:20][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.654, 0.2186 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:32:29][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2187, average loss: 3.6253
+[09/28 13:32:29][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 84.20	
+[09/28 13:32:29][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 2.761321158169134
+[09/28 13:32:39][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 9.88e-02, avg batch time: 0.5562, average train loss: 5.3665
+[09/28 13:32:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1690, average loss: 5.3055
+[09/28 13:32:42][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 90.50	
+[09/28 13:33:05][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.156, 0.2190 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:33:27][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.940, 0.2201 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:33:36][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2187, average loss: 7.0393
+[09/28 13:33:36][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.09	top5: 84.20	
+[09/28 13:33:36][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 2.6743911843603128
+[09/28 13:33:46][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 1.05e-01, avg batch time: 0.5611, average train loss: 3.4510
+[09/28 13:33:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.45e-05, avg batch time: 0.1690, average loss: 6.2105
+[09/28 13:33:50][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 12.00	top5: 89.50	
+[09/28 13:34:13][INFO] visual_prompt:  307: 	Test 100/235. loss: 6.015, 0.2197 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 13:34:35][INFO] visual_prompt:  307: 	Test 200/235. loss: 6.219, 0.2199 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:34:44][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2187, average loss: 6.2767
+[09/28 13:34:44][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 9.05	top5: 91.87	
+[09/28 13:34:44][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 2.5872487417562526
+[09/28 13:34:54][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 1.01e-01, avg batch time: 0.5583, average train loss: 6.3285
+[09/28 13:34:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1690, average loss: 4.0137
+[09/28 13:34:57][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 13:35:21][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.863, 0.2187 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 13:35:43][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.817, 0.2202 s / batch. (data: 2.81e-05)max mem: 7.81877 GB 
+[09/28 13:35:52][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2187, average loss: 3.9313
+[09/28 13:35:52][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 13:35:52][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 2.5
+[09/28 13:36:02][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 1.04e-01, avg batch time: 0.5608, average train loss: 4.5659
+[09/28 13:36:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1690, average loss: 3.4886
+[09/28 13:36:05][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 76.00	
+[09/28 13:36:29][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.450, 0.2197 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:36:51][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.192, 0.2201 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:36:59][INFO] visual_prompt:  320: Inference (test):avg data time: 2.81e-05, avg batch time: 0.2186, average loss: 3.1026
+[09/28 13:37:00][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 80.03	
+[09/28 13:37:00][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 2.4127512582437483
+[09/28 13:37:10][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 1.05e-01, avg batch time: 0.5616, average train loss: 2.7837
+[09/28 13:37:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.80e-05, avg batch time: 0.1690, average loss: 1.9354
+[09/28 13:37:13][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 13:37:36][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.839, 0.2196 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:37:58][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.817, 0.2196 s / batch. (data: 2.43e-05)max mem: 7.81877 GB 
+[09/28 13:38:07][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2187, average loss: 1.8240
+[09/28 13:38:07][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 13:38:07][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 2.325608815639687
+[09/28 13:38:18][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 9.78e-02, avg batch time: 0.5563, average train loss: 1.9676
+[09/28 13:38:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1691, average loss: 2.1624
+[09/28 13:38:21][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 76.00	
+[09/28 13:38:45][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.131, 0.2200 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 13:39:07][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.142, 0.2204 s / batch. (data: 2.43e-05)max mem: 7.81877 GB 
+[09/28 13:39:15][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2186, average loss: 2.1097
+[09/28 13:39:15][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 80.03	
+[09/28 13:39:15][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 2.2386788418308665
+[09/28 13:39:26][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 9.86e-02, avg batch time: 0.5572, average train loss: 2.0192
+[09/28 13:39:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1697, average loss: 2.5952
+[09/28 13:39:29][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 90.50	
+[09/28 13:39:52][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.737, 0.2199 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 13:40:14][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.707, 0.2198 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 13:40:23][INFO] visual_prompt:  320: Inference (test):avg data time: 1.48e-04, avg batch time: 0.2190, average loss: 2.7674
+[09/28 13:40:23][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 84.20	
+[09/28 13:40:23][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 2.1520672475998373
+[09/28 13:40:34][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 1.03e-01, avg batch time: 0.5605, average train loss: 2.2581
+[09/28 13:40:37][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1693, average loss: 2.1027
+[09/28 13:40:37][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 78.00	
+[09/28 13:41:00][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.917, 0.2205 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 13:41:22][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.043, 0.2201 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:41:31][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2189, average loss: 2.1172
+[09/28 13:41:31][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 75.49	
+[09/28 13:41:31][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 2.0658795558326744
+[09/28 13:41:41][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 9.78e-02, avg batch time: 0.5550, average train loss: 2.3021
+[09/28 13:41:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1730, average loss: 2.7623
+[09/28 13:41:45][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 13:42:08][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.355, 0.2199 s / batch. (data: 2.81e-05)max mem: 7.81877 GB 
+[09/28 13:42:30][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.541, 0.2190 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 13:42:39][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2189, average loss: 2.6995
+[09/28 13:42:39][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 90.95	
+[09/28 13:42:39][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 1.980220772955602
+[09/28 13:42:49][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 9.49e-02, avg batch time: 0.5532, average train loss: 2.2589
+[09/28 13:42:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1698, average loss: 1.8873
+[09/28 13:42:52][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 13:43:16][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.897, 0.2198 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:43:38][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.818, 0.2199 s / batch. (data: 3.31e-05)max mem: 7.81877 GB 
+[09/28 13:43:47][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2191, average loss: 1.8357
+[09/28 13:43:47][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 91.87	
+[09/28 13:43:47][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 1.895195261000831
+[09/28 13:43:57][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 9.69e-02, avg batch time: 0.5564, average train loss: 1.8476
+[09/28 13:44:00][INFO] visual_prompt:  320: Inference (val):avg data time: 2.56e-05, avg batch time: 0.1689, average loss: 1.7506
+[09/28 13:44:00][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 13:44:24][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.704, 0.2199 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:44:46][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.729, 0.2188 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:44:54][INFO] visual_prompt:  320: Inference (test):avg data time: 2.78e-05, avg batch time: 0.2189, average loss: 1.7795
+[09/28 13:44:54][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 13:44:54][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 1.8109066104575022
+[09/28 13:45:04][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 1.02e-01, avg batch time: 0.5594, average train loss: 1.8494
+[09/28 13:45:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.70e-05, avg batch time: 0.1731, average loss: 1.7662
+[09/28 13:45:08][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 13:45:31][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.727, 0.2191 s / batch. (data: 2.84e-05)max mem: 7.81877 GB 
+[09/28 13:45:53][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.732, 0.2201 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:46:02][INFO] visual_prompt:  320: Inference (test):avg data time: 6.77e-05, avg batch time: 0.2191, average loss: 1.7907
+[09/28 13:46:02][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 91.87	
+[09/28 13:46:02][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 1.7274575140626316
+[09/28 13:46:12][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 1.01e-01, avg batch time: 0.5585, average train loss: 1.7843
+[09/28 13:46:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1694, average loss: 1.7657
+[09/28 13:46:16][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 13:46:39][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.777, 0.2193 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:47:01][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.834, 0.2196 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:47:10][INFO] visual_prompt:  320: Inference (test):avg data time: 2.73e-05, avg batch time: 0.2189, average loss: 1.8470
+[09/28 13:47:10][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.54	top5: 84.20	
+[09/28 13:47:10][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 1.6449496416858285
+[09/28 13:47:20][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 1.04e-01, avg batch time: 0.5623, average train loss: 2.0768
+[09/28 13:47:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.49e-05, avg batch time: 0.1701, average loss: 1.9939
+[09/28 13:47:24][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 14.50	top5: 75.00	
+[09/28 13:47:47][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.948, 0.2193 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 13:48:09][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.003, 0.2206 s / batch. (data: 2.81e-05)max mem: 7.81877 GB 
+[09/28 13:48:18][INFO] visual_prompt:  320: Inference (test):avg data time: 7.90e-05, avg batch time: 0.2191, average loss: 1.9825
+[09/28 13:48:18][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 11.96	top5: 78.42	
+[09/28 13:48:18][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 1.5634835164602199
+[09/28 13:48:28][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 9.76e-02, avg batch time: 0.5564, average train loss: 6.6154
+[09/28 13:48:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1693, average loss: 3.9099
+[09/28 13:48:31][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 9.50	top5: 76.00	
+[09/28 13:48:55][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.707, 0.2197 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:49:17][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.649, 0.2195 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:49:26][INFO] visual_prompt:  320: Inference (test):avg data time: 2.75e-05, avg batch time: 0.2188, average loss: 3.4965
+[09/28 13:49:26][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 15.80	top5: 80.03	
+[09/28 13:49:26][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 1.4831583923104998
+[09/28 13:49:36][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 9.43e-02, avg batch time: 0.5532, average train loss: 3.7565
+[09/28 13:49:39][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1699, average loss: 3.2536
+[09/28 13:49:39][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 78.00	
+[09/28 13:50:03][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.410, 0.2195 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:50:25][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.387, 0.2198 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:50:33][INFO] visual_prompt:  320: Inference (test):avg data time: 2.79e-05, avg batch time: 0.2188, average loss: 3.4746
+[09/28 13:50:33][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 77.46	
+[09/28 13:50:33][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 1.4040721330273063
+[09/28 13:50:43][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 9.25e-02, avg batch time: 0.5506, average train loss: 2.8257
+[09/28 13:50:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1698, average loss: 3.5069
+[09/28 13:50:47][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 13:51:10][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.522, 0.2198 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:51:32][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.225, 0.2199 s / batch. (data: 2.79e-05)max mem: 7.81877 GB 
+[09/28 13:51:41][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2189, average loss: 3.4021
+[09/28 13:51:41][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 13:51:41][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 1.3263210930352738
+[09/28 13:51:51][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 9.87e-02, avg batch time: 0.5560, average train loss: 2.7021
+[09/28 13:51:54][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1700, average loss: 1.9638
+[09/28 13:51:54][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 32.00	top5: 90.50	
+[09/28 13:52:18][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.955, 0.2205 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 13:52:40][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.098, 0.2189 s / batch. (data: 2.77e-05)max mem: 7.81877 GB 
+[09/28 13:52:49][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2191, average loss: 2.1333
+[09/28 13:52:49][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 25.97	top5: 84.20	
+[09/28 13:52:49][INFO] visual_prompt:  245: Best epoch 70: best metric: 0.320
+[09/28 13:52:49][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 1.2500000000000004
+[09/28 13:52:59][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 9.93e-02, avg batch time: 0.5578, average train loss: 2.8559
+[09/28 13:53:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1695, average loss: 4.0949
+[09/28 13:53:02][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 10.50	top5: 88.00	
+[09/28 13:53:26][INFO] visual_prompt:  307: 	Test 100/235. loss: 3.871, 0.2199 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 13:53:48][INFO] visual_prompt:  307: 	Test 200/235. loss: 3.884, 0.2195 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 13:53:57][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2191, average loss: 3.7560
+[09/28 13:53:57][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 8.13	top5: 90.95	
+[09/28 13:53:57][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 1.175201839416988
+[09/28 13:54:07][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 9.38e-02, avg batch time: 0.5534, average train loss: 2.6759
+[09/28 13:54:10][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1690, average loss: 1.7707
+[09/28 13:54:10][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 13:54:34][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.642, 0.2197 s / batch. (data: 7.70e-05)max mem: 7.81877 GB 
+[09/28 13:54:56][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.674, 0.2190 s / batch. (data: 2.96e-05)max mem: 7.81877 GB 
+[09/28 13:55:04][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2189, average loss: 1.7498
+[09/28 13:55:05][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 22.55	top5: 91.87	
+[09/28 13:55:05][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 1.1020177413231333
+[09/28 13:55:14][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 9.46e-02, avg batch time: 0.5537, average train loss: 1.9308
+[09/28 13:55:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.75e-05, avg batch time: 0.1693, average loss: 2.2361
+[09/28 13:55:18][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 78.00	
+[09/28 13:55:41][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.025, 0.2192 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:56:03][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.180, 0.2193 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 13:56:12][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2186, average loss: 2.3175
+[09/28 13:56:12][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 75.49	
+[09/28 13:56:12][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 1.0305368692688175
+[09/28 13:56:22][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 9.33e-02, avg batch time: 0.5510, average train loss: 2.0706
+[09/28 13:56:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.77e-05, avg batch time: 0.1695, average loss: 2.2283
+[09/28 13:56:25][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 76.00	
+[09/28 13:56:49][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.336, 0.2199 s / batch. (data: 2.81e-05)max mem: 7.81877 GB 
+[09/28 13:57:11][INFO] visual_prompt:  307: 	Test 200/235. loss: 2.200, 0.2194 s / batch. (data: 3.03e-05)max mem: 7.81877 GB 
+[09/28 13:57:20][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2188, average loss: 2.1300
+[09/28 13:57:20][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 80.03	
+[09/28 13:57:20][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 0.9608463116858543
+[09/28 13:57:30][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 9.56e-02, avg batch time: 0.5549, average train loss: 1.9989
+[09/28 13:57:33][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1752, average loss: 1.8597
+[09/28 13:57:33][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 89.50	
+[09/28 13:57:57][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.702, 0.2192 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 13:58:19][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.787, 0.2200 s / batch. (data: 2.48e-05)max mem: 7.81877 GB 
+[09/28 13:58:28][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2188, average loss: 1.9016
+[09/28 13:58:28][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 91.87	
+[09/28 13:58:28][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 0.8930309757836516
+[09/28 13:58:38][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 9.85e-02, avg batch time: 0.5581, average train loss: 1.9622
+[09/28 13:58:41][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1691, average loss: 1.7424
+[09/28 13:58:41][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 24.00	top5: 88.00	
+[09/28 13:59:04][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.662, 0.2197 s / batch. (data: 2.77e-05)max mem: 7.81877 GB 
+[09/28 13:59:26][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.675, 0.2199 s / batch. (data: 2.77e-05)max mem: 7.81877 GB 
+[09/28 13:59:35][INFO] visual_prompt:  320: Inference (test):avg data time: 3.02e-05, avg batch time: 0.2188, average loss: 1.7262
+[09/28 13:59:35][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 19.97	top5: 90.95	
+[09/28 13:59:35][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 0.8271734841028553
+[09/28 13:59:45][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 9.66e-02, avg batch time: 0.5558, average train loss: 1.8748
+[09/28 13:59:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.23e-05, avg batch time: 0.1695, average loss: 2.0813
+[09/28 13:59:48][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 89.50	
+[09/28 14:00:12][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.117, 0.2201 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 14:00:34][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.981, 0.2203 s / batch. (data: 7.70e-05)max mem: 7.81877 GB 
+[09/28 14:00:43][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2188, average loss: 2.0412
+[09/28 14:00:43][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 91.87	
+[09/28 14:00:43][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 0.7633540738525066
+[09/28 14:00:53][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 9.24e-02, avg batch time: 0.5503, average train loss: 1.8581
+[09/28 14:00:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1691, average loss: 2.0047
+[09/28 14:00:56][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 88.00	
+[09/28 14:01:19][INFO] visual_prompt:  307: 	Test 100/235. loss: 2.055, 0.2199 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 14:01:41][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.959, 0.2200 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:01:50][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2190, average loss: 1.9652
+[09/28 14:01:50][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 90.95	
+[09/28 14:01:50][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 0.7016504991533725
+[09/28 14:02:00][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 9.89e-02, avg batch time: 0.5560, average train loss: 1.8104
+[09/28 14:02:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.33e-05, avg batch time: 0.1693, average loss: 1.6012
+[09/28 14:02:04][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 44.50	top5: 89.50	
+[09/28 14:02:27][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.537, 0.2199 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 14:02:49][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.536, 0.2200 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:02:58][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2189, average loss: 1.6273
+[09/28 14:02:58][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 39.04	top5: 91.87	
+[09/28 14:02:58][INFO] visual_prompt:  245: Best epoch 79: best metric: 0.445
+[09/28 14:02:58][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 0.6421379363065141
+[09/28 14:03:08][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 9.03e-02, avg batch time: 0.5481, average train loss: 1.7019
+[09/28 14:03:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.65e-05, avg batch time: 0.1693, average loss: 1.6617
+[09/28 14:03:11][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 26.00	top5: 89.50	
+[09/28 14:03:35][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.527, 0.2193 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:03:57][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.566, 0.2198 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:04:06][INFO] visual_prompt:  320: Inference (test):avg data time: 3.11e-05, avg batch time: 0.2189, average loss: 1.6396
+[09/28 14:04:06][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 25.09	top5: 91.87	
+[09/28 14:04:06][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 0.5848888922025552
+[09/28 14:04:16][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 9.42e-02, avg batch time: 0.5519, average train loss: 1.5910
+[09/28 14:04:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1690, average loss: 1.3934
+[09/28 14:04:19][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 34.50	top5: 98.50	
+[09/28 14:04:43][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.395, 0.2208 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 14:05:05][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.411, 0.2199 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:05:13][INFO] visual_prompt:  320: Inference (test):avg data time: 2.95e-05, avg batch time: 0.2189, average loss: 1.4255
+[09/28 14:05:13][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 28.01	top5: 99.49	
+[09/28 14:05:13][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 0.5299731159831953
+[09/28 14:05:24][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 1.04e-01, avg batch time: 0.5607, average train loss: 1.4046
+[09/28 14:05:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1694, average loss: 1.5403
+[09/28 14:05:27][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 32.00	top5: 100.00	
+[09/28 14:05:50][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.529, 0.2205 s / batch. (data: 8.01e-05)max mem: 7.81877 GB 
+[09/28 14:06:12][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.482, 0.2247 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 14:06:21][INFO] visual_prompt:  320: Inference (test):avg data time: 4.93e-05, avg batch time: 0.2188, average loss: 1.5821
+[09/28 14:06:21][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 32.79	top5: 99.50	
+[09/28 14:06:21][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 0.47745751406263165
+[09/28 14:06:31][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 9.10e-02, avg batch time: 0.5489, average train loss: 1.2841
+[09/28 14:06:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1696, average loss: 1.3299
+[09/28 14:06:34][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 34.50	top5: 100.00	
+[09/28 14:06:58][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.320, 0.2203 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:07:20][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.331, 0.2205 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 14:07:29][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2190, average loss: 1.3605
+[09/28 14:07:29][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 36.98	top5: 99.96	
+[09/28 14:07:29][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 0.42740606861239594
+[09/28 14:07:39][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 9.92e-02, avg batch time: 0.5580, average train loss: 1.3289
+[09/28 14:07:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.34e-05, avg batch time: 0.1691, average loss: 1.2752
+[09/28 14:07:42][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 45.00	top5: 99.50	
+[09/28 14:08:06][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.347, 0.2196 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 14:08:28][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.278, 0.2202 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 14:08:36][INFO] visual_prompt:  320: Inference (test):avg data time: 4.91e-05, avg batch time: 0.2190, average loss: 1.3433
+[09/28 14:08:37][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 39.14	top5: 98.60	
+[09/28 14:08:37][INFO] visual_prompt:  245: Best epoch 84: best metric: 0.450
+[09/28 14:08:37][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 0.3798797596089351
+[09/28 14:08:47][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 9.62e-02, avg batch time: 0.5550, average train loss: 1.7275
+[09/28 14:08:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.69e-05, avg batch time: 0.1694, average loss: 1.7115
+[09/28 14:08:50][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 22.00	top5: 90.50	
+[09/28 14:09:13][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.758, 0.2192 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 14:09:35][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.741, 0.2193 s / batch. (data: 2.74e-05)max mem: 7.81877 GB 
+[09/28 14:09:44][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2191, average loss: 1.7542
+[09/28 14:09:44][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.51	top5: 84.20	
+[09/28 14:09:44][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 0.33493649053890323
+[09/28 14:09:54][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 9.27e-02, avg batch time: 0.5521, average train loss: 1.7523
+[09/28 14:09:58][INFO] visual_prompt:  320: Inference (val):avg data time: 3.08e-05, avg batch time: 0.1694, average loss: 1.5726
+[09/28 14:09:58][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 26.00	top5: 96.00	
+[09/28 14:10:21][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.550, 0.2205 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:10:43][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.543, 0.2202 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:10:52][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2188, average loss: 1.5758
+[09/28 14:10:52][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 27.17	top5: 96.49	
+[09/28 14:10:52][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 0.29263101785268253
+[09/28 14:11:02][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 9.32e-02, avg batch time: 0.5508, average train loss: 1.6052
+[09/28 14:11:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.59e-05, avg batch time: 0.1697, average loss: 1.4013
+[09/28 14:11:05][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 35.00	top5: 99.50	
+[09/28 14:11:29][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.461, 0.2197 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:11:51][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.346, 0.2207 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:12:00][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2188, average loss: 1.4224
+[09/28 14:12:00][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 33.07	top5: 99.83	
+[09/28 14:12:00][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 0.25301488425208296
+[09/28 14:12:10][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 9.44e-02, avg batch time: 0.5548, average train loss: 1.3915
+[09/28 14:12:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.33e-05, avg batch time: 0.1692, average loss: 1.3379
+[09/28 14:12:13][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 41.00	top5: 98.50	
+[09/28 14:12:37][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.445, 0.2202 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 14:12:59][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.338, 0.2204 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:13:07][INFO] visual_prompt:  320: Inference (test):avg data time: 2.75e-05, avg batch time: 0.2188, average loss: 1.4202
+[09/28 14:13:08][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 34.91	top5: 99.24	
+[09/28 14:13:08][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 0.21613635589349756
+[09/28 14:13:18][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 9.81e-02, avg batch time: 0.5575, average train loss: 1.7772
+[09/28 14:13:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.82e-05, avg batch time: 0.1698, average loss: 1.7049
+[09/28 14:13:21][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 21.50	top5: 88.00	
+[09/28 14:13:44][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.696, 0.2190 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 14:14:06][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.675, 0.2191 s / batch. (data: 2.69e-05)max mem: 7.81877 GB 
+[09/28 14:14:15][INFO] visual_prompt:  320: Inference (test):avg data time: 2.75e-05, avg batch time: 0.2187, average loss: 1.7006
+[09/28 14:14:15][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 24.84	top5: 90.95	
+[09/28 14:14:15][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.18204036358303172
+[09/28 14:14:25][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 9.90e-02, avg batch time: 0.5588, average train loss: 1.6542
+[09/28 14:14:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1701, average loss: 1.4869
+[09/28 14:14:29][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 30.50	top5: 97.00	
+[09/28 14:14:52][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.507, 0.2205 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:15:14][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.448, 0.2196 s / batch. (data: 2.48e-05)max mem: 7.81877 GB 
+[09/28 14:15:23][INFO] visual_prompt:  320: Inference (test):avg data time: 2.79e-05, avg batch time: 0.2189, average loss: 1.5124
+[09/28 14:15:23][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 25.93	top5: 97.52	
+[09/28 14:15:23][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.1507684480352292
+[09/28 14:15:33][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 9.60e-02, avg batch time: 0.5535, average train loss: 1.3926
+[09/28 14:15:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1694, average loss: 1.1858
+[09/28 14:15:36][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 44.00	top5: 100.00	
+[09/28 14:16:00][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.298, 0.2198 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:16:22][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.279, 0.2194 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 14:16:31][INFO] visual_prompt:  320: Inference (test):avg data time: 3.21e-05, avg batch time: 0.2190, average loss: 1.2714
+[09/28 14:16:31][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 41.12	top5: 99.97	
+[09/28 14:16:31][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.12235870926211617
+[09/28 14:16:41][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 1.10e-01, avg batch time: 0.5678, average train loss: 1.1667
+[09/28 14:16:45][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1694, average loss: 1.1216
+[09/28 14:16:45][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 48.00	top5: 100.00	
+[09/28 14:17:08][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.143, 0.2196 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 14:17:30][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.117, 0.2199 s / batch. (data: 2.79e-05)max mem: 7.81877 GB 
+[09/28 14:17:39][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2189, average loss: 1.1711
+[09/28 14:17:39][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 44.55	top5: 100.00	
+[09/28 14:17:39][INFO] visual_prompt:  245: Best epoch 92: best metric: 0.480
+[09/28 14:17:39][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.09684576015420276
+[09/28 14:17:49][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 9.34e-02, avg batch time: 0.5534, average train loss: 1.0664
+[09/28 14:17:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.66e-05, avg batch time: 0.1707, average loss: 0.9734
+[09/28 14:17:52][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 54.00	top5: 100.00	
+[09/28 14:18:16][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.033, 0.2204 s / batch. (data: 2.50e-05)max mem: 7.81877 GB 
+[09/28 14:18:38][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.028, 0.2200 s / batch. (data: 2.67e-05)max mem: 7.81877 GB 
+[09/28 14:18:47][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2189, average loss: 1.0598
+[09/28 14:18:47][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 49.50	top5: 99.99	
+[09/28 14:18:47][INFO] visual_prompt:  245: Best epoch 93: best metric: 0.540
+[09/28 14:18:47][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.07426068431000882
+[09/28 14:18:57][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 1.10e-01, avg batch time: 0.5677, average train loss: 1.0098
+[09/28 14:19:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1694, average loss: 0.9821
+[09/28 14:19:01][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 56.00	top5: 100.00	
+[09/28 14:19:24][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.072, 0.2195 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 14:19:46][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.033, 0.2201 s / batch. (data: 3.03e-05)max mem: 7.81877 GB 
+[09/28 14:19:55][INFO] visual_prompt:  320: Inference (test):avg data time: 2.79e-05, avg batch time: 0.2189, average loss: 1.0588
+[09/28 14:19:55][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 49.94	top5: 99.99	
+[09/28 14:19:55][INFO] visual_prompt:  245: Best epoch 94: best metric: 0.560
+[09/28 14:19:55][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.05463099816548578
+[09/28 14:20:05][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 1.04e-01, avg batch time: 0.5611, average train loss: 0.9525
+[09/28 14:20:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1690, average loss: 0.8869
+[09/28 14:20:08][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 58.50	top5: 100.00	
+[09/28 14:20:32][INFO] visual_prompt:  307: 	Test 100/235. loss: 0.952, 0.2197 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:20:54][INFO] visual_prompt:  307: 	Test 200/235. loss: 0.931, 0.2207 s / batch. (data: 6.29e-05)max mem: 7.81877 GB 
+[09/28 14:21:03][INFO] visual_prompt:  320: Inference (test):avg data time: 9.72e-05, avg batch time: 0.2192, average loss: 0.9837
+[09/28 14:21:03][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 52.91	top5: 99.99	
+[09/28 14:21:03][INFO] visual_prompt:  245: Best epoch 95: best metric: 0.585
+[09/28 14:21:03][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.03798061746947995
+[09/28 14:21:13][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 9.33e-02, avg batch time: 0.5513, average train loss: 0.9524
+[09/28 14:21:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.63e-05, avg batch time: 0.1691, average loss: 0.8801
+[09/28 14:21:16][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 57.50	top5: 100.00	
+[09/28 14:21:40][INFO] visual_prompt:  307: 	Test 100/235. loss: 1.044, 0.2199 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:22:02][INFO] visual_prompt:  307: 	Test 200/235. loss: 1.063, 0.2189 s / batch. (data: 2.46e-05)max mem: 7.81877 GB 
+[09/28 14:22:11][INFO] visual_prompt:  320: Inference (test):avg data time: 3.12e-05, avg batch time: 0.2187, average loss: 1.0481
+[09/28 14:22:11][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 50.18	top5: 99.96	
+[09/28 14:22:11][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.024329828146074095
+[09/28 14:22:21][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 9.84e-02, avg batch time: 0.5565, average train loss: 0.9656
+[09/28 14:22:24][INFO] visual_prompt:  320: Inference (val):avg data time: 2.64e-05, avg batch time: 0.1699, average loss: 0.8968
+[09/28 14:22:24][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 60.00	top5: 100.00	
+[09/28 14:22:47][INFO] visual_prompt:  307: 	Test 100/235. loss: 0.949, 0.2194 s / batch. (data: 2.57e-05)max mem: 7.81877 GB 
+[09/28 14:23:09][INFO] visual_prompt:  307: 	Test 200/235. loss: 0.957, 0.2199 s / batch. (data: 2.55e-05)max mem: 7.81877 GB 
+[09/28 14:23:18][INFO] visual_prompt:  320: Inference (test):avg data time: 3.76e-05, avg batch time: 0.2187, average loss: 0.9942
+[09/28 14:23:18][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 54.13	top5: 100.00	
+[09/28 14:23:18][INFO] visual_prompt:  245: Best epoch 97: best metric: 0.600
+[09/28 14:23:18][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.013695261579316775
+[09/28 14:23:28][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 9.58e-02, avg batch time: 0.5541, average train loss: 0.9285
+[09/28 14:23:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.54e-05, avg batch time: 0.1693, average loss: 0.8872
+[09/28 14:23:32][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 58.50	top5: 100.00	
+[09/28 14:23:55][INFO] visual_prompt:  307: 	Test 100/235. loss: 0.918, 0.2201 s / batch. (data: 2.72e-05)max mem: 7.81877 GB 
+[09/28 14:24:17][INFO] visual_prompt:  307: 	Test 200/235. loss: 0.897, 0.2201 s / batch. (data: 2.53e-05)max mem: 7.81877 GB 
+[09/28 14:24:26][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2187, average loss: 0.9684
+[09/28 14:24:26][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 52.31	top5: 100.00	
+[09/28 14:24:26][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.006089874350439506
+[09/28 14:24:36][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 9.19e-02, avg batch time: 0.5505, average train loss: 0.8923
+[09/28 14:24:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.46e-05, avg batch time: 0.1689, average loss: 0.8432
+[09/28 14:24:40][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 65.00	top5: 100.00	
+[09/28 14:25:03][INFO] visual_prompt:  307: 	Test 100/235. loss: 0.928, 0.2190 s / batch. (data: 2.65e-05)max mem: 7.81877 GB 
+[09/28 14:25:25][INFO] visual_prompt:  307: 	Test 200/235. loss: 0.949, 0.2200 s / batch. (data: 3.22e-05)max mem: 7.81877 GB 
+[09/28 14:25:34][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2190, average loss: 0.9624
+[09/28 14:25:34][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 56.53	top5: 99.99	
+[09/28 14:25:34][INFO] visual_prompt:  245: Best epoch 99: best metric: 0.650
+[09/28 14:25:34][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 0.0015229324522605947
+[09/28 14:25:44][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 1.00e-01, avg batch time: 0.5583, average train loss: 0.8808
+[09/28 14:25:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1693, average loss: 0.8337
+[09/28 14:25:47][INFO] visual_prompt:  113: Classification results with val_vtab-clevr(task="closest_object_distance"): top1: 65.50	top5: 100.00	
+[09/28 14:26:11][INFO] visual_prompt:  307: 	Test 100/235. loss: 0.913, 0.2195 s / batch. (data: 2.62e-05)max mem: 7.81877 GB 
+[09/28 14:26:33][INFO] visual_prompt:  307: 	Test 200/235. loss: 0.915, 0.2198 s / batch. (data: 2.60e-05)max mem: 7.81877 GB 
+[09/28 14:26:42][INFO] visual_prompt:  320: Inference (test):avg data time: 3.16e-05, avg batch time: 0.2189, average loss: 0.9464
+[09/28 14:26:42][INFO] visual_prompt:  113: Classification results with test_vtab-clevr(task="closest_object_distance"): top1: 57.61	top5: 99.99	
+[09/28 14:26:42][INFO] visual_prompt:  245: Best epoch 100: best metric: 0.655

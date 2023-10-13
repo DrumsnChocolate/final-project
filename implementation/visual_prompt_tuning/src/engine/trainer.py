@@ -17,6 +17,7 @@ from ..solver.optimizer import make_optimizer
 from ..solver.losses import build_loss
 from ..utils import logging
 from ..utils.train_utils import AverageMeter, gpu_mem_usage
+from ..engine.stopper import get_stopper
 
 logger = logging.get_logger("visual_prompt")
 
@@ -60,6 +61,7 @@ class Trainer():
 
         self.evaluator = evaluator
         self.cpu_device = torch.device("cpu")
+        self.stopper = get_stopper(cfg)
 
     def forward_one_batch(self, inputs, targets, is_train):
         """Train a single (full) epoch on the model using the given
@@ -227,29 +229,23 @@ class Trainer():
 
             # eval at each epoch for single gpu training
             self.evaluator.update_iteration(epoch)
-            self.eval_classifier(val_loader, "val", epoch == total_epoch - 1)
+            avg_val_loss = self.eval_classifier(val_loader, "val", epoch == total_epoch - 1)
             if test_loader is not None:
                 self.eval_classifier(
                     test_loader, "test", epoch == total_epoch - 1)
 
-            # check the patience
-            t_name = "val_" + val_loader.dataset.name
-            try:
-                curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
-            except KeyError:
-                return
+            if epoch >= self.cfg.SOLVER.WARMUP_EPOCH:
 
-            if curr_acc > best_metric:
-                best_metric = curr_acc
-                best_epoch = epoch + 1
-                logger.info(
-                    f'Best epoch {best_epoch}: best metric: {best_metric:.3f}')
-                patience = 0
-            else:
-                patience += 1
-            if patience >= self.cfg.SOLVER.PATIENCE:
-                logger.info("No improvement. Breaking out of loop.")
-                break
+                t_name = "val_" + val_loader.dataset.name
+                try:
+                    curr_acc = self.evaluator.results[f"epoch_{epoch}"]["classification"][t_name]["top1"]
+                except KeyError:
+                    return
+
+                # we choose not to use test metrics for stopping, because we should behave
+                # as if we don't have access to test data. Otherwise, the test is not a true test.
+                if self.stopper({"epoch": epoch, "loss": avg_val_loss, "accuracy": curr_acc}):
+                    break
 
         # save the last checkpoints
         # if self.cfg.MODEL.SAVE_CKPT:
@@ -340,3 +336,5 @@ class Trainer():
             torch.save(out, out_path)
             logger.info(
                 f"Saved logits and targets for {test_name} at {out_path}")
+        # return avg loss
+        return losses.avg

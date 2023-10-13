@@ -1,0 +1,791 @@
+[09/28 08:13:09][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[09/28 08:13:09][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              3
+GPU 0                NVIDIA A100-PCIE-40GB
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[09/28 08:13:09][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-smallnorb(predicted_attribute="label_azimuth")', 'DATA.NUMBER_CLASSES', '18', 'DATA.CROPSIZE', '224', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir'])
+[09/28 08:13:09][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/28 08:13:09][INFO] visual_prompt:  108: Training with config:
+[09/28 08:13:09][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/vtab-smallnorb(predicted_attribute="label_azimuth")/sup_vitb16_imagenet21k/prompt50/crop224/test/seed8364/lr0.25_wd0.001/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 8364, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.001, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 300, 'SCHEDULER': 'cosine', 'BASE_LR': 0.25, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'vtab-smallnorb(predicted_attribute="label_azimuth")', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 18, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'CROPSIZE': 224, 'NO_TEST': False, 'BATCH_SIZE': 64, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[09/28 08:13:09][INFO] visual_prompt:   89: Loading training data...
+[09/28 08:13:09][INFO] visual_prompt:   68: Constructing vtab-smallnorb(predicted_attribute="label_azimuth") dataset trainval...
+[09/28 08:13:10][INFO] visual_prompt:   88: Number of images: 1000
+[09/28 08:13:10][INFO] visual_prompt:   89: Number of classes: 18 / 18
+[09/28 08:13:10][INFO] visual_prompt:   94: Loading validation data...
+[09/28 08:13:10][INFO] visual_prompt:   68: Constructing vtab-smallnorb(predicted_attribute="label_azimuth") dataset val...
+[09/28 08:13:10][INFO] visual_prompt:   88: Number of images: 200
+[09/28 08:13:10][INFO] visual_prompt:   89: Number of classes: 18 / 18
+[09/28 08:13:10][INFO] visual_prompt:   98: Loading test data...
+[09/28 08:13:10][INFO] visual_prompt:   68: Constructing vtab-smallnorb(predicted_attribute="label_azimuth") dataset test...
+[09/28 08:13:27][INFO] visual_prompt:   88: Number of images: 12150
+[09/28 08:13:27][INFO] visual_prompt:   89: Number of classes: 18 / 18
+[09/28 08:13:27][INFO] visual_prompt:  120: Constructing models...
+[09/28 08:13:29][INFO] visual_prompt:   52: Total Parameters: 86273298	 Gradient Parameters: 474642
+[09/28 08:13:29][INFO] visual_prompt:   54: tuned percent:0.550
+[09/28 08:13:29][INFO] visual_prompt:   40: Device used for model: 0
+[09/28 08:13:29][INFO] visual_prompt:  122: Setting up Evaluator...
+[09/28 08:13:29][INFO] visual_prompt:  124: Setting up Trainer...
+[09/28 08:13:29][INFO] visual_prompt:   44: 	Setting up the optimizer...
+[09/28 08:13:29][INFO] visual_prompt:  163: Training 1 / 100 epoch, with learning rate 0.0
+[09/28 08:13:39][INFO] visual_prompt:  215: Epoch 1 / 100: avg data time: 1.02e-01, avg batch time: 0.5247, average train loss: 3.0634
+[09/28 08:13:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1741, average loss: 3.0647
+[09/28 08:13:42][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.50	top5: 28.50	
+[09/28 08:14:04][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.117, 0.2040 s / batch. (data: 2.72e-05)max mem: 7.81168 GB 
+[09/28 08:14:24][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2040, average loss: 3.0763
+[09/28 08:14:24][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.82	top5: 28.07	
+[09/28 08:14:24][INFO] visual_prompt:  245: Best epoch 1: best metric: 0.055
+[09/28 08:14:24][INFO] visual_prompt:  163: Training 2 / 100 epoch, with learning rate 0.025
+[09/28 08:14:33][INFO] visual_prompt:  215: Epoch 2 / 100: avg data time: 1.04e-01, avg batch time: 0.5299, average train loss: 3.0237
+[09/28 08:14:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.66e-05, avg batch time: 0.1595, average loss: 2.9236
+[09/28 08:14:36][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.50	top5: 30.50	
+[09/28 08:14:59][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.862, 0.2042 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 08:15:18][INFO] visual_prompt:  320: Inference (test):avg data time: 1.29e-04, avg batch time: 0.2053, average loss: 2.9301
+[09/28 08:15:18][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.51	top5: 27.41	
+[09/28 08:15:18][INFO] visual_prompt:  163: Training 3 / 100 epoch, with learning rate 0.05
+[09/28 08:15:28][INFO] visual_prompt:  215: Epoch 3 / 100: avg data time: 1.01e-01, avg batch time: 0.5320, average train loss: 2.9170
+[09/28 08:15:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1853, average loss: 2.8988
+[09/28 08:15:31][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.50	top5: 28.50	
+[09/28 08:15:53][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.939, 0.2049 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 08:16:13][INFO] visual_prompt:  320: Inference (test):avg data time: 1.25e-04, avg batch time: 0.2052, average loss: 2.9170
+[09/28 08:16:13][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.82	top5: 27.44	
+[09/28 08:16:13][INFO] visual_prompt:  163: Training 4 / 100 epoch, with learning rate 0.075
+[09/28 08:16:22][INFO] visual_prompt:  215: Epoch 4 / 100: avg data time: 1.02e-01, avg batch time: 0.5286, average train loss: 2.9060
+[09/28 08:16:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1767, average loss: 2.8991
+[09/28 08:16:25][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 9.00	top5: 30.00	
+[09/28 08:16:48][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.873, 0.2057 s / batch. (data: 2.50e-05)max mem: 7.81234 GB 
+[09/28 08:17:07][INFO] visual_prompt:  320: Inference (test):avg data time: 8.68e-05, avg batch time: 0.2052, average loss: 2.8976
+[09/28 08:17:07][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.67	top5: 28.40	
+[09/28 08:17:07][INFO] visual_prompt:  245: Best epoch 4: best metric: 0.090
+[09/28 08:17:07][INFO] visual_prompt:  163: Training 5 / 100 epoch, with learning rate 0.1
+[09/28 08:17:17][INFO] visual_prompt:  215: Epoch 5 / 100: avg data time: 1.02e-01, avg batch time: 0.5315, average train loss: 2.9004
+[09/28 08:17:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.17e-05, avg batch time: 0.1825, average loss: 2.8767
+[09/28 08:17:20][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 9.50	top5: 35.00	
+[09/28 08:17:42][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.929, 0.2036 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 08:18:02][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2054, average loss: 2.9089
+[09/28 08:18:02][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 6.49	top5: 30.21	
+[09/28 08:18:02][INFO] visual_prompt:  245: Best epoch 5: best metric: 0.095
+[09/28 08:18:02][INFO] visual_prompt:  163: Training 6 / 100 epoch, with learning rate 0.125
+[09/28 08:18:11][INFO] visual_prompt:  215: Epoch 6 / 100: avg data time: 9.53e-02, avg batch time: 0.5227, average train loss: 2.9024
+[09/28 08:18:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1726, average loss: 2.8910
+[09/28 08:18:14][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 8.50	top5: 27.50	
+[09/28 08:18:36][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.894, 0.2055 s / batch. (data: 2.31e-05)max mem: 7.81234 GB 
+[09/28 08:18:56][INFO] visual_prompt:  320: Inference (test):avg data time: 2.40e-04, avg batch time: 0.2052, average loss: 2.9068
+[09/28 08:18:56][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.41	top5: 27.91	
+[09/28 08:18:56][INFO] visual_prompt:  163: Training 7 / 100 epoch, with learning rate 0.15
+[09/28 08:19:06][INFO] visual_prompt:  215: Epoch 7 / 100: avg data time: 1.01e-01, avg batch time: 0.5291, average train loss: 2.9015
+[09/28 08:19:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.00e-05, avg batch time: 0.1783, average loss: 2.8795
+[09/28 08:19:09][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 10.00	top5: 32.00	
+[09/28 08:19:31][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.874, 0.2045 s / batch. (data: 2.86e-05)max mem: 7.81234 GB 
+[09/28 08:19:51][INFO] visual_prompt:  320: Inference (test):avg data time: 7.19e-05, avg batch time: 0.2051, average loss: 2.8908
+[09/28 08:19:51][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 6.99	top5: 30.58	
+[09/28 08:19:51][INFO] visual_prompt:  245: Best epoch 7: best metric: 0.100
+[09/28 08:19:51][INFO] visual_prompt:  163: Training 8 / 100 epoch, with learning rate 0.175
+[09/28 08:20:00][INFO] visual_prompt:  215: Epoch 8 / 100: avg data time: 9.73e-02, avg batch time: 0.5255, average train loss: 2.9146
+[09/28 08:20:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1806, average loss: 2.8658
+[09/28 08:20:03][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 8.50	top5: 36.50	
+[09/28 08:20:26][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.894, 0.2032 s / batch. (data: 2.88e-05)max mem: 7.81234 GB 
+[09/28 08:20:45][INFO] visual_prompt:  320: Inference (test):avg data time: 3.05e-05, avg batch time: 0.2050, average loss: 2.9245
+[09/28 08:20:45][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.95	top5: 29.62	
+[09/28 08:20:45][INFO] visual_prompt:  163: Training 9 / 100 epoch, with learning rate 0.2
+[09/28 08:20:55][INFO] visual_prompt:  215: Epoch 9 / 100: avg data time: 1.03e-01, avg batch time: 0.5311, average train loss: 2.9078
+[09/28 08:20:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.23e-05, avg batch time: 0.1859, average loss: 2.8822
+[09/28 08:20:58][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 7.00	top5: 30.50	
+[09/28 08:21:20][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.909, 0.2059 s / batch. (data: 2.74e-05)max mem: 7.81234 GB 
+[09/28 08:21:40][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2047, average loss: 2.9126
+[09/28 08:21:40][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 6.88	top5: 30.60	
+[09/28 08:21:40][INFO] visual_prompt:  163: Training 10 / 100 epoch, with learning rate 0.225
+[09/28 08:21:49][INFO] visual_prompt:  215: Epoch 10 / 100: avg data time: 1.06e-01, avg batch time: 0.5308, average train loss: 2.9154
+[09/28 08:21:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.30e-05, avg batch time: 0.1754, average loss: 2.9316
+[09/28 08:21:53][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.00	top5: 33.00	
+[09/28 08:22:15][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.928, 0.2044 s / batch. (data: 2.57e-05)max mem: 7.81234 GB 
+[09/28 08:22:34][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2047, average loss: 2.9273
+[09/28 08:22:34][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 5.49	top5: 29.99	
+[09/28 08:22:34][INFO] visual_prompt:  163: Training 11 / 100 epoch, with learning rate 0.25
+[09/28 08:22:44][INFO] visual_prompt:  215: Epoch 11 / 100: avg data time: 9.05e-02, avg batch time: 0.5177, average train loss: 2.9055
+[09/28 08:22:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.10e-05, avg batch time: 0.1832, average loss: 2.8809
+[09/28 08:22:47][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 7.00	top5: 36.00	
+[09/28 08:23:09][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.895, 0.2060 s / batch. (data: 2.74e-05)max mem: 7.81234 GB 
+[09/28 08:23:29][INFO] visual_prompt:  320: Inference (test):avg data time: 2.94e-05, avg batch time: 0.2050, average loss: 2.9191
+[09/28 08:23:29][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 6.46	top5: 32.12	
+[09/28 08:23:29][INFO] visual_prompt:  163: Training 12 / 100 epoch, with learning rate 0.24992385337738698
+[09/28 08:23:38][INFO] visual_prompt:  215: Epoch 12 / 100: avg data time: 9.46e-02, avg batch time: 0.5227, average train loss: 2.8680
+[09/28 08:23:41][INFO] visual_prompt:  320: Inference (val):avg data time: 2.25e-05, avg batch time: 0.1838, average loss: 2.7993
+[09/28 08:23:41][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 12.00	top5: 40.50	
+[09/28 08:24:03][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.873, 0.2042 s / batch. (data: 2.48e-05)max mem: 7.81234 GB 
+[09/28 08:24:23][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2050, average loss: 2.8706
+[09/28 08:24:23][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 7.88	top5: 35.28	
+[09/28 08:24:23][INFO] visual_prompt:  245: Best epoch 12: best metric: 0.120
+[09/28 08:24:23][INFO] visual_prompt:  163: Training 13 / 100 epoch, with learning rate 0.24969550628247802
+[09/28 08:24:33][INFO] visual_prompt:  215: Epoch 13 / 100: avg data time: 9.73e-02, avg batch time: 0.5280, average train loss: 2.8210
+[09/28 08:24:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.18e-05, avg batch time: 0.1762, average loss: 2.7767
+[09/28 08:24:36][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 12.00	top5: 42.00	
+[09/28 08:24:58][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.719, 0.2053 s / batch. (data: 2.72e-05)max mem: 7.81234 GB 
+[09/28 08:25:18][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2048, average loss: 2.8721
+[09/28 08:25:18][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 8.73	top5: 37.21	
+[09/28 08:25:18][INFO] visual_prompt:  163: Training 14 / 100 epoch, with learning rate 0.24931523692103416
+[09/28 08:25:27][INFO] visual_prompt:  215: Epoch 14 / 100: avg data time: 1.12e-01, avg batch time: 0.5373, average train loss: 2.8172
+[09/28 08:25:30][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1790, average loss: 2.7113
+[09/28 08:25:30][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 10.50	top5: 44.00	
+[09/28 08:25:53][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.764, 0.2037 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 08:26:12][INFO] visual_prompt:  320: Inference (test):avg data time: 2.78e-05, avg batch time: 0.2048, average loss: 2.7902
+[09/28 08:26:12][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 9.11	top5: 38.35	
+[09/28 08:26:12][INFO] visual_prompt:  163: Training 15 / 100 epoch, with learning rate 0.2487835085926963
+[09/28 08:26:22][INFO] visual_prompt:  215: Epoch 15 / 100: avg data time: 9.66e-02, avg batch time: 0.5224, average train loss: 2.7230
+[09/28 08:26:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1814, average loss: 2.7140
+[09/28 08:26:25][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 10.00	top5: 45.50	
+[09/28 08:26:47][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.759, 0.2042 s / batch. (data: 3.24e-05)max mem: 7.81234 GB 
+[09/28 08:27:07][INFO] visual_prompt:  320: Inference (test):avg data time: 1.55e-04, avg batch time: 0.2049, average loss: 2.8159
+[09/28 08:27:07][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 8.49	top5: 42.29	
+[09/28 08:27:07][INFO] visual_prompt:  163: Training 16 / 100 epoch, with learning rate 0.24810096912652602
+[09/28 08:27:16][INFO] visual_prompt:  215: Epoch 16 / 100: avg data time: 8.94e-02, avg batch time: 0.5171, average train loss: 2.7849
+[09/28 08:27:19][INFO] visual_prompt:  320: Inference (val):avg data time: 1.92e-05, avg batch time: 0.1750, average loss: 2.7674
+[09/28 08:27:19][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 13.00	top5: 46.50	
+[09/28 08:27:41][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.749, 0.2042 s / batch. (data: 2.77e-05)max mem: 7.81234 GB 
+[09/28 08:28:01][INFO] visual_prompt:  320: Inference (test):avg data time: 7.92e-05, avg batch time: 0.2048, average loss: 2.8773
+[09/28 08:28:01][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 8.77	top5: 36.94	
+[09/28 08:28:01][INFO] visual_prompt:  245: Best epoch 16: best metric: 0.130
+[09/28 08:28:01][INFO] visual_prompt:  163: Training 17 / 100 epoch, with learning rate 0.2472684500917257
+[09/28 08:28:10][INFO] visual_prompt:  215: Epoch 17 / 100: avg data time: 1.07e-01, avg batch time: 0.5326, average train loss: 2.6668
+[09/28 08:28:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.08e-05, avg batch time: 0.1820, average loss: 2.6249
+[09/28 08:28:14][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 14.00	top5: 52.50	
+[09/28 08:28:36][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.631, 0.2043 s / batch. (data: 2.50e-05)max mem: 7.81234 GB 
+[09/28 08:28:55][INFO] visual_prompt:  320: Inference (test):avg data time: 1.10e-04, avg batch time: 0.2052, average loss: 2.7558
+[09/28 08:28:56][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 9.14	top5: 44.63	
+[09/28 08:28:56][INFO] visual_prompt:  245: Best epoch 17: best metric: 0.140
+[09/28 08:28:56][INFO] visual_prompt:  163: Training 18 / 100 epoch, with learning rate 0.24628696578449955
+[09/28 08:29:05][INFO] visual_prompt:  215: Epoch 18 / 100: avg data time: 1.05e-01, avg batch time: 0.5315, average train loss: 2.6134
+[09/28 08:29:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.12e-05, avg batch time: 0.1793, average loss: 2.4919
+[09/28 08:29:08][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 19.50	top5: 57.00	
+[09/28 08:29:30][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.730, 0.2060 s / batch. (data: 2.62e-05)max mem: 7.81234 GB 
+[09/28 08:29:50][INFO] visual_prompt:  320: Inference (test):avg data time: 2.81e-05, avg batch time: 0.2046, average loss: 2.7184
+[09/28 08:29:50][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 11.18	top5: 50.21	
+[09/28 08:29:50][INFO] visual_prompt:  245: Best epoch 18: best metric: 0.195
+[09/28 08:29:50][INFO] visual_prompt:  163: Training 19 / 100 epoch, with learning rate 0.24515771199228986
+[09/28 08:30:00][INFO] visual_prompt:  215: Epoch 19 / 100: avg data time: 1.10e-01, avg batch time: 0.5365, average train loss: 2.5408
+[09/28 08:30:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.13e-05, avg batch time: 0.1817, average loss: 2.6896
+[09/28 08:30:03][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 14.00	top5: 55.50	
+[09/28 08:30:25][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.746, 0.2044 s / batch. (data: 2.50e-05)max mem: 7.81234 GB 
+[09/28 08:30:44][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2045, average loss: 2.7931
+[09/28 08:30:44][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 11.20	top5: 50.52	
+[09/28 08:30:44][INFO] visual_prompt:  163: Training 20 / 100 epoch, with learning rate 0.2438820645368942
+[09/28 08:30:54][INFO] visual_prompt:  215: Epoch 20 / 100: avg data time: 9.74e-02, avg batch time: 0.5230, average train loss: 2.5325
+[09/28 08:30:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.28e-05, avg batch time: 0.1753, average loss: 2.5621
+[09/28 08:30:57][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 12.00	top5: 60.50	
+[09/28 08:31:19][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.643, 0.2042 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 08:31:39][INFO] visual_prompt:  320: Inference (test):avg data time: 1.46e-04, avg batch time: 0.2048, average loss: 2.6859
+[09/28 08:31:39][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 12.27	top5: 55.18	
+[09/28 08:31:39][INFO] visual_prompt:  163: Training 21 / 100 epoch, with learning rate 0.24246157759823855
+[09/28 08:31:48][INFO] visual_prompt:  215: Epoch 21 / 100: avg data time: 1.05e-01, avg batch time: 0.5311, average train loss: 2.4585
+[09/28 08:31:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.66e-05, avg batch time: 0.1801, average loss: 2.3458
+[09/28 08:31:51][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 21.00	top5: 66.50	
+[09/28 08:32:13][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.615, 0.2037 s / batch. (data: 2.96e-05)max mem: 7.81234 GB 
+[09/28 08:32:33][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2048, average loss: 2.6016
+[09/28 08:32:33][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 13.88	top5: 59.11	
+[09/28 08:32:33][INFO] visual_prompt:  245: Best epoch 21: best metric: 0.210
+[09/28 08:32:33][INFO] visual_prompt:  163: Training 22 / 100 epoch, with learning rate 0.24089798182084843
+[09/28 08:32:42][INFO] visual_prompt:  215: Epoch 22 / 100: avg data time: 1.03e-01, avg batch time: 0.5288, average train loss: 2.2833
+[09/28 08:32:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1764, average loss: 2.2517
+[09/28 08:32:46][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 21.50	top5: 72.00	
+[09/28 08:33:08][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.751, 0.2035 s / batch. (data: 2.43e-05)max mem: 7.81234 GB 
+[09/28 08:33:27][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2045, average loss: 2.6166
+[09/28 08:33:28][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 16.03	top5: 62.55	
+[09/28 08:33:28][INFO] visual_prompt:  245: Best epoch 22: best metric: 0.215
+[09/28 08:33:28][INFO] visual_prompt:  163: Training 23 / 100 epoch, with learning rate 0.2391931822053251
+[09/28 08:33:37][INFO] visual_prompt:  215: Epoch 23 / 100: avg data time: 9.93e-02, avg batch time: 0.5248, average train loss: 2.3486
+[09/28 08:33:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1792, average loss: 2.2027
+[09/28 08:33:40][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 23.00	top5: 79.00	
+[09/28 08:34:02][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.476, 0.2062 s / batch. (data: 2.74e-05)max mem: 7.81234 GB 
+[09/28 08:34:22][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2047, average loss: 2.4710
+[09/28 08:34:22][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 14.02	top5: 63.42	
+[09/28 08:34:22][INFO] visual_prompt:  245: Best epoch 23: best metric: 0.230
+[09/28 08:34:22][INFO] visual_prompt:  163: Training 24 / 100 epoch, with learning rate 0.23734925578739588
+[09/28 08:34:31][INFO] visual_prompt:  215: Epoch 24 / 100: avg data time: 1.06e-01, avg batch time: 0.5321, average train loss: 2.2239
+[09/28 08:34:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.58e-05, avg batch time: 0.1823, average loss: 2.2183
+[09/28 08:34:35][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 23.50	top5: 73.50	
+[09/28 08:34:57][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.550, 0.2054 s / batch. (data: 2.88e-05)max mem: 7.81234 GB 
+[09/28 08:35:16][INFO] visual_prompt:  320: Inference (test):avg data time: 3.09e-05, avg batch time: 0.2045, average loss: 2.4522
+[09/28 08:35:16][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 17.26	top5: 65.28	
+[09/28 08:35:16][INFO] visual_prompt:  245: Best epoch 24: best metric: 0.235
+[09/28 08:35:16][INFO] visual_prompt:  163: Training 25 / 100 epoch, with learning rate 0.23536844910736587
+[09/28 08:35:26][INFO] visual_prompt:  215: Epoch 25 / 100: avg data time: 9.36e-02, avg batch time: 0.5205, average train loss: 2.1791
+[09/28 08:35:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1842, average loss: 2.1798
+[09/28 08:35:29][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 23.00	top5: 72.50	
+[09/28 08:35:51][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.559, 0.2041 s / batch. (data: 2.43e-05)max mem: 7.81234 GB 
+[09/28 08:36:11][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2047, average loss: 2.4473
+[09/28 08:36:11][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 17.99	top5: 64.19	
+[09/28 08:36:11][INFO] visual_prompt:  163: Training 26 / 100 epoch, with learning rate 0.23325317547305485
+[09/28 08:36:20][INFO] visual_prompt:  215: Epoch 26 / 100: avg data time: 1.06e-01, avg batch time: 0.5330, average train loss: 2.0641
+[09/28 08:36:24][INFO] visual_prompt:  320: Inference (val):avg data time: 3.80e-05, avg batch time: 0.1803, average loss: 2.0325
+[09/28 08:36:24][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 26.50	top5: 81.50	
+[09/28 08:36:46][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.935, 0.2050 s / batch. (data: 2.74e-05)max mem: 7.81234 GB 
+[09/28 08:37:05][INFO] visual_prompt:  320: Inference (test):avg data time: 2.83e-05, avg batch time: 0.2051, average loss: 2.5291
+[09/28 08:37:05][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 18.35	top5: 67.54	
+[09/28 08:37:05][INFO] visual_prompt:  245: Best epoch 26: best metric: 0.265
+[09/28 08:37:05][INFO] visual_prompt:  163: Training 27 / 100 epoch, with learning rate 0.23100601201955323
+[09/28 08:37:15][INFO] visual_prompt:  215: Epoch 27 / 100: avg data time: 1.09e-01, avg batch time: 0.5356, average train loss: 2.0003
+[09/28 08:37:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.31e-05, avg batch time: 0.1776, average loss: 2.0884
+[09/28 08:37:18][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 25.50	top5: 78.50	
+[09/28 08:37:40][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.643, 0.2193 s / batch. (data: 2.72e-05)max mem: 7.81234 GB 
+[09/28 08:38:00][INFO] visual_prompt:  320: Inference (test):avg data time: 2.80e-05, avg batch time: 0.2045, average loss: 2.6798
+[09/28 08:38:00][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 17.73	top5: 66.79	
+[09/28 08:38:00][INFO] visual_prompt:  163: Training 28 / 100 epoch, with learning rate 0.2286296965693802
+[09/28 08:38:09][INFO] visual_prompt:  215: Epoch 28 / 100: avg data time: 1.05e-01, avg batch time: 0.5306, average train loss: 1.8632
+[09/28 08:38:13][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1822, average loss: 1.9230
+[09/28 08:38:13][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 32.50	top5: 85.00	
+[09/28 08:38:35][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.697, 0.2034 s / batch. (data: 2.53e-05)max mem: 7.81234 GB 
+[09/28 08:38:54][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2050, average loss: 2.6721
+[09/28 08:38:54][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 19.19	top5: 68.63	
+[09/28 08:38:54][INFO] visual_prompt:  245: Best epoch 28: best metric: 0.325
+[09/28 08:38:54][INFO] visual_prompt:  163: Training 29 / 100 epoch, with learning rate 0.22612712429686843
+[09/28 08:39:04][INFO] visual_prompt:  215: Epoch 29 / 100: avg data time: 1.04e-01, avg batch time: 0.5304, average train loss: 1.7424
+[09/28 08:39:07][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1852, average loss: 1.9538
+[09/28 08:39:07][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.50	top5: 83.50	
+[09/28 08:39:29][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.762, 0.2041 s / batch. (data: 4.86e-05)max mem: 7.81234 GB 
+[09/28 08:39:48][INFO] visual_prompt:  320: Inference (test):avg data time: 2.86e-05, avg batch time: 0.2045, average loss: 2.6681
+[09/28 08:39:48][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 19.52	top5: 69.15	
+[09/28 08:39:48][INFO] visual_prompt:  163: Training 30 / 100 epoch, with learning rate 0.22350134420084022
+[09/28 08:39:58][INFO] visual_prompt:  215: Epoch 30 / 100: avg data time: 1.09e-01, avg batch time: 0.5333, average train loss: 1.6643
+[09/28 08:40:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.40e-05, avg batch time: 0.1726, average loss: 1.7766
+[09/28 08:40:01][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 35.50	top5: 90.50	
+[09/28 08:40:23][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.029, 0.2039 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 08:40:43][INFO] visual_prompt:  320: Inference (test):avg data time: 1.57e-04, avg batch time: 0.2046, average loss: 2.7635
+[09/28 08:40:43][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 19.86	top5: 69.54	
+[09/28 08:40:43][INFO] visual_prompt:  245: Best epoch 30: best metric: 0.355
+[09/28 08:40:43][INFO] visual_prompt:  163: Training 31 / 100 epoch, with learning rate 0.22075555538987224
+[09/28 08:40:52][INFO] visual_prompt:  215: Epoch 31 / 100: avg data time: 8.91e-02, avg batch time: 0.5173, average train loss: 1.5314
+[09/28 08:40:56][INFO] visual_prompt:  320: Inference (val):avg data time: 2.33e-05, avg batch time: 0.1769, average loss: 1.4990
+[09/28 08:40:56][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 45.50	top5: 94.50	
+[09/28 08:41:18][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.090, 0.2043 s / batch. (data: 2.60e-05)max mem: 7.81234 GB 
+[09/28 08:41:37][INFO] visual_prompt:  320: Inference (test):avg data time: 2.77e-05, avg batch time: 0.2043, average loss: 2.7538
+[09/28 08:41:37][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 21.15	top5: 70.00	
+[09/28 08:41:37][INFO] visual_prompt:  245: Best epoch 31: best metric: 0.455
+[09/28 08:41:37][INFO] visual_prompt:  163: Training 32 / 100 epoch, with learning rate 0.21789310318467428
+[09/28 08:41:47][INFO] visual_prompt:  215: Epoch 32 / 100: avg data time: 9.90e-02, avg batch time: 0.5256, average train loss: 1.3877
+[09/28 08:41:50][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1835, average loss: 1.6247
+[09/28 08:41:50][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 41.50	top5: 91.00	
+[09/28 08:42:12][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.137, 0.2042 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 08:42:31][INFO] visual_prompt:  320: Inference (test):avg data time: 2.81e-05, avg batch time: 0.2043, average loss: 2.9223
+[09/28 08:42:31][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 19.89	top5: 69.23	
+[09/28 08:42:31][INFO] visual_prompt:  163: Training 33 / 100 epoch, with learning rate 0.21491747504233139
+[09/28 08:42:41][INFO] visual_prompt:  215: Epoch 33 / 100: avg data time: 9.98e-02, avg batch time: 0.5270, average train loss: 1.4596
+[09/28 08:42:44][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1852, average loss: 1.4254
+[09/28 08:42:44][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 48.50	top5: 93.50	
+[09/28 08:43:06][INFO] visual_prompt:  307: 	Test 100/190. loss: 2.735, 0.2035 s / batch. (data: 2.62e-05)max mem: 7.81234 GB 
+[09/28 08:43:26][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2042, average loss: 2.7526
+[09/28 08:43:26][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 21.49	top5: 71.12	
+[09/28 08:43:26][INFO] visual_prompt:  245: Best epoch 33: best metric: 0.485
+[09/28 08:43:26][INFO] visual_prompt:  163: Training 34 / 100 epoch, with learning rate 0.21183229630737466
+[09/28 08:43:35][INFO] visual_prompt:  215: Epoch 34 / 100: avg data time: 1.00e-01, avg batch time: 0.5245, average train loss: 1.1907
+[09/28 08:43:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.10e-05, avg batch time: 0.1800, average loss: 1.2183
+[09/28 08:43:38][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 55.00	top5: 95.50	
+[09/28 08:44:00][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.222, 0.2045 s / batch. (data: 2.38e-05)max mem: 7.81234 GB 
+[09/28 08:44:20][INFO] visual_prompt:  320: Inference (test):avg data time: 1.34e-04, avg batch time: 0.2043, average loss: 3.0407
+[09/28 08:44:20][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 22.72	top5: 71.57	
+[09/28 08:44:20][INFO] visual_prompt:  245: Best epoch 34: best metric: 0.550
+[09/28 08:44:20][INFO] visual_prompt:  163: Training 35 / 100 epoch, with learning rate 0.20864132579485728
+[09/28 08:44:29][INFO] visual_prompt:  215: Epoch 35 / 100: avg data time: 9.37e-02, avg batch time: 0.5191, average train loss: 1.1156
+[09/28 08:44:33][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1757, average loss: 1.0363
+[09/28 08:44:33][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 65.50	top5: 96.00	
+[09/28 08:44:55][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.258, 0.2030 s / batch. (data: 2.88e-05)max mem: 7.81234 GB 
+[09/28 08:45:14][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2044, average loss: 2.9517
+[09/28 08:45:14][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 22.44	top5: 71.34	
+[09/28 08:45:14][INFO] visual_prompt:  245: Best epoch 35: best metric: 0.655
+[09/28 08:45:14][INFO] visual_prompt:  163: Training 36 / 100 epoch, with learning rate 0.2053484512108174
+[09/28 08:45:24][INFO] visual_prompt:  215: Epoch 36 / 100: avg data time: 1.02e-01, avg batch time: 0.5285, average train loss: 0.8803
+[09/28 08:45:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1849, average loss: 0.9538
+[09/28 08:45:27][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 71.50	top5: 96.50	
+[09/28 08:45:49][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.120, 0.2033 s / batch. (data: 2.26e-05)max mem: 7.81234 GB 
+[09/28 08:46:09][INFO] visual_prompt:  320: Inference (test):avg data time: 9.65e-05, avg batch time: 0.2043, average loss: 3.0788
+[09/28 08:46:09][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 24.61	top5: 73.16	
+[09/28 08:46:09][INFO] visual_prompt:  245: Best epoch 36: best metric: 0.715
+[09/28 08:46:09][INFO] visual_prompt:  163: Training 37 / 100 epoch, with learning rate 0.20195768441570727
+[09/28 08:46:18][INFO] visual_prompt:  215: Epoch 37 / 100: avg data time: 1.04e-01, avg batch time: 0.5299, average train loss: 0.7113
+[09/28 08:46:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1741, average loss: 0.7936
+[09/28 08:46:21][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 75.50	top5: 98.50	
+[09/28 08:46:43][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.811, 0.2034 s / batch. (data: 3.36e-05)max mem: 7.81234 GB 
+[09/28 08:47:03][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2041, average loss: 3.2525
+[09/28 08:47:03][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 22.91	top5: 71.56	
+[09/28 08:47:03][INFO] visual_prompt:  245: Best epoch 37: best metric: 0.755
+[09/28 08:47:03][INFO] visual_prompt:  163: Training 38 / 100 epoch, with learning rate 0.19847315653655914
+[09/28 08:47:13][INFO] visual_prompt:  215: Epoch 38 / 100: avg data time: 1.02e-01, avg batch time: 0.5274, average train loss: 0.6622
+[09/28 08:47:16][INFO] visual_prompt:  320: Inference (val):avg data time: 2.31e-05, avg batch time: 0.1852, average loss: 0.8056
+[09/28 08:47:16][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 69.00	top5: 99.50	
+[09/28 08:47:38][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.505, 0.2019 s / batch. (data: 3.74e-05)max mem: 7.81234 GB 
+[09/28 08:47:58][INFO] visual_prompt:  320: Inference (test):avg data time: 4.15e-05, avg batch time: 0.2040, average loss: 3.2374
+[09/28 08:47:58][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 24.35	top5: 73.05	
+[09/28 08:47:58][INFO] visual_prompt:  163: Training 39 / 100 epoch, with learning rate 0.19489911293384335
+[09/28 08:48:07][INFO] visual_prompt:  215: Epoch 39 / 100: avg data time: 9.75e-02, avg batch time: 0.5252, average train loss: 0.5773
+[09/28 08:48:10][INFO] visual_prompt:  320: Inference (val):avg data time: 2.45e-05, avg batch time: 0.1736, average loss: 0.6043
+[09/28 08:48:10][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 79.00	top5: 99.50	
+[09/28 08:48:32][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.456, 0.2038 s / batch. (data: 2.62e-05)max mem: 7.81234 GB 
+[09/28 08:48:52][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2040, average loss: 3.2090
+[09/28 08:48:52][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 25.59	top5: 72.61	
+[09/28 08:48:52][INFO] visual_prompt:  245: Best epoch 39: best metric: 0.790
+[09/28 08:48:52][INFO] visual_prompt:  163: Training 40 / 100 epoch, with learning rate 0.1912399080291506
+[09/28 08:49:01][INFO] visual_prompt:  215: Epoch 40 / 100: avg data time: 1.05e-01, avg batch time: 0.5299, average train loss: 0.4736
+[09/28 08:49:04][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1830, average loss: 0.3716
+[09/28 08:49:04][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 88.50	top5: 100.00	
+[09/28 08:49:26][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.486, 0.2048 s / batch. (data: 2.60e-05)max mem: 7.81234 GB 
+[09/28 08:49:46][INFO] visual_prompt:  320: Inference (test):avg data time: 2.77e-05, avg batch time: 0.2042, average loss: 3.2521
+[09/28 08:49:46][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 26.44	top5: 73.79	
+[09/28 08:49:46][INFO] visual_prompt:  245: Best epoch 40: best metric: 0.885
+[09/28 08:49:46][INFO] visual_prompt:  163: Training 41 / 100 epoch, with learning rate 0.1875
+[09/28 08:49:55][INFO] visual_prompt:  215: Epoch 41 / 100: avg data time: 1.02e-01, avg batch time: 0.5262, average train loss: 0.3596
+[09/28 08:49:59][INFO] visual_prompt:  320: Inference (val):avg data time: 2.74e-05, avg batch time: 0.1832, average loss: 0.3028
+[09/28 08:49:59][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 91.50	top5: 100.00	
+[09/28 08:50:21][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.394, 0.2037 s / batch. (data: 2.60e-05)max mem: 7.81234 GB 
+[09/28 08:50:40][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2041, average loss: 3.2205
+[09/28 08:50:40][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 27.93	top5: 73.93	
+[09/28 08:50:40][INFO] visual_prompt:  245: Best epoch 41: best metric: 0.915
+[09/28 08:50:40][INFO] visual_prompt:  163: Training 42 / 100 epoch, with learning rate 0.18368394534823634
+[09/28 08:50:50][INFO] visual_prompt:  215: Epoch 42 / 100: avg data time: 9.64e-02, avg batch time: 0.5207, average train loss: 0.3383
+[09/28 08:50:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.57e-05, avg batch time: 0.1785, average loss: 0.3200
+[09/28 08:50:53][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 90.50	top5: 100.00	
+[09/28 08:51:15][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.305, 0.2032 s / batch. (data: 2.69e-05)max mem: 7.81234 GB 
+[09/28 08:51:34][INFO] visual_prompt:  320: Inference (test):avg data time: 2.86e-05, avg batch time: 0.2040, average loss: 3.2932
+[09/28 08:51:34][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.18	top5: 74.81	
+[09/28 08:51:34][INFO] visual_prompt:  163: Training 43 / 100 epoch, with learning rate 0.17979639334863468
+[09/28 08:51:44][INFO] visual_prompt:  215: Epoch 43 / 100: avg data time: 9.98e-02, avg batch time: 0.5249, average train loss: 0.2934
+[09/28 08:51:47][INFO] visual_prompt:  320: Inference (val):avg data time: 2.13e-05, avg batch time: 0.1781, average loss: 0.2023
+[09/28 08:51:47][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 97.00	top5: 100.00	
+[09/28 08:52:09][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.027, 0.2033 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 08:52:28][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2040, average loss: 3.1728
+[09/28 08:52:28][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.57	top5: 74.39	
+[09/28 08:52:28][INFO] visual_prompt:  245: Best epoch 43: best metric: 0.970
+[09/28 08:52:28][INFO] visual_prompt:  163: Training 44 / 100 epoch, with learning rate 0.17584208038447505
+[09/28 08:52:38][INFO] visual_prompt:  215: Epoch 44 / 100: avg data time: 1.05e-01, avg batch time: 0.5291, average train loss: 0.2281
+[09/28 08:52:41][INFO] visual_prompt:  320: Inference (val):avg data time: 3.73e-05, avg batch time: 0.1726, average loss: 0.1865
+[09/28 08:52:41][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 96.50	top5: 100.00	
+[09/28 08:53:03][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.317, 0.2043 s / batch. (data: 2.29e-05)max mem: 7.81234 GB 
+[09/28 08:53:23][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2040, average loss: 3.2393
+[09/28 08:53:23][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.16	top5: 75.07	
+[09/28 08:53:23][INFO] visual_prompt:  163: Training 45 / 100 epoch, with learning rate 0.17182582417698902
+[09/28 08:53:32][INFO] visual_prompt:  215: Epoch 45 / 100: avg data time: 8.89e-02, avg batch time: 0.5165, average train loss: 0.1569
+[09/28 08:53:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.44e-05, avg batch time: 0.1729, average loss: 0.1124
+[09/28 08:53:35][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 98.00	top5: 100.00	
+[09/28 08:53:57][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.453, 0.2040 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 08:54:17][INFO] visual_prompt:  320: Inference (test):avg data time: 1.08e-04, avg batch time: 0.2043, average loss: 3.3640
+[09/28 08:54:17][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.11	top5: 74.69	
+[09/28 08:54:17][INFO] visual_prompt:  245: Best epoch 45: best metric: 0.980
+[09/28 08:54:17][INFO] visual_prompt:  163: Training 46 / 100 epoch, with learning rate 0.1677525179157086
+[09/28 08:54:26][INFO] visual_prompt:  215: Epoch 46 / 100: avg data time: 1.02e-01, avg batch time: 0.5281, average train loss: 0.1428
+[09/28 08:54:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.13e-05, avg batch time: 0.1743, average loss: 0.1213
+[09/28 08:54:29][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 97.00	top5: 100.00	
+[09/28 08:54:51][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.261, 0.2031 s / batch. (data: 3.00e-05)max mem: 7.81234 GB 
+[09/28 08:55:11][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2042, average loss: 3.3806
+[09/28 08:55:11][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.07	top5: 74.77	
+[09/28 08:55:11][INFO] visual_prompt:  163: Training 47 / 100 epoch, with learning rate 0.16362712429686843
+[09/28 08:55:20][INFO] visual_prompt:  215: Epoch 47 / 100: avg data time: 1.03e-01, avg batch time: 0.5298, average train loss: 0.1403
+[09/28 08:55:24][INFO] visual_prompt:  320: Inference (val):avg data time: 3.21e-05, avg batch time: 0.1812, average loss: 0.1308
+[09/28 08:55:24][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 97.00	top5: 100.00	
+[09/28 08:55:46][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.192, 0.2042 s / batch. (data: 2.77e-05)max mem: 7.81234 GB 
+[09/28 08:56:05][INFO] visual_prompt:  320: Inference (test):avg data time: 8.31e-05, avg batch time: 0.2044, average loss: 3.4028
+[09/28 08:56:05][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.95	top5: 74.19	
+[09/28 08:56:05][INFO] visual_prompt:  163: Training 48 / 100 epoch, with learning rate 0.1594546694771249
+[09/28 08:56:15][INFO] visual_prompt:  215: Epoch 48 / 100: avg data time: 1.02e-01, avg batch time: 0.5285, average train loss: 0.1373
+[09/28 08:56:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.08e-05, avg batch time: 0.1822, average loss: 0.3456
+[09/28 08:56:18][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 91.00	top5: 100.00	
+[09/28 08:56:40][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.382, 0.2034 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 08:57:00][INFO] visual_prompt:  320: Inference (test):avg data time: 6.39e-05, avg batch time: 0.2040, average loss: 3.4135
+[09/28 08:57:00][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.18	top5: 73.74	
+[09/28 08:57:00][INFO] visual_prompt:  163: Training 49 / 100 epoch, with learning rate 0.15524023694995845
+[09/28 08:57:09][INFO] visual_prompt:  215: Epoch 49 / 100: avg data time: 9.37e-02, avg batch time: 0.5204, average train loss: 0.1174
+[09/28 08:57:12][INFO] visual_prompt:  320: Inference (val):avg data time: 3.19e-05, avg batch time: 0.1779, average loss: 0.0808
+[09/28 08:57:12][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 98.00	top5: 100.00	
+[09/28 08:57:34][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.314, 0.2042 s / batch. (data: 2.50e-05)max mem: 7.81234 GB 
+[09/28 08:57:54][INFO] visual_prompt:  320: Inference (test):avg data time: 2.80e-05, avg batch time: 0.2041, average loss: 3.5092
+[09/28 08:57:54][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.95	top5: 73.37	
+[09/28 08:57:54][INFO] visual_prompt:  163: Training 50 / 100 epoch, with learning rate 0.1509889613522199
+[09/28 08:58:03][INFO] visual_prompt:  215: Epoch 50 / 100: avg data time: 9.93e-02, avg batch time: 0.5265, average train loss: 0.1134
+[09/28 08:58:07][INFO] visual_prompt:  320: Inference (val):avg data time: 2.14e-05, avg batch time: 0.1778, average loss: 0.1184
+[09/28 08:58:07][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 97.50	top5: 100.00	
+[09/28 08:58:28][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.416, 0.2037 s / batch. (data: 2.86e-05)max mem: 7.81234 GB 
+[09/28 08:58:48][INFO] visual_prompt:  320: Inference (test):avg data time: 2.81e-05, avg batch time: 0.2043, average loss: 3.5544
+[09/28 08:58:48][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.92	top5: 73.22	
+[09/28 08:58:48][INFO] visual_prompt:  163: Training 51 / 100 epoch, with learning rate 0.14670602220836632
+[09/28 08:58:58][INFO] visual_prompt:  215: Epoch 51 / 100: avg data time: 1.01e-01, avg batch time: 0.5246, average train loss: 0.0806
+[09/28 08:59:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.09e-05, avg batch time: 0.1756, average loss: 0.0801
+[09/28 08:59:01][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 99.00	top5: 100.00	
+[09/28 08:59:23][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.222, 0.2030 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 08:59:42][INFO] visual_prompt:  320: Inference (test):avg data time: 3.81e-05, avg batch time: 0.2040, average loss: 3.4958
+[09/28 08:59:42][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.08	top5: 73.88	
+[09/28 08:59:42][INFO] visual_prompt:  245: Best epoch 51: best metric: 0.990
+[09/28 08:59:42][INFO] visual_prompt:  163: Training 52 / 100 epoch, with learning rate 0.14239663762000818
+[09/28 08:59:52][INFO] visual_prompt:  215: Epoch 52 / 100: avg data time: 1.02e-01, avg batch time: 0.5271, average train loss: 0.0657
+[09/28 08:59:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.19e-05, avg batch time: 0.1731, average loss: 0.0513
+[09/28 08:59:55][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:00:17][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.432, 0.2048 s / batch. (data: 2.65e-05)max mem: 7.81234 GB 
+[09/28 09:00:37][INFO] visual_prompt:  320: Inference (test):avg data time: 3.12e-05, avg batch time: 0.2041, average loss: 3.4484
+[09/28 09:00:37][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.49	top5: 74.26	
+[09/28 09:00:37][INFO] visual_prompt:  245: Best epoch 52: best metric: 1.000
+[09/28 09:00:37][INFO] visual_prompt:  163: Training 53 / 100 epoch, with learning rate 0.1380660579084567
+[09/28 09:00:46][INFO] visual_prompt:  215: Epoch 53 / 100: avg data time: 1.01e-01, avg batch time: 0.5255, average train loss: 0.0626
+[09/28 09:00:49][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1846, average loss: 0.0535
+[09/28 09:00:49][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 99.50	top5: 100.00	
+[09/28 09:01:11][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.390, 0.2037 s / batch. (data: 2.77e-05)max mem: 7.81234 GB 
+[09/28 09:01:31][INFO] visual_prompt:  320: Inference (test):avg data time: 2.86e-05, avg batch time: 0.2040, average loss: 3.5027
+[09/28 09:01:31][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.61	top5: 72.91	
+[09/28 09:01:31][INFO] visual_prompt:  163: Training 54 / 100 epoch, with learning rate 0.13371955921801565
+[09/28 09:01:40][INFO] visual_prompt:  215: Epoch 54 / 100: avg data time: 8.83e-02, avg batch time: 0.5150, average train loss: 0.0705
+[09/28 09:01:44][INFO] visual_prompt:  320: Inference (val):avg data time: 2.21e-05, avg batch time: 0.1784, average loss: 0.0320
+[09/28 09:01:44][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:02:06][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.223, 0.2033 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 09:02:25][INFO] visual_prompt:  320: Inference (test):avg data time: 2.99e-05, avg batch time: 0.2039, average loss: 3.4229
+[09/28 09:02:25][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.34	top5: 74.62	
+[09/28 09:02:25][INFO] visual_prompt:  163: Training 55 / 100 epoch, with learning rate 0.12936243708781264
+[09/28 09:02:34][INFO] visual_prompt:  215: Epoch 55 / 100: avg data time: 9.14e-02, avg batch time: 0.5173, average train loss: 0.0572
+[09/28 09:02:38][INFO] visual_prompt:  320: Inference (val):avg data time: 2.07e-05, avg batch time: 0.1817, average loss: 0.0648
+[09/28 09:02:38][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 99.50	top5: 100.00	
+[09/28 09:03:00][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.498, 0.2041 s / batch. (data: 2.79e-05)max mem: 7.81234 GB 
+[09/28 09:03:19][INFO] visual_prompt:  320: Inference (test):avg data time: 2.79e-05, avg batch time: 0.2041, average loss: 3.5072
+[09/28 09:03:19][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 28.98	top5: 73.71	
+[09/28 09:03:19][INFO] visual_prompt:  163: Training 56 / 100 epoch, with learning rate 0.125
+[09/28 09:03:29][INFO] visual_prompt:  215: Epoch 56 / 100: avg data time: 1.08e-01, avg batch time: 0.5338, average train loss: 0.0548
+[09/28 09:03:32][INFO] visual_prompt:  320: Inference (val):avg data time: 2.55e-05, avg batch time: 0.1829, average loss: 0.0358
+[09/28 09:03:32][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 99.50	top5: 100.00	
+[09/28 09:03:54][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.589, 0.2033 s / batch. (data: 4.01e-05)max mem: 7.81234 GB 
+[09/28 09:04:14][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2040, average loss: 3.5131
+[09/28 09:04:14][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.79	top5: 73.17	
+[09/28 09:04:14][INFO] visual_prompt:  163: Training 57 / 100 epoch, with learning rate 0.12063756291218741
+[09/28 09:04:23][INFO] visual_prompt:  215: Epoch 57 / 100: avg data time: 1.02e-01, avg batch time: 0.5262, average train loss: 0.0351
+[09/28 09:04:27][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1728, average loss: 0.0141
+[09/28 09:04:27][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:04:49][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.431, 0.2051 s / batch. (data: 2.79e-05)max mem: 7.81234 GB 
+[09/28 09:05:08][INFO] visual_prompt:  320: Inference (test):avg data time: 2.91e-05, avg batch time: 0.2042, average loss: 3.4861
+[09/28 09:05:08][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 29.95	top5: 74.25	
+[09/28 09:05:08][INFO] visual_prompt:  163: Training 58 / 100 epoch, with learning rate 0.11628044078198434
+[09/28 09:05:18][INFO] visual_prompt:  215: Epoch 58 / 100: avg data time: 1.10e-01, avg batch time: 0.5363, average train loss: 0.0238
+[09/28 09:05:21][INFO] visual_prompt:  320: Inference (val):avg data time: 2.28e-05, avg batch time: 0.1733, average loss: 0.0143
+[09/28 09:05:21][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:05:43][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.384, 0.2033 s / batch. (data: 2.53e-05)max mem: 7.81234 GB 
+[09/28 09:06:03][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2040, average loss: 3.4506
+[09/28 09:06:03][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.46	top5: 75.04	
+[09/28 09:06:03][INFO] visual_prompt:  163: Training 59 / 100 epoch, with learning rate 0.11193394209154334
+[09/28 09:06:12][INFO] visual_prompt:  215: Epoch 59 / 100: avg data time: 9.26e-02, avg batch time: 0.5202, average train loss: 0.0184
+[09/28 09:06:15][INFO] visual_prompt:  320: Inference (val):avg data time: 2.73e-05, avg batch time: 0.1770, average loss: 0.0133
+[09/28 09:06:15][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:06:37][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.392, 0.2032 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 09:06:57][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2041, average loss: 3.4467
+[09/28 09:06:57][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.84	top5: 74.80	
+[09/28 09:06:57][INFO] visual_prompt:  163: Training 60 / 100 epoch, with learning rate 0.10760336237999185
+[09/28 09:07:06][INFO] visual_prompt:  215: Epoch 60 / 100: avg data time: 1.05e-01, avg batch time: 0.5286, average train loss: 0.0155
+[09/28 09:07:09][INFO] visual_prompt:  320: Inference (val):avg data time: 2.15e-05, avg batch time: 0.1795, average loss: 0.0115
+[09/28 09:07:09][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:07:31][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.427, 0.2020 s / batch. (data: 6.41e-05)max mem: 7.81234 GB 
+[09/28 09:07:51][INFO] visual_prompt:  320: Inference (test):avg data time: 1.03e-04, avg batch time: 0.2043, average loss: 3.4649
+[09/28 09:07:51][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.74	top5: 74.96	
+[09/28 09:07:51][INFO] visual_prompt:  163: Training 61 / 100 epoch, with learning rate 0.10329397779163371
+[09/28 09:08:00][INFO] visual_prompt:  215: Epoch 61 / 100: avg data time: 1.07e-01, avg batch time: 0.5320, average train loss: 0.0147
+[09/28 09:08:03][INFO] visual_prompt:  320: Inference (val):avg data time: 2.08e-05, avg batch time: 0.1778, average loss: 0.0110
+[09/28 09:08:03][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:08:25][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.413, 0.2039 s / batch. (data: 2.57e-05)max mem: 7.81234 GB 
+[09/28 09:08:45][INFO] visual_prompt:  320: Inference (test):avg data time: 2.97e-05, avg batch time: 0.2040, average loss: 3.4593
+[09/28 09:08:45][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.91	top5: 74.91	
+[09/28 09:08:45][INFO] visual_prompt:  163: Training 62 / 100 epoch, with learning rate 0.0990110386477801
+[09/28 09:08:54][INFO] visual_prompt:  215: Epoch 62 / 100: avg data time: 9.53e-02, avg batch time: 0.5210, average train loss: 0.0140
+[09/28 09:08:58][INFO] visual_prompt:  320: Inference (val):avg data time: 2.00e-05, avg batch time: 0.1793, average loss: 0.0101
+[09/28 09:08:58][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:09:20][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.466, 0.2033 s / batch. (data: 3.60e-05)max mem: 7.81234 GB 
+[09/28 09:09:39][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2041, average loss: 3.4576
+[09/28 09:09:39][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.80	top5: 74.81	
+[09/28 09:09:39][INFO] visual_prompt:  163: Training 63 / 100 epoch, with learning rate 0.09475976305004155
+[09/28 09:09:49][INFO] visual_prompt:  215: Epoch 63 / 100: avg data time: 9.14e-02, avg batch time: 0.5175, average train loss: 0.0131
+[09/28 09:09:52][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1770, average loss: 0.0095
+[09/28 09:09:52][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:10:14][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.474, 0.2042 s / batch. (data: 2.77e-05)max mem: 7.81234 GB 
+[09/28 09:10:33][INFO] visual_prompt:  320: Inference (test):avg data time: 3.82e-05, avg batch time: 0.2041, average loss: 3.4415
+[09/28 09:10:33][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.93	top5: 74.79	
+[09/28 09:10:33][INFO] visual_prompt:  163: Training 64 / 100 epoch, with learning rate 0.09054533052287511
+[09/28 09:10:43][INFO] visual_prompt:  215: Epoch 64 / 100: avg data time: 1.03e-01, avg batch time: 0.5283, average train loss: 0.0125
+[09/28 09:10:46][INFO] visual_prompt:  320: Inference (val):avg data time: 2.24e-05, avg batch time: 0.1757, average loss: 0.0100
+[09/28 09:10:46][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:11:08][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.476, 0.2043 s / batch. (data: 4.67e-05)max mem: 7.81234 GB 
+[09/28 09:11:28][INFO] visual_prompt:  320: Inference (test):avg data time: 1.44e-04, avg batch time: 0.2043, average loss: 3.4455
+[09/28 09:11:28][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.81	top5: 74.70	
+[09/28 09:11:28][INFO] visual_prompt:  163: Training 65 / 100 epoch, with learning rate 0.08637287570313158
+[09/28 09:11:37][INFO] visual_prompt:  215: Epoch 65 / 100: avg data time: 9.93e-02, avg batch time: 0.5262, average train loss: 0.0124
+[09/28 09:11:41][INFO] visual_prompt:  320: Inference (val):avg data time: 3.14e-05, avg batch time: 0.1781, average loss: 0.0088
+[09/28 09:11:41][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:12:03][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.462, 0.2035 s / batch. (data: 2.57e-05)max mem: 7.81234 GB 
+[09/28 09:12:22][INFO] visual_prompt:  320: Inference (test):avg data time: 1.05e-04, avg batch time: 0.2045, average loss: 3.4476
+[09/28 09:12:22][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.19	top5: 74.73	
+[09/28 09:12:22][INFO] visual_prompt:  163: Training 66 / 100 epoch, with learning rate 0.08224748208429142
+[09/28 09:12:32][INFO] visual_prompt:  215: Epoch 66 / 100: avg data time: 9.50e-02, avg batch time: 0.5207, average train loss: 0.0114
+[09/28 09:12:35][INFO] visual_prompt:  320: Inference (val):avg data time: 2.16e-05, avg batch time: 0.1723, average loss: 0.0087
+[09/28 09:12:35][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:12:57][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.445, 0.2056 s / batch. (data: 2.69e-05)max mem: 7.81234 GB 
+[09/28 09:13:17][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2041, average loss: 3.4409
+[09/28 09:13:17][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.25	top5: 74.67	
+[09/28 09:13:17][INFO] visual_prompt:  163: Training 67 / 100 epoch, with learning rate 0.07817417582301099
+[09/28 09:13:26][INFO] visual_prompt:  215: Epoch 67 / 100: avg data time: 9.10e-02, avg batch time: 0.5179, average train loss: 0.0115
+[09/28 09:13:29][INFO] visual_prompt:  320: Inference (val):avg data time: 2.02e-05, avg batch time: 0.1734, average loss: 0.0090
+[09/28 09:13:29][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:13:51][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.468, 0.2034 s / batch. (data: 2.57e-05)max mem: 7.81234 GB 
+[09/28 09:14:11][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2041, average loss: 3.4295
+[09/28 09:14:11][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.04	top5: 74.70	
+[09/28 09:14:11][INFO] visual_prompt:  163: Training 68 / 100 epoch, with learning rate 0.074157919615525
+[09/28 09:14:20][INFO] visual_prompt:  215: Epoch 68 / 100: avg data time: 9.71e-02, avg batch time: 0.5236, average train loss: 0.0114
+[09/28 09:14:23][INFO] visual_prompt:  320: Inference (val):avg data time: 2.34e-05, avg batch time: 0.1805, average loss: 0.0091
+[09/28 09:14:23][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:14:45][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.475, 0.2040 s / batch. (data: 2.69e-05)max mem: 7.81234 GB 
+[09/28 09:15:05][INFO] visual_prompt:  320: Inference (test):avg data time: 4.50e-05, avg batch time: 0.2043, average loss: 3.4327
+[09/28 09:15:05][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.88	top5: 74.86	
+[09/28 09:15:05][INFO] visual_prompt:  163: Training 69 / 100 epoch, with learning rate 0.07020360665136531
+[09/28 09:15:15][INFO] visual_prompt:  215: Epoch 69 / 100: avg data time: 1.04e-01, avg batch time: 0.5300, average train loss: 0.0115
+[09/28 09:15:18][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1718, average loss: 0.0083
+[09/28 09:15:18][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:15:40][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.450, 0.2033 s / batch. (data: 2.60e-05)max mem: 7.81234 GB 
+[09/28 09:15:59][INFO] visual_prompt:  320: Inference (test):avg data time: 2.82e-05, avg batch time: 0.2040, average loss: 3.4336
+[09/28 09:15:59][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.00	top5: 74.90	
+[09/28 09:15:59][INFO] visual_prompt:  163: Training 70 / 100 epoch, with learning rate 0.06631605465176368
+[09/28 09:16:09][INFO] visual_prompt:  215: Epoch 70 / 100: avg data time: 8.81e-02, avg batch time: 0.5134, average train loss: 0.0114
+[09/28 09:16:12][INFO] visual_prompt:  320: Inference (val):avg data time: 2.30e-05, avg batch time: 0.1808, average loss: 0.0079
+[09/28 09:16:12][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:16:34][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.460, 0.2029 s / batch. (data: 2.31e-05)max mem: 7.81234 GB 
+[09/28 09:16:53][INFO] visual_prompt:  320: Inference (test):avg data time: 1.38e-04, avg batch time: 0.2041, average loss: 3.4195
+[09/28 09:16:54][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.18	top5: 74.88	
+[09/28 09:16:54][INFO] visual_prompt:  163: Training 71 / 100 epoch, with learning rate 0.06250000000000003
+[09/28 09:17:03][INFO] visual_prompt:  215: Epoch 71 / 100: avg data time: 9.97e-02, avg batch time: 0.5246, average train loss: 0.0106
+[09/28 09:17:06][INFO] visual_prompt:  320: Inference (val):avg data time: 2.15e-05, avg batch time: 0.1831, average loss: 0.0080
+[09/28 09:17:06][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:17:28][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.466, 0.2042 s / batch. (data: 2.65e-05)max mem: 7.81234 GB 
+[09/28 09:17:48][INFO] visual_prompt:  320: Inference (test):avg data time: 3.00e-05, avg batch time: 0.2040, average loss: 3.4204
+[09/28 09:17:48][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.06	top5: 74.70	
+[09/28 09:17:48][INFO] visual_prompt:  163: Training 72 / 100 epoch, with learning rate 0.0587600919708494
+[09/28 09:17:57][INFO] visual_prompt:  215: Epoch 72 / 100: avg data time: 1.01e-01, avg batch time: 0.5280, average train loss: 0.0112
+[09/28 09:18:01][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1737, average loss: 0.0080
+[09/28 09:18:01][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:18:23][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.476, 0.2043 s / batch. (data: 2.38e-05)max mem: 7.81234 GB 
+[09/28 09:18:42][INFO] visual_prompt:  320: Inference (test):avg data time: 3.03e-05, avg batch time: 0.2039, average loss: 3.4202
+[09/28 09:18:42][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.13	top5: 74.79	
+[09/28 09:18:42][INFO] visual_prompt:  163: Training 73 / 100 epoch, with learning rate 0.055100887066156665
+[09/28 09:18:51][INFO] visual_prompt:  215: Epoch 73 / 100: avg data time: 9.21e-02, avg batch time: 0.5176, average train loss: 0.0107
+[09/28 09:18:55][INFO] visual_prompt:  320: Inference (val):avg data time: 2.09e-05, avg batch time: 0.1740, average loss: 0.0079
+[09/28 09:18:55][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:19:17][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.501, 0.2043 s / batch. (data: 2.41e-05)max mem: 7.81234 GB 
+[09/28 09:19:36][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2040, average loss: 3.4186
+[09/28 09:19:36][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 30.98	top5: 74.67	
+[09/28 09:19:36][INFO] visual_prompt:  163: Training 74 / 100 epoch, with learning rate 0.05152684346344087
+[09/28 09:19:46][INFO] visual_prompt:  215: Epoch 74 / 100: avg data time: 9.85e-02, avg batch time: 0.5256, average train loss: 0.0108
+[09/28 09:19:49][INFO] visual_prompt:  320: Inference (val):avg data time: 2.31e-05, avg batch time: 0.1764, average loss: 0.0078
+[09/28 09:19:49][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:20:11][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.510, 0.2042 s / batch. (data: 2.69e-05)max mem: 7.81234 GB 
+[09/28 09:20:30][INFO] visual_prompt:  320: Inference (test):avg data time: 2.90e-05, avg batch time: 0.2044, average loss: 3.4165
+[09/28 09:20:31][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.09	top5: 74.68	
+[09/28 09:20:31][INFO] visual_prompt:  163: Training 75 / 100 epoch, with learning rate 0.048042315584292714
+[09/28 09:20:40][INFO] visual_prompt:  215: Epoch 75 / 100: avg data time: 1.01e-01, avg batch time: 0.5271, average train loss: 0.0104
+[09/28 09:20:43][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1811, average loss: 0.0081
+[09/28 09:20:43][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:21:05][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.496, 0.2036 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 09:21:25][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2040, average loss: 3.4167
+[09/28 09:21:25][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.09	top5: 74.76	
+[09/28 09:21:25][INFO] visual_prompt:  163: Training 76 / 100 epoch, with learning rate 0.04465154878918258
+[09/28 09:21:34][INFO] visual_prompt:  215: Epoch 76 / 100: avg data time: 1.02e-01, avg batch time: 0.5257, average train loss: 0.0104
+[09/28 09:21:37][INFO] visual_prompt:  320: Inference (val):avg data time: 1.98e-05, avg batch time: 0.1797, average loss: 0.0084
+[09/28 09:21:37][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:22:00][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.493, 0.2040 s / batch. (data: 2.74e-05)max mem: 7.81234 GB 
+[09/28 09:22:19][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2040, average loss: 3.4209
+[09/28 09:22:19][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.08	top5: 74.90	
+[09/28 09:22:19][INFO] visual_prompt:  163: Training 77 / 100 epoch, with learning rate 0.04135867420514276
+[09/28 09:22:28][INFO] visual_prompt:  215: Epoch 77 / 100: avg data time: 9.21e-02, avg batch time: 0.5172, average train loss: 0.0104
+[09/28 09:22:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1726, average loss: 0.0081
+[09/28 09:22:31][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:22:53][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.481, 0.2033 s / batch. (data: 2.86e-05)max mem: 7.81234 GB 
+[09/28 09:23:13][INFO] visual_prompt:  320: Inference (test):avg data time: 2.86e-05, avg batch time: 0.2040, average loss: 3.4023
+[09/28 09:23:13][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.12	top5: 74.77	
+[09/28 09:23:13][INFO] visual_prompt:  163: Training 78 / 100 epoch, with learning rate 0.03816770369262533
+[09/28 09:23:22][INFO] visual_prompt:  215: Epoch 78 / 100: avg data time: 9.93e-02, avg batch time: 0.5243, average train loss: 0.0102
+[09/28 09:23:26][INFO] visual_prompt:  320: Inference (val):avg data time: 2.29e-05, avg batch time: 0.1816, average loss: 0.0080
+[09/28 09:23:26][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:23:48][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.480, 0.2031 s / batch. (data: 2.98e-05)max mem: 7.81234 GB 
+[09/28 09:24:07][INFO] visual_prompt:  320: Inference (test):avg data time: 2.96e-05, avg batch time: 0.2040, average loss: 3.3982
+[09/28 09:24:07][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.17	top5: 74.72	
+[09/28 09:24:07][INFO] visual_prompt:  163: Training 79 / 100 epoch, with learning rate 0.03508252495766863
+[09/28 09:24:17][INFO] visual_prompt:  215: Epoch 79 / 100: avg data time: 9.85e-02, avg batch time: 0.5235, average train loss: 0.0102
+[09/28 09:24:20][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1788, average loss: 0.0076
+[09/28 09:24:20][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:24:42][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.491, 0.2034 s / batch. (data: 2.26e-05)max mem: 7.81234 GB 
+[09/28 09:25:01][INFO] visual_prompt:  320: Inference (test):avg data time: 2.75e-05, avg batch time: 0.2039, average loss: 3.3992
+[09/28 09:25:01][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.28	top5: 74.58	
+[09/28 09:25:01][INFO] visual_prompt:  163: Training 80 / 100 epoch, with learning rate 0.032106896815325706
+[09/28 09:25:11][INFO] visual_prompt:  215: Epoch 80 / 100: avg data time: 9.57e-02, avg batch time: 0.5208, average train loss: 0.0098
+[09/28 09:25:14][INFO] visual_prompt:  320: Inference (val):avg data time: 2.39e-05, avg batch time: 0.1818, average loss: 0.0077
+[09/28 09:25:14][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:25:36][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2038 s / batch. (data: 2.81e-05)max mem: 7.81234 GB 
+[09/28 09:25:55][INFO] visual_prompt:  320: Inference (test):avg data time: 3.02e-05, avg batch time: 0.2040, average loss: 3.4043
+[09/28 09:25:55][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.10	top5: 74.53	
+[09/28 09:25:55][INFO] visual_prompt:  163: Training 81 / 100 epoch, with learning rate 0.029244444610127762
+[09/28 09:26:05][INFO] visual_prompt:  215: Epoch 81 / 100: avg data time: 9.13e-02, avg batch time: 0.5159, average train loss: 0.0099
+[09/28 09:26:08][INFO] visual_prompt:  320: Inference (val):avg data time: 2.26e-05, avg batch time: 0.1806, average loss: 0.0078
+[09/28 09:26:08][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:26:30][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.504, 0.2043 s / batch. (data: 2.65e-05)max mem: 7.81234 GB 
+[09/28 09:26:50][INFO] visual_prompt:  320: Inference (test):avg data time: 4.26e-05, avg batch time: 0.2039, average loss: 3.4064
+[09/28 09:26:50][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.09	top5: 74.53	
+[09/28 09:26:50][INFO] visual_prompt:  163: Training 82 / 100 epoch, with learning rate 0.026498655799159762
+[09/28 09:26:59][INFO] visual_prompt:  215: Epoch 82 / 100: avg data time: 1.05e-01, avg batch time: 0.5290, average train loss: 0.0097
+[09/28 09:27:02][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1789, average loss: 0.0077
+[09/28 09:27:02][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:27:24][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2030 s / batch. (data: 2.43e-05)max mem: 7.81234 GB 
+[09/28 09:27:44][INFO] visual_prompt:  320: Inference (test):avg data time: 4.96e-05, avg batch time: 0.2040, average loss: 3.4078
+[09/28 09:27:44][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.23	top5: 74.55	
+[09/28 09:27:44][INFO] visual_prompt:  163: Training 83 / 100 epoch, with learning rate 0.023872875703131582
+[09/28 09:27:53][INFO] visual_prompt:  215: Epoch 83 / 100: avg data time: 9.53e-02, avg batch time: 0.5203, average train loss: 0.0104
+[09/28 09:27:57][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1801, average loss: 0.0078
+[09/28 09:27:57][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:28:19][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.496, 0.2035 s / batch. (data: 2.67e-05)max mem: 7.81234 GB 
+[09/28 09:28:38][INFO] visual_prompt:  320: Inference (test):avg data time: 4.43e-05, avg batch time: 0.2042, average loss: 3.4066
+[09/28 09:28:38][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.29	top5: 74.61	
+[09/28 09:28:38][INFO] visual_prompt:  163: Training 84 / 100 epoch, with learning rate 0.021370303430619797
+[09/28 09:28:48][INFO] visual_prompt:  215: Epoch 84 / 100: avg data time: 1.05e-01, avg batch time: 0.5306, average train loss: 0.0097
+[09/28 09:28:51][INFO] visual_prompt:  320: Inference (val):avg data time: 2.50e-05, avg batch time: 0.1795, average loss: 0.0080
+[09/28 09:28:51][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:29:13][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.501, 0.2040 s / batch. (data: 3.17e-05)max mem: 7.81234 GB 
+[09/28 09:29:33][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2043, average loss: 3.4061
+[09/28 09:29:33][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.30	top5: 74.61	
+[09/28 09:29:33][INFO] visual_prompt:  163: Training 85 / 100 epoch, with learning rate 0.018993987980446755
+[09/28 09:29:42][INFO] visual_prompt:  215: Epoch 85 / 100: avg data time: 9.78e-02, avg batch time: 0.5237, average train loss: 0.0101
+[09/28 09:29:45][INFO] visual_prompt:  320: Inference (val):avg data time: 3.62e-05, avg batch time: 0.1768, average loss: 0.0079
+[09/28 09:29:45][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:30:07][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.512, 0.2032 s / batch. (data: 2.48e-05)max mem: 7.81234 GB 
+[09/28 09:30:27][INFO] visual_prompt:  320: Inference (test):avg data time: 2.84e-05, avg batch time: 0.2041, average loss: 3.4038
+[09/28 09:30:27][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.23	top5: 74.76	
+[09/28 09:30:27][INFO] visual_prompt:  163: Training 86 / 100 epoch, with learning rate 0.01674682452694516
+[09/28 09:30:36][INFO] visual_prompt:  215: Epoch 86 / 100: avg data time: 9.75e-02, avg batch time: 0.5241, average train loss: 0.0102
+[09/28 09:30:40][INFO] visual_prompt:  320: Inference (val):avg data time: 2.53e-05, avg batch time: 0.1752, average loss: 0.0079
+[09/28 09:30:40][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:31:02][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.507, 0.2037 s / batch. (data: 2.36e-05)max mem: 7.81234 GB 
+[09/28 09:31:21][INFO] visual_prompt:  320: Inference (test):avg data time: 2.82e-05, avg batch time: 0.2041, average loss: 3.4027
+[09/28 09:31:21][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.20	top5: 74.70	
+[09/28 09:31:21][INFO] visual_prompt:  163: Training 87 / 100 epoch, with learning rate 0.014631550892634126
+[09/28 09:31:31][INFO] visual_prompt:  215: Epoch 87 / 100: avg data time: 1.01e-01, avg batch time: 0.5282, average train loss: 0.0099
+[09/28 09:31:34][INFO] visual_prompt:  320: Inference (val):avg data time: 2.37e-05, avg batch time: 0.1825, average loss: 0.0078
+[09/28 09:31:34][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:31:56][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2040 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 09:32:15][INFO] visual_prompt:  320: Inference (test):avg data time: 2.98e-05, avg batch time: 0.2041, average loss: 3.4006
+[09/28 09:32:16][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.15	top5: 74.75	
+[09/28 09:32:16][INFO] visual_prompt:  163: Training 88 / 100 epoch, with learning rate 0.012650744212604148
+[09/28 09:32:25][INFO] visual_prompt:  215: Epoch 88 / 100: avg data time: 9.28e-02, avg batch time: 0.5206, average train loss: 0.0097
+[09/28 09:32:28][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1773, average loss: 0.0077
+[09/28 09:32:28][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:32:50][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.493, 0.2034 s / batch. (data: 2.72e-05)max mem: 7.81234 GB 
+[09/28 09:33:09][INFO] visual_prompt:  320: Inference (test):avg data time: 5.11e-05, avg batch time: 0.2042, average loss: 3.3995
+[09/28 09:33:09][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.22	top5: 74.66	
+[09/28 09:33:09][INFO] visual_prompt:  163: Training 89 / 100 epoch, with learning rate 0.010806817794674878
+[09/28 09:33:19][INFO] visual_prompt:  215: Epoch 89 / 100: avg data time: 1.09e-01, avg batch time: 0.5361, average train loss: 0.0100
+[09/28 09:33:22][INFO] visual_prompt:  320: Inference (val):avg data time: 2.34e-05, avg batch time: 0.1787, average loss: 0.0077
+[09/28 09:33:22][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:33:44][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.487, 0.2028 s / batch. (data: 3.15e-05)max mem: 7.81234 GB 
+[09/28 09:34:04][INFO] visual_prompt:  320: Inference (test):avg data time: 2.85e-05, avg batch time: 0.2040, average loss: 3.3970
+[09/28 09:34:04][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.33	top5: 74.66	
+[09/28 09:34:04][INFO] visual_prompt:  163: Training 90 / 100 epoch, with learning rate 0.009102018179151586
+[09/28 09:34:13][INFO] visual_prompt:  215: Epoch 90 / 100: avg data time: 9.46e-02, avg batch time: 0.5197, average train loss: 0.0099
+[09/28 09:34:16][INFO] visual_prompt:  320: Inference (val):avg data time: 3.52e-05, avg batch time: 0.1809, average loss: 0.0077
+[09/28 09:34:16][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:34:39][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.487, 0.2034 s / batch. (data: 2.79e-05)max mem: 7.81234 GB 
+[09/28 09:34:58][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2041, average loss: 3.3938
+[09/28 09:34:58][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.12	top5: 74.63	
+[09/28 09:34:58][INFO] visual_prompt:  163: Training 91 / 100 epoch, with learning rate 0.00753842240176146
+[09/28 09:35:07][INFO] visual_prompt:  215: Epoch 91 / 100: avg data time: 9.65e-02, avg batch time: 0.5229, average train loss: 0.0098
+[09/28 09:35:11][INFO] visual_prompt:  320: Inference (val):avg data time: 2.35e-05, avg batch time: 0.1732, average loss: 0.0077
+[09/28 09:35:11][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:35:33][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.494, 0.2034 s / batch. (data: 2.84e-05)max mem: 7.81234 GB 
+[09/28 09:35:52][INFO] visual_prompt:  320: Inference (test):avg data time: 1.90e-04, avg batch time: 0.2044, average loss: 3.3948
+[09/28 09:35:52][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.19	top5: 74.63	
+[09/28 09:35:52][INFO] visual_prompt:  163: Training 92 / 100 epoch, with learning rate 0.006117935463105809
+[09/28 09:36:02][INFO] visual_prompt:  215: Epoch 92 / 100: avg data time: 1.05e-01, avg batch time: 0.5311, average train loss: 0.0100
+[09/28 09:36:05][INFO] visual_prompt:  320: Inference (val):avg data time: 2.22e-05, avg batch time: 0.1776, average loss: 0.0077
+[09/28 09:36:05][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:36:27][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.495, 0.2034 s / batch. (data: 2.88e-05)max mem: 7.81234 GB 
+[09/28 09:36:46][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2041, average loss: 3.3951
+[09/28 09:36:46][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.22	top5: 74.65	
+[09/28 09:36:46][INFO] visual_prompt:  163: Training 93 / 100 epoch, with learning rate 0.004842288007710138
+[09/28 09:36:56][INFO] visual_prompt:  215: Epoch 93 / 100: avg data time: 1.01e-01, avg batch time: 0.5262, average train loss: 0.0100
+[09/28 09:36:59][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1720, average loss: 0.0077
+[09/28 09:36:59][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:37:21][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.496, 0.2033 s / batch. (data: 2.53e-05)max mem: 7.81234 GB 
+[09/28 09:37:41][INFO] visual_prompt:  320: Inference (test):avg data time: 2.88e-05, avg batch time: 0.2041, average loss: 3.3964
+[09/28 09:37:41][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.27	top5: 74.64	
+[09/28 09:37:41][INFO] visual_prompt:  163: Training 94 / 100 epoch, with learning rate 0.003713034215500441
+[09/28 09:37:50][INFO] visual_prompt:  215: Epoch 94 / 100: avg data time: 1.05e-01, avg batch time: 0.5312, average train loss: 0.0098
+[09/28 09:37:53][INFO] visual_prompt:  320: Inference (val):avg data time: 2.47e-05, avg batch time: 0.1782, average loss: 0.0077
+[09/28 09:37:53][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:38:15][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.498, 0.2051 s / batch. (data: 3.00e-05)max mem: 7.81234 GB 
+[09/28 09:38:35][INFO] visual_prompt:  320: Inference (test):avg data time: 2.87e-05, avg batch time: 0.2044, average loss: 3.3970
+[09/28 09:38:35][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.27	top5: 74.68	
+[09/28 09:38:35][INFO] visual_prompt:  163: Training 95 / 100 epoch, with learning rate 0.002731549908274289
+[09/28 09:38:44][INFO] visual_prompt:  215: Epoch 95 / 100: avg data time: 1.02e-01, avg batch time: 0.5266, average train loss: 0.0099
+[09/28 09:38:48][INFO] visual_prompt:  320: Inference (val):avg data time: 2.43e-05, avg batch time: 0.1841, average loss: 0.0076
+[09/28 09:38:48][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:39:10][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.500, 0.2032 s / batch. (data: 7.32e-05)max mem: 7.81234 GB 
+[09/28 09:39:29][INFO] visual_prompt:  320: Inference (test):avg data time: 3.03e-05, avg batch time: 0.2042, average loss: 3.3969
+[09/28 09:39:29][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.22	top5: 74.67	
+[09/28 09:39:29][INFO] visual_prompt:  163: Training 96 / 100 epoch, with learning rate 0.0018990308734739975
+[09/28 09:39:39][INFO] visual_prompt:  215: Epoch 96 / 100: avg data time: 1.05e-01, avg batch time: 0.5310, average train loss: 0.0099
+[09/28 09:39:42][INFO] visual_prompt:  320: Inference (val):avg data time: 2.52e-05, avg batch time: 0.1848, average loss: 0.0076
+[09/28 09:39:42][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:40:04][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2033 s / batch. (data: 2.79e-05)max mem: 7.81234 GB 
+[09/28 09:40:24][INFO] visual_prompt:  320: Inference (test):avg data time: 3.01e-05, avg batch time: 0.2043, average loss: 3.3968
+[09/28 09:40:24][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.23	top5: 74.69	
+[09/28 09:40:24][INFO] visual_prompt:  163: Training 97 / 100 epoch, with learning rate 0.0012164914073037048
+[09/28 09:40:33][INFO] visual_prompt:  215: Epoch 97 / 100: avg data time: 9.92e-02, avg batch time: 0.5271, average train loss: 0.0098
+[09/28 09:40:36][INFO] visual_prompt:  320: Inference (val):avg data time: 2.71e-05, avg batch time: 0.1787, average loss: 0.0076
+[09/28 09:40:36][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:40:58][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2031 s / batch. (data: 2.79e-05)max mem: 7.81234 GB 
+[09/28 09:41:18][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2040, average loss: 3.3964
+[09/28 09:41:18][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.22	top5: 74.68	
+[09/28 09:41:18][INFO] visual_prompt:  163: Training 98 / 100 epoch, with learning rate 0.0006847630789658388
+[09/28 09:41:27][INFO] visual_prompt:  215: Epoch 98 / 100: avg data time: 1.04e-01, avg batch time: 0.5314, average train loss: 0.0095
+[09/28 09:41:31][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1734, average loss: 0.0076
+[09/28 09:41:31][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:41:53][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2037 s / batch. (data: 3.81e-05)max mem: 7.81234 GB 
+[09/28 09:42:12][INFO] visual_prompt:  320: Inference (test):avg data time: 2.89e-05, avg batch time: 0.2044, average loss: 3.3962
+[09/28 09:42:12][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.21	top5: 74.69	
+[09/28 09:42:12][INFO] visual_prompt:  163: Training 99 / 100 epoch, with learning rate 0.0003044937175219753
+[09/28 09:42:22][INFO] visual_prompt:  215: Epoch 99 / 100: avg data time: 1.00e-01, avg batch time: 0.5262, average train loss: 0.0096
+[09/28 09:42:25][INFO] visual_prompt:  320: Inference (val):avg data time: 2.41e-05, avg batch time: 0.1737, average loss: 0.0076
+[09/28 09:42:25][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:42:47][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2049 s / batch. (data: 2.77e-05)max mem: 7.81234 GB 
+[09/28 09:43:06][INFO] visual_prompt:  320: Inference (test):avg data time: 4.68e-05, avg batch time: 0.2043, average loss: 3.3961
+[09/28 09:43:06][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.21	top5: 74.69	
+[09/28 09:43:06][INFO] visual_prompt:  163: Training 100 / 100 epoch, with learning rate 7.614662261302974e-05
+[09/28 09:43:16][INFO] visual_prompt:  215: Epoch 100 / 100: avg data time: 1.00e-01, avg batch time: 0.5268, average train loss: 0.0097
+[09/28 09:43:19][INFO] visual_prompt:  320: Inference (val):avg data time: 2.38e-05, avg batch time: 0.1814, average loss: 0.0076
+[09/28 09:43:19][INFO] visual_prompt:  113: Classification results with val_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 100.00	top5: 100.00	
+[09/28 09:43:41][INFO] visual_prompt:  307: 	Test 100/190. loss: 3.499, 0.2042 s / batch. (data: 2.88e-05)max mem: 7.81234 GB 
+[09/28 09:44:01][INFO] visual_prompt:  320: Inference (test):avg data time: 2.92e-05, avg batch time: 0.2041, average loss: 3.3961
+[09/28 09:44:01][INFO] visual_prompt:  113: Classification results with test_vtab-smallnorb(predicted_attribute="label_azimuth"): top1: 31.22	top5: 74.69	
