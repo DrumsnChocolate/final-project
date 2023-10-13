@@ -24,3 +24,6 @@ pip install timm
 pip install ml-collections
 
 pip install chardet
+
+pip install openmim
+mim install mmcv
