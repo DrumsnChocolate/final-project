@@ -18,7 +18,7 @@ from torch.nn.modules.batchnorm import _BatchNorm
 from torch.nn.modules.utils import _pair as to_2tuple, _pair
 
 from mmseg.registry import MODELS
-from .mit import TransformerEncoderLayer
+from .vit import TransformerEncoderLayer
 from ..utils import PatchEmbed, resize
 
 @MODELS.register_module()
@@ -403,24 +403,20 @@ class PromptedVisionTransformer(BaseModule):
 
         for i, layer in enumerate(self.layers):
             prompt_emb = self.prompt_dropout(self.prompt_embeddings[i].expand(B, -1, -1))
-            if i == 0:
-                x = torch.cat((
-                    x[:, :1, :],
-                    prompt_emb,
-                    x[:, 1:, :]
-                ), dim=1)
-            else:
-                # discard the transformed prompt embeddings from the previous layer,
-                # because we only use the prompts to add info to the other embeddings, and we don't need
-                # 'enriched' information about the prompts themselves.
-                # also, this keeps the length of the hidden states in check,
-                # and as a result the computational complexity stays the same for each layer.
-                x = torch.cat((
-                    x[:, :1, :],
-                    prompt_emb,
-                    x[:, 1+self.prompt_cfg['length']:, :]
-                ), dim=1)
+            x = torch.cat((
+                x[:, :1, :],
+                prompt_emb,
+                x[:, 1:, :]
+            ), dim=1)
             x = layer(x)
+            # discard the transformed prompt embeddings,
+            # so we return hidden states the original length,
+            # and because there is arguably not any crucial information
+            # that is added to the prompt embeddings by the transformer layer,
+            # since the idea is to use the prompt embeddings to ask questions about
+            # the rest of the input sequence.
+            x = torch.cat((x[:, :1, :], x[:, 1+self.prompt_cfg['length']:, :]), dim=1)
+
             if i == len(self.layers) - 1:
                 if self.final_norm:
                     x = self.norm1(x)
@@ -440,8 +436,8 @@ class PromptedVisionTransformer(BaseModule):
         return tuple(outs)
 
     def train(self, mode=True):
-        super().eval()  # set everything to evaluation mode except for the prompt relevant stuff
-        self.prompt_proj.train()
+        # set everything to evaluation mode except for the prompt relevant stuff
+        super().train(False)
         self.prompt_dropout.train()
         # there is no train() method for the prompt embeddings, because they are an instance of torch.Parameter
         if mode and self.norm_eval:

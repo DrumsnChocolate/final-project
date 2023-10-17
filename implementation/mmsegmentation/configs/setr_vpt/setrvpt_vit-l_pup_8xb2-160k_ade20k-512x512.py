@@ -9,10 +9,20 @@ model = dict(
     data_preprocessor=data_preprocessor,
     pretrained=None,
     backbone=dict(
+        type='PromptedVisionTransformer',
         img_size=(512, 512),
         drop_rate=0.,
         init_cfg=dict(
-            type='Pretrained', checkpoint='pretrain/vit_large_p16.pth')),
+            type='Pretrained', checkpoint='pretrain/vit_large_p16.pth'),
+        prompt_cfg=dict(
+            length=50,  # todo: hyperparameter sweep this? for [1, 5, 10, 50, 100, 200]
+            depth=24,
+            location='prepend',
+            init='random',
+            shared=False,
+            dropout=0.1,  # todo: sweep for [0.0, 0.1]
+        ),
+    ),
     decode_head=dict(num_classes=150),
     auxiliary_head=[
         dict(
@@ -61,11 +71,11 @@ model = dict(
     test_cfg=dict(mode='slide', crop_size=(512, 512), stride=(341, 341)),
 )
 
-optimizer = dict(lr=0.001, weight_decay=0.0)
+optimizer = dict(lr=0.0005, weight_decay=0.0)
 optim_wrapper = dict(
     type='OptimWrapper',
     optimizer=optimizer,
-    paramwise_cfg=dict(custom_keys={'head': dict(lr_mult=10.)}))
+    paramwise_cfg=dict(custom_keys={'head': dict(lr_mult=1.)}))
 # num_gpus: 8 -> batch_size: 16
 train_dataloader = dict(batch_size=2)
 val_dataloader = dict(batch_size=1)
