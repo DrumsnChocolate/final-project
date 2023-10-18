@@ -474,7 +474,6 @@ class VisionTransformer(BaseModule):
             outs.append(out)
 
         for i, layer in enumerate(self.layers):
-            print(x.shape)
             x = layer(x)
             if i == len(self.layers) - 1:
                 if self.final_norm:
