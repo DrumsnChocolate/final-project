@@ -4,10 +4,16 @@ output_dir=visual_prompt_tuning/output_dir
 
 dataset=$1
 num_classes=$2
+transfer_type=$3
+
+config=visual_prompt_tuning/configs/prompt/cub.yaml
+if [ ${transfer_type} == "finetune" ]; then
+  config=visual_prompt_tuning/configs/finetune/cub.yaml
+fi
 
 python visual_prompt_tuning/tune_vtab.py \
-  --config-file visual_prompt_tuning/configs/prompt/cub.yaml \
-  --train-type "prompt" \
+  --config-file ${config} \
+  --train-type ${transfer_type} \
   MODEL.TYPE "vit" \
   DATA.BATCH_SIZE "64" \
   MODEL.PROMPT.NUM_TOKENS "50" \

@@ -14,7 +14,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate prompt
 
 # launch experiments
-$command $dataset $num_classes
+$command $dataset $num_classes "prompt"
 
 # deactivate conda
 conda deactivate

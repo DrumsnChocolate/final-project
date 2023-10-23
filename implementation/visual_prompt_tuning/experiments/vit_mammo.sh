@@ -5,6 +5,7 @@ output_dir=visual_prompt_tuning/output_dir
 dataset=$1
 num_classes=$2
 transfer_type=$3
+crop_size=$4
 
 config=visual_prompt_tuning/configs/prompt/cub.yaml
 if [ ${transfer_type} == "finetune" ]; then
@@ -22,7 +23,7 @@ python visual_prompt_tuning/tune_cbis.py \
   DATA.FEATURE "sup_vitb16_imagenet21k" \
   DATA.NAME "mammo-${dataset}" \
   DATA.NUMBER_CLASSES "${num_classes}" \
-  DATA.CROPSIZE "224" \
+  DATA.CROPSIZE ${crop_size} \
   MODEL.MODEL_ROOT "${model_root}" \
   DATA.DATAPATH "${data_path}" \
   OUTPUT_DIR "${output_dir}" \
