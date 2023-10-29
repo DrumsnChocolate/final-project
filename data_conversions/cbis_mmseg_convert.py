@@ -28,6 +28,10 @@ def main():
     samples_df_path = os.path.join(dir_path, 'data', 'mammography', 'cbis-ddsm', 'cbis-ddsm_singleinstance_groundtruth.csv')
     samples_df = pd.read_csv(samples_df_path, sep=';')
     samples_df.apply(symlink_sample, axis=1)
+    # now also link from mmseg to this new directory
+    mmseg_path = os.path.join(dir_path, 'implementation', 'mmsegmentation', 'data', 'cbis', 'cbis-linked')
+    os.makedirs(os.path.dirname(mmseg_path), exist_ok=True)
+    os.symlink(os.path.join(dir_path, 'data', 'mammography', 'cbis-linked'), mmseg_path)
 
 
 if __name__ == '__main__':

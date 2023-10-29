@@ -6,18 +6,16 @@ from mmseg.registry import DATASETS
 @DATASETS.register_module()
 class CBISDataset(BaseDataset):
     """CBIS-DDSM dataset.
-
-    In segmentation maps for CBIS-DDSM, 0 stands for background
     """
     METAINFO = dict(
-        classes=("mass", "calc"),
+        classes=("background", "roi"),
         palette=[[255, 0, 0], [0, 0, 255]],
     )
 
     def __init__(self,
                  img_suffix='.png',
                  seg_map_suffix='.png',
-                 reduce_zero_label=True,
+                 reduce_zero_label=False,
                  **kwargs) -> None:
         super().__init__(
             img_suffix=img_suffix,
