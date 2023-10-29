@@ -1,0 +1,1 @@
+These files are meant to be ran from the root directory, not from the data_conversions directory.
