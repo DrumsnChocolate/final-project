@@ -114,7 +114,7 @@ def get_training_data(job_path):
     gradiented_params = -1
     batch_size = None
     for line in lines:  #, leave=False):
-        if "{'BATCH_SIZE'" in line and batch_size is None:
+        if "'BATCH_SIZE'" in line and batch_size is None:
             batch_size = int(line.split("'BATCH_SIZE': ")[-1].split(",")[0])
             
         if "Total Parameters: " in line:
