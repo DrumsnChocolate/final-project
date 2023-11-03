@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-mammo_root = os.path.join(os.path.dirname(os.getcwd()), "data" "mammography", "cbis-ddsm")
+mammo_root = os.path.join(os.path.dirname(os.getcwd()), "data", "mammography")
 cbis_root = os.path.join(mammo_root, "cbis-ddsm")
 cbis_linked_root = os.path.join(mammo_root, 'mammography', "cbis-linked")
 
