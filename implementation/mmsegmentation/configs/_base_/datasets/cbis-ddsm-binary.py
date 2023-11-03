@@ -1,5 +1,5 @@
 # dataset settings
-dataset_type = 'CBISDataset'
+dataset_type = 'CBISBinaryDataset'
 data_root = 'data/cbis/cbis-linked'
 crop_size = (512, 512)
 train_pipeline = [
@@ -31,7 +31,7 @@ train_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        data_prefix=dict(img_path='images/train', seg_map_path='annotations/train'),
+        data_prefix=dict(img_path='images/train', seg_map_path='annotations_binary/train'),
         pipeline=train_pipeline,
     ),
 )
@@ -43,7 +43,7 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        data_prefix=dict(img_path='images/val', seg_map_path='annotations/val'),
+        data_prefix=dict(img_path='images/val', seg_map_path='annotations_binary/val'),
         pipeline=val_pipeline,
     ),
 )
@@ -55,7 +55,7 @@ test_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        data_prefix=dict(img_path='images/test', seg_map_path='annotations/test'),
+        data_prefix=dict(img_path='images/test', seg_map_path='annotations_binary/test'),
         pipeline=val_pipeline,
     ),
 )
