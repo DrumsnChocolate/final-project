@@ -1,7 +1,8 @@
 _base_ = [
-    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm.py',
+    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm-multi.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
 ]
+num_classes = 5  # 4 classes + 1 background
 crop_size = (512, 512)
 data_preprocessor = dict(size=crop_size)
 norm_cfg = dict(type='SyncBN', requires_grad=True)
@@ -14,7 +15,7 @@ model = dict(
         drop_rate=0.,
         init_cfg=dict(type='Pretrained', checkpoint='pretrain/vit_large_p16.pth'),
         prompt_cfg=dict(
-            length=50,  # todo: hyperparamter sweep this? for [1, 5, 10, 50, 100, 200]
+            length=50,  # todo: hyperparameter sweep this? for [1, 5, 10, 50, 100, 200]
             depth=24,
             location='prepend',
             init='random',
@@ -22,14 +23,14 @@ model = dict(
             dropout=0.1,  # todo: sweep for [0.0, 0.1]
         ),
     ),
-    decode_head=dict(num_classes=2),
+    decode_head=dict(num_classes=num_classes),
     auxiliary_head=[
         dict(
             type='SETRUPHead',
             in_channels=1024,
             channels=256,
             in_index=0,
-            num_classes=2,
+            num_classes=num_classes,
             dropout_ratio=0,
             norm_cfg=norm_cfg,
             act_cfg=dict(type='ReLU'),
@@ -43,7 +44,7 @@ model = dict(
             in_channels=1024,
             channels=256,
             in_index=1,
-            num_classes=2,
+            num_classes=num_classes,
             dropout_ratio=0,
             norm_cfg=norm_cfg,
             act_cfg=dict(type='ReLU'),
@@ -57,7 +58,7 @@ model = dict(
             in_channels=1024,
             channels=256,
             in_index=2,
-            num_classes=2,
+            num_classes=num_classes,
             dropout_ratio=0,
             norm_cfg=norm_cfg,
             act_cfg=dict(type='ReLU'),
