@@ -3,7 +3,7 @@ import os
 import numpy as np
 import cv2
 
-cbis_root = os.path.join(os.path.dirname(os.getcwd()), "data", "mammography", "cbis-ddsm")
+cbis_root = os.path.join(os.getcwd(), "data", "mammography", "cbis-ddsm")
 
 cbis_merged_single_path = os.path.join(cbis_root, "merged-binary-cropped-roi-images")
 cbis_merged_multi_path = os.path.join(cbis_root, "merged-multi-cropped-roi-images")

@@ -2,7 +2,7 @@ import pandas as pd
 from PIL import Image
 import os
 
-cbis_root = os.path.join(os.path.dirname(os.getcwd()), "data", "mammography", "cbis-ddsm")
+cbis_root = os.path.join(os.getcwd(), "data", "mammography", "cbis-ddsm")
 
 
 def count_masks(row):

@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-mammo_root = os.path.join(os.path.dirname(os.getcwd()), "data", "mammography")
+mammo_root = os.path.join(os.getcwd(), "data", "mammography")
 cbis_root = os.path.join(mammo_root, "cbis-ddsm")
 cbis_linked_root = os.path.join(mammo_root, "cbis-linked")
+mmseg_data_root = os.path.join(os.path.dirname(os.getcwd()), "implementation", "mmsegmentation", "data")
 
 
 def symlink_sample(sample):
@@ -52,6 +53,8 @@ def main():
     samples_df.loc[list(val_split_indices), 'Split'] = 'Val'
 
     samples_df.apply(symlink_sample, axis=1)
+    # finally, we symlink from mmseg data dir to the newly created cbis-linked dir
+    os.symlink(cbis_linked_root, os.path.join(mmseg_data_root, 'cbis', 'cbis-linked'))
 
 
 if __name__ == '__main__':
