@@ -1,17 +1,17 @@
 # dataset settings
 dataset_type = 'CBISBinaryDataset'
 data_root = 'data/cbis/cbis-linked'
-crop_size = (512, 512)
+# crop_size = (512, 512)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', reduce_zero_label=False),
-    dict(
-        type='RandomResize',
-        scale=(2048, 512),
-        ratio_range=(0.5, 2.0),
-        keep_ratio=True
-    ),
-    dict(type='RandomCrop', crop_size=crop_size),  # todo: figure out what cat max ratio means
+    # dict(
+    #     type='RandomResize',
+    #     scale=(2048, 512),
+    #     ratio_range=(0.5, 2.0),
+    #     keep_ratio=True
+    # ),
+    # dict(type='RandomCrop', crop_size=crop_size),
     dict(type='RandomFlip', prob=0.5),
     # dict(type='PhotoMetricDistortion'),  # todo: figure out if this is something we want to use
     dict(type='PackSegInputs'),
