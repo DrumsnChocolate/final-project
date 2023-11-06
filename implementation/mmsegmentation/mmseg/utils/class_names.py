@@ -473,6 +473,22 @@ def bdd100k_palette():
             [0, 0, 230], [119, 11, 32]]
 
 
+def cbis_binary_classes():
+    return ['background', 'roi']
+
+
+def cbis_binary_palette():
+    return [[0,0, 0], [255, 255, 255]]
+
+
+def cbis_multi_classes():
+    return ['background', 'calcification benign', 'calcification malignant', 'mass benign', 'mass malignant']
+
+
+def cbis_multi_palette():
+    return [[127, 127, 127], [255, 255, 0], [0, 255, 0], [0, 0, 255], [0, 0, 0]]
+
+
 dataset_aliases = {
     'cityscapes': ['cityscapes'],
     'ade': ['ade', 'ade20k'],
@@ -491,7 +507,9 @@ dataset_aliases = {
     'lip': ['LIP', 'lip'],
     'mapillary_v1': ['mapillary_v1'],
     'mapillary_v2': ['mapillary_v2'],
-    'bdd100k': ['bdd100k']
+    'bdd100k': ['bdd100k'],
+    'cbis_binary': ['cbis_binary', 'cbis-binary'],
+    'cbis_multi': ['cbis_multi', 'cbis-multi'],
 }
 
 

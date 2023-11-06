@@ -11,7 +11,7 @@ from mmseg.datasets import (ADE20KDataset, BaseSegDataset, BDD100KDataset,
                             LIPDataset, LoveDADataset, MapillaryDataset_v1,
                             MapillaryDataset_v2, NYUDataset, PascalVOCDataset,
                             PotsdamDataset, REFUGEDataset, SynapseDataset,
-                            iSAIDDataset)
+                            iSAIDDataset, CBISBinaryDataset, CBISMultiDataset)
 from mmseg.registry import DATASETS
 from mmseg.utils import get_classes, get_palette
 
@@ -39,6 +39,8 @@ def test_classes():
     assert list(
         MapillaryDataset_v2.METAINFO['classes']) == get_classes('mapillary_v2')
     assert list(BDD100KDataset.METAINFO['classes']) == get_classes('bdd100k')
+    assert list(CBISBinaryDataset.METAINFO['classes']) == get_classes('cbis_binary')
+    assert list(CBISMultiDataset.METAINFO['classes']) == get_classes('cbis_multi')
     with pytest.raises(ValueError):
         get_classes('unsupported')
 
@@ -96,6 +98,8 @@ def test_palette():
     assert list(
         MapillaryDataset_v2.METAINFO['palette']) == get_palette('mapillary_v2')
     assert list(BDD100KDataset.METAINFO['palette']) == get_palette('bdd100k')
+    assert list(CBISBinaryDataset.METAINFO['palette']) == get_palette('cbis_binary')
+    assert list(CBISMultiDataset.METAINFO['palette']) == get_palette('cbis_multi')
     with pytest.raises(ValueError):
         get_palette('unsupported')
 

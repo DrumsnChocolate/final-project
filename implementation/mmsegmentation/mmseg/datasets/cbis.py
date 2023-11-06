@@ -1,15 +1,14 @@
-from mmengine.dataset import BaseDataset
-
 from mmseg.registry import DATASETS
+from .basesegdataset import BaseSegDataset
 
 
 @DATASETS.register_module()
-class CBISBinaryDataset(BaseDataset):
+class CBISBinaryDataset(BaseSegDataset):
     """CBIS-DDSM binary class dataset.
     """
     METAINFO = dict(
         classes=("background", "roi"),
-        palette=[[255, 0, 0], [0, 0, 255]],
+        palette=[[0, 0, 0], [255, 255, 255]],  # black, white
     )
 
     def __init__(self,
@@ -24,9 +23,8 @@ class CBISBinaryDataset(BaseDataset):
             **kwargs)
 
 
-
 @DATASETS.register_module()
-class CBISMultiDataset(BaseDataset):
+class CBISMultiDataset(BaseSegDataset):
     """CBIS-DDSM multi class dataset.
     """
     METAINFO = dict(
