@@ -1,5 +1,6 @@
 #!/bin/bash
-for d in "cbis 2 prompt 224 64" "cbis 2 prompt 384 16" "cbis 2 prompt 672 4" "cbis 2 prompt 896 2"; do
+#for d in "cbis 2 prompt 224 64" "cbis 2 prompt 384 16" "cbis 2 prompt 672 4" "cbis 2 prompt 896 2"; do
+for d in "cbis 2 finetune 224 1"; do
   set -- $d
   dataset=$1
   num_classes=$2
