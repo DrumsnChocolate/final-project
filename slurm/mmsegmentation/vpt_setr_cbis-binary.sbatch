@@ -17,5 +17,7 @@ tools/dist_train.sh configs/setr_vpt/setrvpt_vit-l_pup_8xb2-160k_cbis-ddsm-binar
   $gpu_num \
   --cfg-options \
   train_dataloader.batch_size=4 \
-  optim_wrapper.optimizer.lr=${lr} \
-  optim_wrapper.optimizer.weight_decay=${wd}
+  optimizer.lr=$lr \
+  optimizer.weight_decay=$wd \
+  optim_wrapper.optimizer.lr=$lr \
+  optim_wrapper.optimizer.weight_decay=$wd
