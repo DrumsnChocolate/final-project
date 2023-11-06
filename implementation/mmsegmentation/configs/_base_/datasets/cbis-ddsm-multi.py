@@ -4,7 +4,7 @@ data_root = 'data/cbis/cbis-linked'
 crop_size = (512, 512)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotatios', reduce_zero_label=False),
+    dict(type='LoadAnnotations', reduce_zero_label=False),
     dict(
         type='RandomResize',
         scale=(2048, 512),
