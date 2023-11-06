@@ -113,8 +113,9 @@ def get_training_data(job_path):
     total_params = -1
     gradiented_params = -1
     batch_size = None
+    patience = None
     for line in lines:  #, leave=False):
-        if "'BATCH_SIZE'" in line and batch_size is None:
+        if "'BATCH_SIZE': " in line and batch_size is None:
             batch_size = int(line.split("'BATCH_SIZE': ")[-1].split(",")[0])
             
         if "Total Parameters: " in line:
@@ -130,6 +131,8 @@ def get_training_data(job_path):
             train_loss.append(loss)
         if " Classification results with " in line:
             update_eval(line, eval_dict, data_name)
+        if "'PATIENCE': " in line and patience is None:
+            patience = int(line.split("'PATIENCE': ")[-1].split(",")[0])
 
     meta_dict = {
         "data": data_name,
@@ -144,6 +147,7 @@ def get_training_data(job_path):
         "tuned_params": gradiented_params,
         "tuned / total (%)": round(gradiented_params / total_params * 100, 4),
         "batch_size": batch_size,
+        "patience": patience,
     }
     v_top1, t_top1 = None, None
     return train_loss, eval_dict, meta_dict, (v_top1, t_top1)
@@ -180,7 +184,6 @@ def get_df(files, is_best=True, is_last=True):
     pd_dict = defaultdict(list)
     for job_path in tqdm(files):
         train_loss, eval_results, meta_dict, (v_top1, t_top1) = get_training_data(job_path)
-        batch_size = meta_dict["batch_size"]
         
         if len(eval_results) == 0:
             print(f"job {job_path} not ready")
@@ -226,7 +229,8 @@ def get_df(files, is_best=True, is_last=True):
                         continue
                     pd_dict["l-" + name].append(val[-1])
 
-        pd_dict["best_epoch"].append(f"{best_epoch + 1} | {len(val)}")
+        pd_dict["best_epoch"].append(best_epoch + 1)
+        pd_dict["total_epochs"].append(len(val))
 
         pd_dict["file"].append(job_path)
         total_time, _, _ = get_time(job_path)
