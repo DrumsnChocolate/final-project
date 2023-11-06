@@ -177,7 +177,6 @@ def get_time(file):
 
 
 def get_df(files, is_best=True, is_last=True):
-    # todo: rewrite?
     pd_dict = defaultdict(list)
     for job_path in tqdm(files):
         train_loss, eval_results, meta_dict, (v_top1, t_top1) = get_training_data(job_path)
