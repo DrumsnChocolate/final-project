@@ -150,10 +150,11 @@ def construct_output_dir(cfg, test=True):
         cfg.DATA.NAME,
         cfg.DATA.FEATURE,
         transfer_method,
-        f"crop{cfg.DATA.IMGSIZE}",
+        f"crop{cfg.DATA.IMGSIZE}" if cfg.DATA.CROP else f"size{cfg.DATA.IMGSIZE}",
         "test" if test else "val",
         f"seed{cfg.SEED}",
         f"lr{cfg.SOLVER.BASE_LR}_wd{cfg.SOLVER.WEIGHT_DECAY}",
+        f"patience{cfg.SOLVER.PATIENCE}",
     )
 
     for run in range(1, cfg.RUN_N_TIMES+1):
