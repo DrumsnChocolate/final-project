@@ -31,22 +31,29 @@ def get_meta(job_path):
     # dataset
     # feature type (e.g. sup_vitb16_imagenet21k)
     # transfer type (e.g. end2end, linear, prompt{num_tokens})
-    # crop{size}
+    # crop{size} | size{size}
     # evaluation set: val or test
     # seed{seed}
     # lr{lr}_wd{wd}
+    # patience{patience}
     """Return the dataset, feature type, lr, wd."""
     path_items = job_path.split("/")
     # output_root = path_items[0]
     dataset = path_items[1]
     feature_type = path_items[2]
     transfer_type = path_items[3]
-    crop_size = int(path_items[4].split("crop")[-1])
+    if "crop" in path_items[4]:
+        img_size = int(path_items[4].split("crop")[-1])
+        cropped = True
+    else:  # we assume "size" in path_items[4]
+        img_size = int(path_items[4].split("size")[-1])
+        cropped = False
     eval_set = path_items[5]
     seed = int(s) if (s := path_items[6].split("seed")[-1]) != "None" else None
     lr = float(path_items[7].split("_")[0].split("lr")[-1])
     wd = float(path_items[7].split("_")[1].split("wd")[-1])
-    return dataset, feature_type, transfer_type, crop_size, eval_set, seed, lr, wd
+    patience = int(path_items[8].split("patience")[-1])
+    return dataset, feature_type, transfer_type, img_size, cropped, eval_set, seed, lr, wd, patience
 
 
 def update_eval(line, eval_dict, data_name):
@@ -101,7 +108,7 @@ def get_mean_accuracy(job_path, data_name):
 
 
 def get_training_data(job_path):
-    data_name, feat_type, transfer_type, crop_size, eval_set, seed, lr, wd = get_meta(job_path)
+    data_name, feat_type, transfer_type, img_size, cropped, eval_set, seed, lr, wd, patience = get_meta(job_path)
     with open(job_path) as f:
         lines = f.readlines()
 
@@ -113,7 +120,6 @@ def get_training_data(job_path):
     total_params = -1
     gradiented_params = -1
     batch_size = None
-    patience = None
     for line in lines:  #, leave=False):
         if "'BATCH_SIZE': " in line and batch_size is None:
             batch_size = int(line.split("'BATCH_SIZE': ")[-1].split(",")[0])
@@ -131,14 +137,13 @@ def get_training_data(job_path):
             train_loss.append(loss)
         if " Classification results with " in line:
             update_eval(line, eval_dict, data_name)
-        if "'PATIENCE': " in line and patience is None:
-            patience = int(line.split("'PATIENCE': ")[-1].split(",")[0])
 
     meta_dict = {
         "data": data_name,
         "feature": feat_type,
         "transfer": transfer_type,
-        "crop": crop_size,
+        "img_size": img_size,
+        "cropped": cropped,
         "eval_set": eval_set,
         "seed": seed,
         "lr": lr,
@@ -239,7 +244,7 @@ def get_df(files, is_best=True, is_last=True):
     result_df = None
     if len(pd_dict) > 0:
         result_df = pd.DataFrame(pd_dict)
-        result_df = result_df.sort_values(['data', "feature", "transfer", "crop", "eval_set", "lr", "wd"])
+        result_df = result_df.sort_values(['data', "feature", "transfer", "img_size", "eval_set", "lr", "wd"])
     return result_df
 
 
