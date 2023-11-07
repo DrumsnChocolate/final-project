@@ -63,7 +63,7 @@ class ViT(nn.Module):
     def build_backbone(self, prompt_cfg, cfg, adapter_cfg, load_pretrain, vis):
         transfer_type = cfg.MODEL.TRANSFER_TYPE
         self.enc, self.feat_dim = build_vit_sup_models(
-            cfg.DATA.FEATURE, cfg.DATA.CROPSIZE, prompt_cfg, cfg.MODEL.MODEL_ROOT, adapter_cfg, load_pretrain, vis
+            cfg.DATA.FEATURE, cfg.DATA.IMGSIZE, prompt_cfg, cfg.MODEL.MODEL_ROOT, adapter_cfg, load_pretrain, vis
         )
 
         # linear, prompt, cls, cls+prompt, partial_1
@@ -203,7 +203,7 @@ class Swin(ViT):
     def build_backbone(self, prompt_cfg, cfg, adapter_cfg, load_pretrain, vis):
         transfer_type = cfg.MODEL.TRANSFER_TYPE
         self.enc, self.feat_dim = build_swin_model(
-            cfg.DATA.FEATURE, cfg.DATA.CROPSIZE,
+            cfg.DATA.FEATURE, cfg.DATA.IMGSIZE,
             prompt_cfg, cfg.MODEL.MODEL_ROOT
         )
 
@@ -274,7 +274,7 @@ class SSLViT(ViT):
             build_fn = build_mae_model
 
         self.enc, self.feat_dim = build_fn(
-            cfg.DATA.FEATURE, cfg.DATA.CROPSIZE,
+            cfg.DATA.FEATURE, cfg.DATA.IMGSIZE,
             prompt_cfg, cfg.MODEL.MODEL_ROOT, adapter_cfg=adapter_cfg
         )
 

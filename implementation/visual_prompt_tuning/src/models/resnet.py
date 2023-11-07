@@ -220,7 +220,7 @@ class ResNet(nn.Module):
         if prompt_config.INITIATION == "random":
             self.prompt_embeddings = nn.Parameter(torch.zeros(
                     1, self.num_tokens,
-                    self.cfg.DATA.CROPSIZE, self.cfg.DATA.CROPSIZE
+                    self.cfg.DATA.IMGSIZE, self.cfg.DATA.IMGSIZE
             ))
             nn.init.uniform_(self.prompt_embeddings.data, 0.0, 1.0)
             self.prompt_norm = tv.transforms.Normalize(
@@ -231,7 +231,7 @@ class ResNet(nn.Module):
         elif prompt_config.INITIATION == "gaussian":
             self.prompt_embeddings = nn.Parameter(torch.zeros(
                     1, self.num_tokens,
-                    self.cfg.DATA.CROPSIZE, self.cfg.DATA.CROPSIZE
+                    self.cfg.DATA.IMGSIZE, self.cfg.DATA.IMGSIZE
             ))
 
             nn.init.normal_(self.prompt_embeddings.data)
@@ -256,10 +256,10 @@ class ResNet(nn.Module):
         if prompt_config.INITIATION == "random":
             self.prompt_embeddings_tb = nn.Parameter(torch.zeros(
                     1, 3, 2 * self.num_tokens,
-                    self.cfg.DATA.CROPSIZE + 2 * self.num_tokens
+                    self.cfg.DATA.IMGSIZE + 2 * self.num_tokens
             ))
             self.prompt_embeddings_lr = nn.Parameter(torch.zeros(
-                    1, 3, self.cfg.DATA.CROPSIZE, 2 * self.num_tokens
+                    1, 3, self.cfg.DATA.IMGSIZE, 2 * self.num_tokens
             ))
 
             nn.init.uniform_(self.prompt_embeddings_tb.data, 0.0, 1.0)
@@ -273,10 +273,10 @@ class ResNet(nn.Module):
         elif prompt_config.INITIATION == "gaussian":
             self.prompt_embeddings_tb = nn.Parameter(torch.zeros(
                     1, 3, 2 * self.num_tokens,
-                    self.cfg.DATA.CROPSIZE + 2 * self.num_tokens
+                    self.cfg.DATA.IMGSIZE + 2 * self.num_tokens
             ))
             self.prompt_embeddings_lr = nn.Parameter(torch.zeros(
-                    1, 3, self.cfg.DATA.CROPSIZE, 2 * self.num_tokens
+                    1, 3, self.cfg.DATA.IMGSIZE, 2 * self.num_tokens
             ))
 
             nn.init.normal_(self.prompt_embeddings_tb.data)

@@ -36,7 +36,7 @@ class CBISDataset(torch.utils.data.Dataset):
         # todo: figure out if this percentage is ever used anywhere, and if we want to use it
         self.data_percentage = cfg.DATA.PERCENTAGE
         # todo: not sure about the transforms, we'll see
-        self.transform = get_transforms(split, cfg.DATA.CROPSIZE)
+        self.transform = get_transforms(split, cfg.DATA.IMGSIZE, crop=cfg.DATA.CROP)
         self.image_labels = self.get_image_labels()
         self._class_to_id = self.get_class_to_id()
 

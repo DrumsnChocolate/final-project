@@ -32,7 +32,7 @@ class JSONDataset(torch.utils.data.Dataset):
         self.data_dir = cfg.DATA.DATAPATH
         self.data_percentage = cfg.DATA.PERCENTAGE
         self._construct_imdb(cfg)
-        self.transform = get_transforms(split, cfg.DATA.CROPSIZE)
+        self.transform = get_transforms(split, cfg.DATA.IMGSIZE, crop=cfg.DATA.CROP)
 
     def get_anno(self):
         anno_path = os.path.join(self.data_dir, "{}.json".format(self._split))

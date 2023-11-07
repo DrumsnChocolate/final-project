@@ -194,7 +194,7 @@ def build_tf_dataset(cfg, mode):
         preprocess_fn=functools.partial(
             preprocess_fn,
             input_range=(0.0, 1.0),
-            size=cfg.DATA.CROPSIZE,
+            size=cfg.DATA.IMGSIZE,
             ),
         for_eval=mode != "train",  # handles shuffling
         shuffle_buffer_size=1000,

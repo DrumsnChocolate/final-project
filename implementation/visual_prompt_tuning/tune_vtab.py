@@ -150,7 +150,7 @@ def construct_output_dir(cfg, test=True):
         cfg.DATA.NAME,
         cfg.DATA.FEATURE,
         transfer_method,
-        f"crop{cfg.DATA.CROPSIZE}",
+        f"crop{cfg.DATA.IMGSIZE}",
         "test" if test else "val",
         f"seed{cfg.SEED}",
         f"lr{cfg.SOLVER.BASE_LR}_wd{cfg.SOLVER.WEIGHT_DECAY}",
@@ -263,7 +263,7 @@ def get_best_lrwd(args):
                       f"{cfg.DATA.NAME}/"
                       f"{cfg.DATA.FEATURE}/"
                       f"{transfer_method}/"
-                      f"crop{cfg.DATA.CROPSIZE}/"
+                      f"crop{cfg.DATA.IMGSIZE}/"
                       "val/"
                       "*/"  # seed
                       "*/"  # hyperparams

@@ -4,10 +4,36 @@
 import torchvision as tv
 
 
-def get_transforms(split, size):
-    normalize = tv.transforms.Normalize(
+def get_transforms(split, size, crop=True):
+    if crop:
+        return get_transforms_crop(split, size)
+    return get_transforms_no_crop(split, size)
+
+def get_normalize():
+    return tv.transforms.Normalize(
         mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
     )
+
+def get_transforms_no_crop(split, size):
+    normalize = get_normalize()
+    if split == "train":
+        return tv.transforms.Compose(
+            [
+                tv.transforms.Resize(size),
+                tv.transforms.RandomHorizontalFlip(0.5),
+                tv.transforms.ToTensor(),
+                get_normalize(),
+            ]
+        )
+    return tv.transforms.Compose(
+        [
+            tv.transforms.Resize(size),
+            tv.transforms.ToTensor(),
+            get_normalize(),
+        ]
+    )
+
+def get_transforms_crop(split, size, crop=True):
     if size == 448:
         resize_dim = 512
         crop_dim = 448
@@ -29,10 +55,8 @@ def get_transforms(split, size):
                 tv.transforms.Resize(resize_dim),
                 tv.transforms.RandomCrop(crop_dim),
                 tv.transforms.RandomHorizontalFlip(0.5),
-                # tv.transforms.RandomResizedCrop(224, scale=(0.2, 1.0)),
-                # tv.transforms.RandomHorizontalFlip(),
                 tv.transforms.ToTensor(),
-                normalize,
+                get_normalize(),
             ]
         )
     else:
@@ -41,7 +65,7 @@ def get_transforms(split, size):
                 tv.transforms.Resize(resize_dim),
                 tv.transforms.CenterCrop(crop_dim),
                 tv.transforms.ToTensor(),
-                normalize,
+                get_normalize(),
             ]
         )
     return transform

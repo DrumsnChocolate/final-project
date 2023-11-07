@@ -156,7 +156,7 @@ class ConvNeXt(ResNet):
         if prompt_config.INITIATION == "random":
             self.prompt_embeddings = nn.Parameter(torch.zeros(
                     1, self.num_tokens,
-                    self.cfg.DATA.CROPSIZE, self.cfg.DATA.CROPSIZE
+                    self.cfg.DATA.IMGSIZE, self.cfg.DATA.IMGSIZE
             ))
             nn.init.uniform_(self.prompt_embeddings.data, 0.0, 1.0)
             self.prompt_norm = tv.transforms.Normalize(
@@ -167,7 +167,7 @@ class ConvNeXt(ResNet):
         elif prompt_config.INITIATION == "gaussian":
             self.prompt_embeddings = nn.Parameter(torch.zeros(
                     1, self.num_tokens,
-                    self.cfg.DATA.CROPSIZE, self.cfg.DATA.CROPSIZE
+                    self.cfg.DATA.IMGSIZE, self.cfg.DATA.IMGSIZE
             ))
 
             nn.init.normal_(self.prompt_embeddings.data)
