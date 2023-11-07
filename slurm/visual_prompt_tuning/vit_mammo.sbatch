@@ -15,7 +15,7 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate prompt
 
 # launch experiments
-visual_prompt_tuning/experiments/vit_mammo.sh $1 $2 $3 $4 $5
+visual_prompt_tuning/experiments/vit_mammo.sh $1 $2 $3 $4 $5 $6
 
 conda deactivate
 
