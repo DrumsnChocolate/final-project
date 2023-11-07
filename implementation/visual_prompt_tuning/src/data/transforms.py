@@ -15,11 +15,10 @@ def get_normalize():
     )
 
 def get_transforms_no_crop(split, size):
-    normalize = get_normalize()
     if split == "train":
         return tv.transforms.Compose(
             [
-                tv.transforms.Resize(size),
+                tv.transforms.Resize((size, size)),
                 tv.transforms.RandomHorizontalFlip(0.5),
                 tv.transforms.ToTensor(),
                 get_normalize(),
@@ -27,13 +26,13 @@ def get_transforms_no_crop(split, size):
         )
     return tv.transforms.Compose(
         [
-            tv.transforms.Resize(size),
+            tv.transforms.Resize((size, size)),
             tv.transforms.ToTensor(),
             get_normalize(),
         ]
     )
 
-def get_transforms_crop(split, size, crop=True):
+def get_transforms_crop(split, size):
     if size == 448:
         resize_dim = 512
         crop_dim = 448
@@ -52,7 +51,7 @@ def get_transforms_crop(split, size, crop=True):
     if split == "train":
         transform = tv.transforms.Compose(
             [
-                tv.transforms.Resize(resize_dim),
+                tv.transforms.Resize((resize_dim, resize_dim)),
                 tv.transforms.RandomCrop(crop_dim),
                 tv.transforms.RandomHorizontalFlip(0.5),
                 tv.transforms.ToTensor(),
@@ -62,7 +61,7 @@ def get_transforms_crop(split, size, crop=True):
     else:
         transform = tv.transforms.Compose(
             [
-                tv.transforms.Resize(resize_dim),
+                tv.transforms.Resize((resize_dim, resize_dim)),
                 tv.transforms.CenterCrop(crop_dim),
                 tv.transforms.ToTensor(),
                 get_normalize(),
