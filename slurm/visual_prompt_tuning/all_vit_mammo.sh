@@ -3,13 +3,13 @@ dataset="cbis"
 num_classes=2
 for transfer_type in "finetune" "prompt"; do
   for patience in 7 14 21; do
-    for img_size in 800 500; do
+    for img_size in 800 500 200; do
       if [ $img_size == 200 ]; then
         batch_size=64
       elif [ $img_size == 500 ]; then
-        batch_size=16
+        batch_size=16  # was 32, but that seems to fail?
       elif [ $img_size == 800 ]; then
-        batch_size=8
+        batch_size=8  # was 16, but that seems to fail?
       fi
 
       if [ ${transfer_type} == "finetune" ]; then
