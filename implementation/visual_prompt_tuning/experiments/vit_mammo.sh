@@ -23,9 +23,9 @@ python visual_prompt_tuning/tune_cbis.py \
   MODEL.PROMPT.DEEP "True" \
   MODEL.PROMPT.DROPOUT "0.1" \
   DATA.FEATURE "sup_vitb16_imagenet21k" \
+  DATA.IMGSIZE $crop_size \
   DATA.NAME "mammo-$dataset" \
   DATA.NUMBER_CLASSES $num_classes \
-  DATA.IMGSIZE $crop_size \
   DATA.CROP "False" \
   MODEL.MODEL_ROOT "$model_root" \
   DATA.DATAPATH "$data_path" \
