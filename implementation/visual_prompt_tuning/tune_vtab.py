@@ -264,7 +264,7 @@ def get_best_lrwd(args):
                       f"{cfg.DATA.NAME}/"
                       f"{cfg.DATA.FEATURE}/"
                       f"{transfer_method}/"
-                      f"crop{cfg.DATA.IMGSIZE}/"
+                      f"crop{cfg.DATA.IMGSIZE}/" if cfg.DATA.CROP else f"size{cfg.DATA.IMGSIZE}/"
                       "val/"
                       "*/"  # seed
                       "*/"  # hyperparams
