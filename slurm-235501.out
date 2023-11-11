@@ -1,0 +1,920 @@
+[09/15 12:30:50 visual_prompt]: Rank of current process: 0. World size: 1
+[09/15 12:30:50 visual_prompt]: Environment info:
+-------------------  ----------------------------------------------------
+Python               3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              1.7.1
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA TITAN X (Pascal)
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  ----------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.6.0 (Git Hash 5ef631a030a6f73131c77892041042805a06064f)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+[09/15 12:30:50 visual_prompt]: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '100', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="count_all")', 'DATA.NUMBER_CLASSES', '8', 'SOLVER.BASE_LR', '5.0', 'SOLVER.WEIGHT_DECAY', '0.0001', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir/seed42'], train_type='')
+[09/15 12:30:50 visual_prompt]: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/15 12:30:50 visual_prompt]: Training with config:
+[09/15 12:30:50 visual_prompt]: {'CUDNN_BENCHMARK': False,
+ 'DATA': {'BATCH_SIZE': 64,
+          'CLASS_WEIGHTS_TYPE': 'none',
+          'CROPSIZE': 224,
+          'DATAPATH': 'visual_prompt_tuning/data_path',
+          'FEATURE': 'sup_vitb16_imagenet21k',
+          'MULTILABEL': False,
+          'NAME': 'vtab-clevr(task="count_all")',
+          'NO_TEST': False,
+          'NUMBER_CLASSES': 8,
+          'NUM_WORKERS': 4,
+          'PERCENTAGE': 1.0,
+          'PIN_MEMORY': True},
+ 'DBG': False,
+ 'MODEL': {'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'}),
+           'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}),
+           'MLP_NUM': 0,
+           'MODEL_ROOT': 'visual_prompt_tuning/model_root',
+           'PROMPT': {'CLSEMB_FOLDER': '',
+                      'CLSEMB_PATH': '',
+                      'DEEP': True,
+                      'DEEP_SHARED': False,
+                      'DROPOUT': 0.1,
+                      'FORWARD_DEEP_NOEXPAND': False,
+                      'INITIATION': 'random',
+                      'LOCATION': 'prepend',
+                      'NUM_DEEP_LAYERS': None,
+                      'NUM_TOKENS': 100,
+                      'PROJECT': -1,
+                      'REVERSE_DEEP': False,
+                      'SAVE_FOR_EACH_EPOCH': False,
+                      'VIT_POOL_TYPE': 'original'},
+           'SAVE_CKPT': False,
+           'TRANSFER_TYPE': 'prompt',
+           'TYPE': 'vit',
+           'WEIGHT_PATH': ''},
+ 'NUM_GPUS': 1,
+ 'NUM_SHARDS': 1,
+ 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/seed42/vtab-clevr(task="count_all")/sup_vitb16_imagenet21k/lr5.0_wd0.0001/run1',
+ 'RUN_N_TIMES': 1,
+ 'SEED': None,
+ 'SOLVER': {'BASE_LR': 5.0,
+            'BIAS_MULTIPLIER': 1.0,
+            'DBG_TRAINABLE': False,
+            'LOG_EVERY_N': 100,
+            'LOSS': 'softmax',
+            'LOSS_ALPHA': 0.01,
+            'MOMENTUM': 0.9,
+            'OPTIMIZER': 'sgd',
+            'PATIENCE': 300,
+            'SCHEDULER': 'cosine',
+            'TOTAL_EPOCH': 100,
+            'WARMUP_EPOCH': 10,
+            'WEIGHT_DECAY': 0.0001,
+            'WEIGHT_DECAY_BIAS': 0}}
+[09/15 12:30:50 visual_prompt]: Loading training data (final training data for vtab)...
+2023-09-15 12:30:50.772870: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-09-15 12:30:52.087202: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:30:52.087320: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:30:52.087334: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2023-09-15 12:30:54.807984: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcusolver.so.11'; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:30:54.808140: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudnn.so.8'; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:30:54.808167: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1934] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+[09/15 12:30:54 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset trainval...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'float32'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to float32.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'int64'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to int64.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'string'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to object.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+2023-09-15 12:30:54.839644: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[:800]+train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:31:00 visual_prompt]: Number of images: 1000
+[09/15 12:31:00 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:31:00 visual_prompt]: Loading validation data...
+[09/15 12:31:00 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset val...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:31:02 visual_prompt]: Number of images: 200
+[09/15 12:31:02 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:31:02 visual_prompt]: Loading test data...
+[09/15 12:31:02 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset test...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split validation, from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:32:28 visual_prompt]: Number of images: 15000
+[09/15 12:32:28 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:32:28 visual_prompt]: Constructing models...
+[09/15 12:32:32 visual_prompt]: Total Parameters: 86726408	 Gradient Parameters: 927752
+[09/15 12:32:32 visual_prompt]: tuned percent:1.070
+[09/15 12:32:34 visual_prompt]: Device used for model: 0
+[09/15 12:32:34 visual_prompt]: Setting up Evalutator...
+[09/15 12:32:34 visual_prompt]: Setting up Trainer...
+[09/15 12:32:34 visual_prompt]: 	Setting up the optimizer...
+[09/15 12:32:34 visual_prompt]: Training 1 / 100 epoch, with learning rate 0.0
+Traceback (most recent call last):
+  File "visual_prompt_tuning/train.py", line 129, in <module>
+    main(args)
+  File "visual_prompt_tuning/train.py", line 124, in main
+    train(cfg, args)
+  File "visual_prompt_tuning/train.py", line 109, in train
+    trainer.train_classifier(train_loader, val_loader, test_loader)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 185, in train_classifier
+    train_loss, _ = self.forward_one_batch(X, targets, True)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 86, in forward_one_batch
+    outputs = self.model(inputs)  # (batchsize, num_cls)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_models.py", line 175, in forward
+    x = self.enc(x)  # batch_size x self.feat_dim
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 161, in forward
+    x, attn_weights = self.transformer(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 138, in forward
+    embedding_output)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 124, in forward_deep_prompt
+    hidden_states, weights = self.encoder.layer[i](hidden_states)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 199, in forward
+    x, weights = self.attn(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 106, in forward
+    context_layer = torch.matmul(attention_probs, value_layer) # B, num_head, num_patches, head_size
+RuntimeError: CUDA out of memory. Tried to allocate 56.00 MiB (GPU 0; 11.91 GiB total capacity; 11.00 GiB already allocated; 14.94 MiB free; 11.11 GiB reserved in total by PyTorch)
+[09/15 12:33:04 visual_prompt]: Rank of current process: 0. World size: 1
+[09/15 12:33:04 visual_prompt]: Environment info:
+-------------------  ----------------------------------------------------
+Python               3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              1.7.1
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA TITAN X (Pascal)
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  ----------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.6.0 (Git Hash 5ef631a030a6f73131c77892041042805a06064f)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+[09/15 12:33:04 visual_prompt]: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '100', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="count_all")', 'DATA.NUMBER_CLASSES', '8', 'SOLVER.BASE_LR', '5.0', 'SOLVER.WEIGHT_DECAY', '0.0001', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir/seed44'], train_type='')
+[09/15 12:33:04 visual_prompt]: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/15 12:33:04 visual_prompt]: Training with config:
+[09/15 12:33:04 visual_prompt]: {'CUDNN_BENCHMARK': False,
+ 'DATA': {'BATCH_SIZE': 64,
+          'CLASS_WEIGHTS_TYPE': 'none',
+          'CROPSIZE': 224,
+          'DATAPATH': 'visual_prompt_tuning/data_path',
+          'FEATURE': 'sup_vitb16_imagenet21k',
+          'MULTILABEL': False,
+          'NAME': 'vtab-clevr(task="count_all")',
+          'NO_TEST': False,
+          'NUMBER_CLASSES': 8,
+          'NUM_WORKERS': 4,
+          'PERCENTAGE': 1.0,
+          'PIN_MEMORY': True},
+ 'DBG': False,
+ 'MODEL': {'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'}),
+           'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}),
+           'MLP_NUM': 0,
+           'MODEL_ROOT': 'visual_prompt_tuning/model_root',
+           'PROMPT': {'CLSEMB_FOLDER': '',
+                      'CLSEMB_PATH': '',
+                      'DEEP': True,
+                      'DEEP_SHARED': False,
+                      'DROPOUT': 0.1,
+                      'FORWARD_DEEP_NOEXPAND': False,
+                      'INITIATION': 'random',
+                      'LOCATION': 'prepend',
+                      'NUM_DEEP_LAYERS': None,
+                      'NUM_TOKENS': 100,
+                      'PROJECT': -1,
+                      'REVERSE_DEEP': False,
+                      'SAVE_FOR_EACH_EPOCH': False,
+                      'VIT_POOL_TYPE': 'original'},
+           'SAVE_CKPT': False,
+           'TRANSFER_TYPE': 'prompt',
+           'TYPE': 'vit',
+           'WEIGHT_PATH': ''},
+ 'NUM_GPUS': 1,
+ 'NUM_SHARDS': 1,
+ 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/seed44/vtab-clevr(task="count_all")/sup_vitb16_imagenet21k/lr5.0_wd0.0001/run1',
+ 'RUN_N_TIMES': 1,
+ 'SEED': None,
+ 'SOLVER': {'BASE_LR': 5.0,
+            'BIAS_MULTIPLIER': 1.0,
+            'DBG_TRAINABLE': False,
+            'LOG_EVERY_N': 100,
+            'LOSS': 'softmax',
+            'LOSS_ALPHA': 0.01,
+            'MOMENTUM': 0.9,
+            'OPTIMIZER': 'sgd',
+            'PATIENCE': 300,
+            'SCHEDULER': 'cosine',
+            'TOTAL_EPOCH': 100,
+            'WARMUP_EPOCH': 10,
+            'WEIGHT_DECAY': 0.0001,
+            'WEIGHT_DECAY_BIAS': 0}}
+[09/15 12:33:04 visual_prompt]: Loading training data (final training data for vtab)...
+2023-09-15 12:33:04.443877: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-09-15 12:33:05.657902: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:33:05.658044: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:33:05.658056: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2023-09-15 12:33:07.911917: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcusolver.so.11'; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:33:07.912083: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudnn.so.8'; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:33:07.912111: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1934] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+[09/15 12:33:07 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset trainval...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'float32'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to float32.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'int64'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to int64.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'string'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to object.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+2023-09-15 12:33:07.942637: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[:800]+train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:33:14 visual_prompt]: Number of images: 1000
+[09/15 12:33:14 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:33:14 visual_prompt]: Loading validation data...
+[09/15 12:33:14 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset val...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:33:15 visual_prompt]: Number of images: 200
+[09/15 12:33:15 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:33:15 visual_prompt]: Loading test data...
+[09/15 12:33:15 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset test...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split validation, from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:34:39 visual_prompt]: Number of images: 15000
+[09/15 12:34:39 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:34:39 visual_prompt]: Constructing models...
+[09/15 12:34:43 visual_prompt]: Total Parameters: 86726408	 Gradient Parameters: 927752
+[09/15 12:34:43 visual_prompt]: tuned percent:1.070
+[09/15 12:34:45 visual_prompt]: Device used for model: 0
+[09/15 12:34:45 visual_prompt]: Setting up Evalutator...
+[09/15 12:34:45 visual_prompt]: Setting up Trainer...
+[09/15 12:34:45 visual_prompt]: 	Setting up the optimizer...
+[09/15 12:34:45 visual_prompt]: Training 1 / 100 epoch, with learning rate 0.0
+Traceback (most recent call last):
+  File "visual_prompt_tuning/train.py", line 129, in <module>
+    main(args)
+  File "visual_prompt_tuning/train.py", line 124, in main
+    train(cfg, args)
+  File "visual_prompt_tuning/train.py", line 109, in train
+    trainer.train_classifier(train_loader, val_loader, test_loader)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 185, in train_classifier
+    train_loss, _ = self.forward_one_batch(X, targets, True)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 86, in forward_one_batch
+    outputs = self.model(inputs)  # (batchsize, num_cls)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_models.py", line 175, in forward
+    x = self.enc(x)  # batch_size x self.feat_dim
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 161, in forward
+    x, attn_weights = self.transformer(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 138, in forward
+    embedding_output)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 124, in forward_deep_prompt
+    hidden_states, weights = self.encoder.layer[i](hidden_states)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 199, in forward
+    x, weights = self.attn(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 106, in forward
+    context_layer = torch.matmul(attention_probs, value_layer) # B, num_head, num_patches, head_size
+RuntimeError: CUDA out of memory. Tried to allocate 56.00 MiB (GPU 0; 11.91 GiB total capacity; 11.00 GiB already allocated; 14.94 MiB free; 11.11 GiB reserved in total by PyTorch)
+[09/15 12:35:02 visual_prompt]: Rank of current process: 0. World size: 1
+[09/15 12:35:02 visual_prompt]: Environment info:
+-------------------  ----------------------------------------------------
+Python               3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              1.7.1
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA TITAN X (Pascal)
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  ----------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.6.0 (Git Hash 5ef631a030a6f73131c77892041042805a06064f)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+[09/15 12:35:02 visual_prompt]: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '100', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="count_all")', 'DATA.NUMBER_CLASSES', '8', 'SOLVER.BASE_LR', '5.0', 'SOLVER.WEIGHT_DECAY', '0.0001', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir/seed82'], train_type='')
+[09/15 12:35:02 visual_prompt]: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/15 12:35:02 visual_prompt]: Training with config:
+[09/15 12:35:02 visual_prompt]: {'CUDNN_BENCHMARK': False,
+ 'DATA': {'BATCH_SIZE': 64,
+          'CLASS_WEIGHTS_TYPE': 'none',
+          'CROPSIZE': 224,
+          'DATAPATH': 'visual_prompt_tuning/data_path',
+          'FEATURE': 'sup_vitb16_imagenet21k',
+          'MULTILABEL': False,
+          'NAME': 'vtab-clevr(task="count_all")',
+          'NO_TEST': False,
+          'NUMBER_CLASSES': 8,
+          'NUM_WORKERS': 4,
+          'PERCENTAGE': 1.0,
+          'PIN_MEMORY': True},
+ 'DBG': False,
+ 'MODEL': {'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'}),
+           'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}),
+           'MLP_NUM': 0,
+           'MODEL_ROOT': 'visual_prompt_tuning/model_root',
+           'PROMPT': {'CLSEMB_FOLDER': '',
+                      'CLSEMB_PATH': '',
+                      'DEEP': True,
+                      'DEEP_SHARED': False,
+                      'DROPOUT': 0.1,
+                      'FORWARD_DEEP_NOEXPAND': False,
+                      'INITIATION': 'random',
+                      'LOCATION': 'prepend',
+                      'NUM_DEEP_LAYERS': None,
+                      'NUM_TOKENS': 100,
+                      'PROJECT': -1,
+                      'REVERSE_DEEP': False,
+                      'SAVE_FOR_EACH_EPOCH': False,
+                      'VIT_POOL_TYPE': 'original'},
+           'SAVE_CKPT': False,
+           'TRANSFER_TYPE': 'prompt',
+           'TYPE': 'vit',
+           'WEIGHT_PATH': ''},
+ 'NUM_GPUS': 1,
+ 'NUM_SHARDS': 1,
+ 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/seed82/vtab-clevr(task="count_all")/sup_vitb16_imagenet21k/lr5.0_wd0.0001/run1',
+ 'RUN_N_TIMES': 1,
+ 'SEED': None,
+ 'SOLVER': {'BASE_LR': 5.0,
+            'BIAS_MULTIPLIER': 1.0,
+            'DBG_TRAINABLE': False,
+            'LOG_EVERY_N': 100,
+            'LOSS': 'softmax',
+            'LOSS_ALPHA': 0.01,
+            'MOMENTUM': 0.9,
+            'OPTIMIZER': 'sgd',
+            'PATIENCE': 300,
+            'SCHEDULER': 'cosine',
+            'TOTAL_EPOCH': 100,
+            'WARMUP_EPOCH': 10,
+            'WEIGHT_DECAY': 0.0001,
+            'WEIGHT_DECAY_BIAS': 0}}
+[09/15 12:35:02 visual_prompt]: Loading training data (final training data for vtab)...
+2023-09-15 12:35:02.343316: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-09-15 12:35:03.552653: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:35:03.552778: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:35:03.552793: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2023-09-15 12:35:05.799000: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcusolver.so.11'; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:35:05.799153: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudnn.so.8'; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:35:05.799177: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1934] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+[09/15 12:35:05 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset trainval...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'string'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to object.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'float32'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to float32.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'int64'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to int64.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+2023-09-15 12:35:05.827194: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[:800]+train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:35:11 visual_prompt]: Number of images: 1000
+[09/15 12:35:11 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:35:11 visual_prompt]: Loading validation data...
+[09/15 12:35:11 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset val...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:35:13 visual_prompt]: Number of images: 200
+[09/15 12:35:13 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:35:13 visual_prompt]: Loading test data...
+[09/15 12:35:13 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset test...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split validation, from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:36:38 visual_prompt]: Number of images: 15000
+[09/15 12:36:38 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:36:38 visual_prompt]: Constructing models...
+[09/15 12:36:41 visual_prompt]: Total Parameters: 86726408	 Gradient Parameters: 927752
+[09/15 12:36:41 visual_prompt]: tuned percent:1.070
+[09/15 12:36:44 visual_prompt]: Device used for model: 0
+[09/15 12:36:44 visual_prompt]: Setting up Evalutator...
+[09/15 12:36:44 visual_prompt]: Setting up Trainer...
+[09/15 12:36:44 visual_prompt]: 	Setting up the optimizer...
+[09/15 12:36:44 visual_prompt]: Training 1 / 100 epoch, with learning rate 0.0
+Traceback (most recent call last):
+  File "visual_prompt_tuning/train.py", line 129, in <module>
+    main(args)
+  File "visual_prompt_tuning/train.py", line 124, in main
+    train(cfg, args)
+  File "visual_prompt_tuning/train.py", line 109, in train
+    trainer.train_classifier(train_loader, val_loader, test_loader)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 185, in train_classifier
+    train_loss, _ = self.forward_one_batch(X, targets, True)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 86, in forward_one_batch
+    outputs = self.model(inputs)  # (batchsize, num_cls)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_models.py", line 175, in forward
+    x = self.enc(x)  # batch_size x self.feat_dim
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 161, in forward
+    x, attn_weights = self.transformer(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 138, in forward
+    embedding_output)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 124, in forward_deep_prompt
+    hidden_states, weights = self.encoder.layer[i](hidden_states)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 199, in forward
+    x, weights = self.attn(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 106, in forward
+    context_layer = torch.matmul(attention_probs, value_layer) # B, num_head, num_patches, head_size
+RuntimeError: CUDA out of memory. Tried to allocate 56.00 MiB (GPU 0; 11.91 GiB total capacity; 11.00 GiB already allocated; 14.94 MiB free; 11.11 GiB reserved in total by PyTorch)
+[09/15 12:37:20 visual_prompt]: Rank of current process: 0. World size: 1
+[09/15 12:37:20 visual_prompt]: Environment info:
+-------------------  ----------------------------------------------------
+Python               3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              1.7.1
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA TITAN X (Pascal)
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  ----------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.6.0 (Git Hash 5ef631a030a6f73131c77892041042805a06064f)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+[09/15 12:37:20 visual_prompt]: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '100', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="count_all")', 'DATA.NUMBER_CLASSES', '8', 'SOLVER.BASE_LR', '5.0', 'SOLVER.WEIGHT_DECAY', '0.0001', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir/seed100'], train_type='')
+[09/15 12:37:20 visual_prompt]: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/15 12:37:20 visual_prompt]: Training with config:
+[09/15 12:37:20 visual_prompt]: {'CUDNN_BENCHMARK': False,
+ 'DATA': {'BATCH_SIZE': 64,
+          'CLASS_WEIGHTS_TYPE': 'none',
+          'CROPSIZE': 224,
+          'DATAPATH': 'visual_prompt_tuning/data_path',
+          'FEATURE': 'sup_vitb16_imagenet21k',
+          'MULTILABEL': False,
+          'NAME': 'vtab-clevr(task="count_all")',
+          'NO_TEST': False,
+          'NUMBER_CLASSES': 8,
+          'NUM_WORKERS': 4,
+          'PERCENTAGE': 1.0,
+          'PIN_MEMORY': True},
+ 'DBG': False,
+ 'MODEL': {'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'}),
+           'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}),
+           'MLP_NUM': 0,
+           'MODEL_ROOT': 'visual_prompt_tuning/model_root',
+           'PROMPT': {'CLSEMB_FOLDER': '',
+                      'CLSEMB_PATH': '',
+                      'DEEP': True,
+                      'DEEP_SHARED': False,
+                      'DROPOUT': 0.1,
+                      'FORWARD_DEEP_NOEXPAND': False,
+                      'INITIATION': 'random',
+                      'LOCATION': 'prepend',
+                      'NUM_DEEP_LAYERS': None,
+                      'NUM_TOKENS': 100,
+                      'PROJECT': -1,
+                      'REVERSE_DEEP': False,
+                      'SAVE_FOR_EACH_EPOCH': False,
+                      'VIT_POOL_TYPE': 'original'},
+           'SAVE_CKPT': False,
+           'TRANSFER_TYPE': 'prompt',
+           'TYPE': 'vit',
+           'WEIGHT_PATH': ''},
+ 'NUM_GPUS': 1,
+ 'NUM_SHARDS': 1,
+ 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/seed100/vtab-clevr(task="count_all")/sup_vitb16_imagenet21k/lr5.0_wd0.0001/run1',
+ 'RUN_N_TIMES': 1,
+ 'SEED': None,
+ 'SOLVER': {'BASE_LR': 5.0,
+            'BIAS_MULTIPLIER': 1.0,
+            'DBG_TRAINABLE': False,
+            'LOG_EVERY_N': 100,
+            'LOSS': 'softmax',
+            'LOSS_ALPHA': 0.01,
+            'MOMENTUM': 0.9,
+            'OPTIMIZER': 'sgd',
+            'PATIENCE': 300,
+            'SCHEDULER': 'cosine',
+            'TOTAL_EPOCH': 100,
+            'WARMUP_EPOCH': 10,
+            'WEIGHT_DECAY': 0.0001,
+            'WEIGHT_DECAY_BIAS': 0}}
+[09/15 12:37:20 visual_prompt]: Loading training data (final training data for vtab)...
+2023-09-15 12:37:20.681554: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-09-15 12:37:21.869784: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:37:21.869902: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:37:21.869917: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2023-09-15 12:37:24.038891: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcusolver.so.11'; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:37:24.039029: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudnn.so.8'; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:37:24.039051: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1934] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+[09/15 12:37:24 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset trainval...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'float32'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to float32.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'int64'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to int64.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'string'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to object.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+2023-09-15 12:37:24.064716: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[:800]+train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:37:30 visual_prompt]: Number of images: 1000
+[09/15 12:37:30 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:37:30 visual_prompt]: Loading validation data...
+[09/15 12:37:30 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset val...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:37:31 visual_prompt]: Number of images: 200
+[09/15 12:37:31 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:37:31 visual_prompt]: Loading test data...
+[09/15 12:37:31 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset test...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split validation, from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:38:55 visual_prompt]: Number of images: 15000
+[09/15 12:38:55 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:38:55 visual_prompt]: Constructing models...
+[09/15 12:38:58 visual_prompt]: Total Parameters: 86726408	 Gradient Parameters: 927752
+[09/15 12:38:58 visual_prompt]: tuned percent:1.070
+[09/15 12:39:01 visual_prompt]: Device used for model: 0
+[09/15 12:39:01 visual_prompt]: Setting up Evalutator...
+[09/15 12:39:01 visual_prompt]: Setting up Trainer...
+[09/15 12:39:01 visual_prompt]: 	Setting up the optimizer...
+[09/15 12:39:01 visual_prompt]: Training 1 / 100 epoch, with learning rate 0.0
+Traceback (most recent call last):
+  File "visual_prompt_tuning/train.py", line 129, in <module>
+    main(args)
+  File "visual_prompt_tuning/train.py", line 124, in main
+    train(cfg, args)
+  File "visual_prompt_tuning/train.py", line 109, in train
+    trainer.train_classifier(train_loader, val_loader, test_loader)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 185, in train_classifier
+    train_loss, _ = self.forward_one_batch(X, targets, True)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 86, in forward_one_batch
+    outputs = self.model(inputs)  # (batchsize, num_cls)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_models.py", line 175, in forward
+    x = self.enc(x)  # batch_size x self.feat_dim
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 161, in forward
+    x, attn_weights = self.transformer(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 138, in forward
+    embedding_output)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 124, in forward_deep_prompt
+    hidden_states, weights = self.encoder.layer[i](hidden_states)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 199, in forward
+    x, weights = self.attn(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 106, in forward
+    context_layer = torch.matmul(attention_probs, value_layer) # B, num_head, num_patches, head_size
+RuntimeError: CUDA out of memory. Tried to allocate 56.00 MiB (GPU 0; 11.91 GiB total capacity; 11.00 GiB already allocated; 14.94 MiB free; 11.11 GiB reserved in total by PyTorch)
+[09/15 12:39:18 visual_prompt]: Rank of current process: 0. World size: 1
+[09/15 12:39:18 visual_prompt]: Environment info:
+-------------------  ----------------------------------------------------
+Python               3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              1.7.1
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              0
+GPU 0                NVIDIA TITAN X (Pascal)
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  ----------------------------------------------------
+PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.6.0 (Git Hash 5ef631a030a6f73131c77892041042805a06064f)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.0
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS=MKL, BUILD_TYPE=Release, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DUSE_VULKAN_WRAPPER -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, USE_CUDA=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+[09/15 12:39:18 visual_prompt]: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '64', 'MODEL.PROMPT.NUM_TOKENS', '100', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.NAME', 'vtab-clevr(task="count_all")', 'DATA.NUMBER_CLASSES', '8', 'SOLVER.BASE_LR', '5.0', 'SOLVER.WEIGHT_DECAY', '0.0001', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir/seed800'], train_type='')
+[09/15 12:39:18 visual_prompt]: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[09/15 12:39:18 visual_prompt]: Training with config:
+[09/15 12:39:18 visual_prompt]: {'CUDNN_BENCHMARK': False,
+ 'DATA': {'BATCH_SIZE': 64,
+          'CLASS_WEIGHTS_TYPE': 'none',
+          'CROPSIZE': 224,
+          'DATAPATH': 'visual_prompt_tuning/data_path',
+          'FEATURE': 'sup_vitb16_imagenet21k',
+          'MULTILABEL': False,
+          'NAME': 'vtab-clevr(task="count_all")',
+          'NO_TEST': False,
+          'NUMBER_CLASSES': 8,
+          'NUM_WORKERS': 4,
+          'PERCENTAGE': 1.0,
+          'PIN_MEMORY': True},
+ 'DBG': False,
+ 'MODEL': {'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'}),
+           'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}),
+           'MLP_NUM': 0,
+           'MODEL_ROOT': 'visual_prompt_tuning/model_root',
+           'PROMPT': {'CLSEMB_FOLDER': '',
+                      'CLSEMB_PATH': '',
+                      'DEEP': True,
+                      'DEEP_SHARED': False,
+                      'DROPOUT': 0.1,
+                      'FORWARD_DEEP_NOEXPAND': False,
+                      'INITIATION': 'random',
+                      'LOCATION': 'prepend',
+                      'NUM_DEEP_LAYERS': None,
+                      'NUM_TOKENS': 100,
+                      'PROJECT': -1,
+                      'REVERSE_DEEP': False,
+                      'SAVE_FOR_EACH_EPOCH': False,
+                      'VIT_POOL_TYPE': 'original'},
+           'SAVE_CKPT': False,
+           'TRANSFER_TYPE': 'prompt',
+           'TYPE': 'vit',
+           'WEIGHT_PATH': ''},
+ 'NUM_GPUS': 1,
+ 'NUM_SHARDS': 1,
+ 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/seed800/vtab-clevr(task="count_all")/sup_vitb16_imagenet21k/lr5.0_wd0.0001/run1',
+ 'RUN_N_TIMES': 1,
+ 'SEED': None,
+ 'SOLVER': {'BASE_LR': 5.0,
+            'BIAS_MULTIPLIER': 1.0,
+            'DBG_TRAINABLE': False,
+            'LOG_EVERY_N': 100,
+            'LOSS': 'softmax',
+            'LOSS_ALPHA': 0.01,
+            'MOMENTUM': 0.9,
+            'OPTIMIZER': 'sgd',
+            'PATIENCE': 300,
+            'SCHEDULER': 'cosine',
+            'TOTAL_EPOCH': 100,
+            'WARMUP_EPOCH': 10,
+            'WEIGHT_DECAY': 0.0001,
+            'WEIGHT_DECAY_BIAS': 0}}
+[09/15 12:39:18 visual_prompt]: Loading training data (final training data for vtab)...
+2023-09-15 12:39:18.233947: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-09-15 12:39:19.578913: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer.so.7'; dlerror: libnvinfer.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:39:19.579034: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libnvinfer_plugin.so.7'; dlerror: libnvinfer_plugin.so.7: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:39:19.579047: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2023-09-15 12:39:22.082645: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcusolver.so.11'; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:39:22.082802: W tensorflow/compiler/xla/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudnn.so.8'; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/cv2/../../lib64:
+2023-09-15 12:39:22.082827: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1934] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+[09/15 12:39:22 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset trainval...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'string'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to object.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'float32'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to float32.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: dtype_utils.py:   50]: You use TensorFlow DType <dtype: 'int64'> in tfds.features This will soon be deprecated in favor of NumPy DTypes. In the meantime it was converted to int64.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+2023-09-15 12:39:22.114820: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[:800]+train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:39:28 visual_prompt]: Number of images: 1000
+[09/15 12:39:28 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:39:28 visual_prompt]: Loading validation data...
+[09/15 12:39:28 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset val...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[WARNING: feature.py:   71]: `TensorInfo.dtype` is deprecated. Please change your code to use NumPy with the field `TensorInfo.np_dtype` or use TensorFlow with the field `TensorInfo.tf_dtype`.
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split train[63000:63200], from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:39:29 visual_prompt]: Number of images: 200
+[09/15 12:39:29 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:39:29 visual_prompt]: Loading test data...
+[09/15 12:39:29 visual_prompt]: Constructing vtab-clevr(task="count_all") dataset test...
+[INFO: dataset_info.py:  566]: Load dataset info from visual_prompt_tuning/data_path/clevr/3.1.0
+[INFO: dataset_builder.py:  510]: Reusing dataset clevr (visual_prompt_tuning/data_path/clevr/3.1.0)
+[INFO: logging_logger.py:   53]: Constructing tf.data.Dataset clevr for split validation, from visual_prompt_tuning/data_path/clevr/3.1.0
+[09/15 12:40:52 visual_prompt]: Number of images: 15000
+[09/15 12:40:52 visual_prompt]: Number of classes: 8 / 8
+[09/15 12:40:53 visual_prompt]: Constructing models...
+[09/15 12:40:56 visual_prompt]: Total Parameters: 86726408	 Gradient Parameters: 927752
+[09/15 12:40:56 visual_prompt]: tuned percent:1.070
+[09/15 12:40:59 visual_prompt]: Device used for model: 0
+[09/15 12:40:59 visual_prompt]: Setting up Evalutator...
+[09/15 12:40:59 visual_prompt]: Setting up Trainer...
+[09/15 12:40:59 visual_prompt]: 	Setting up the optimizer...
+[09/15 12:40:59 visual_prompt]: Training 1 / 100 epoch, with learning rate 0.0
+Traceback (most recent call last):
+  File "visual_prompt_tuning/train.py", line 129, in <module>
+    main(args)
+  File "visual_prompt_tuning/train.py", line 124, in main
+    train(cfg, args)
+  File "visual_prompt_tuning/train.py", line 109, in train
+    trainer.train_classifier(train_loader, val_loader, test_loader)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 185, in train_classifier
+    train_loss, _ = self.forward_one_batch(X, targets, True)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/engine/trainer.py", line 86, in forward_one_batch
+    outputs = self.model(inputs)  # (batchsize, num_cls)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_models.py", line 175, in forward
+    x = self.enc(x)  # batch_size x self.feat_dim
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 161, in forward
+    x, attn_weights = self.transformer(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 138, in forward
+    embedding_output)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_prompt/vit.py", line 124, in forward_deep_prompt
+    hidden_states, weights = self.encoder.layer[i](hidden_states)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 199, in forward
+    x, weights = self.attn(x)
+  File "/home/s1952889/miniconda3/envs/prompt/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/s1952889/final-project/implementation/visual_prompt_tuning/src/models/vit_backbones/vit.py", line 106, in forward
+    context_layer = torch.matmul(attention_probs, value_layer) # B, num_head, num_patches, head_size
+RuntimeError: CUDA out of memory. Tried to allocate 56.00 MiB (GPU 0; 11.91 GiB total capacity; 11.00 GiB already allocated; 14.94 MiB free; 11.11 GiB reserved in total by PyTorch)
