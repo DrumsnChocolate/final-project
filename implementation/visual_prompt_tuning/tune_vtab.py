@@ -267,7 +267,8 @@ def get_best_lrwd(args):
                       f"crop{cfg.DATA.IMGSIZE}/" if cfg.DATA.CROP else f"size{cfg.DATA.IMGSIZE}/"
                       "val/"
                       "*/"  # seed
-                      "*/"  # hyperparams
+                      "*/"  # lr and wd
+                      "*/"  # patience
                       "run1/"
                       "eval_results.pth")
     lr, wd = find_best_lrwd(files, cfg.DATA.NAME)

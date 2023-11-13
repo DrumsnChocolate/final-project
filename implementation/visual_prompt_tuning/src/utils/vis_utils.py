@@ -26,34 +26,38 @@ def remove_trailing(eval_dict):
 
 
 def get_meta(job_path):
-    # for now, path consists of
-    # output_root
-    # dataset
-    # feature type (e.g. sup_vitb16_imagenet21k)
-    # transfer type (e.g. end2end, linear, prompt{num_tokens})
-    # crop{size} | size{size}
-    # evaluation set: val or test
-    # seed{seed}
-    # lr{lr}_wd{wd}
-    # patience{patience}
-    """Return the dataset, feature type, lr, wd."""
-    path_items = job_path.split("/")
-    # output_root = path_items[0]
-    dataset = path_items[1]
-    feature_type = path_items[2]
-    transfer_type = path_items[3]
-    if "crop" in path_items[4]:
-        img_size = int(path_items[4].split("crop")[-1])
-        cropped = True
-    else:  # we assume "size" in path_items[4]
-        img_size = int(path_items[4].split("size")[-1])
-        cropped = False
-    eval_set = path_items[5]
-    seed = int(s) if (s := path_items[6].split("seed")[-1]) != "None" else None
-    lr = float(path_items[7].split("_")[0].split("lr")[-1])
-    wd = float(path_items[7].split("_")[1].split("wd")[-1])
-    patience = int(path_items[8].split("patience")[-1])
-    return dataset, feature_type, transfer_type, img_size, cropped, eval_set, seed, lr, wd, patience
+    try:
+        # for now, path consists of
+        # output_root
+        # dataset
+        # feature type (e.g. sup_vitb16_imagenet21k)
+        # transfer type (e.g. end2end, linear, prompt{num_tokens})
+        # crop{size} | size{size}
+        # evaluation set: val or test
+        # seed{seed}
+        # lr{lr}_wd{wd}
+        # patience{patience}
+        """Return the dataset, feature type, lr, wd."""
+        path_items = job_path.split("/")
+        # output_root = path_items[0]
+        dataset = path_items[1]
+        feature_type = path_items[2]
+        transfer_type = path_items[3]
+        if "crop" in path_items[4]:
+            img_size = int(path_items[4].split("crop")[-1])
+            cropped = True
+        else:  # we assume "size" in path_items[4]
+            img_size = int(path_items[4].split("size")[-1])
+            cropped = False
+        eval_set = path_items[5]
+        seed = int(s) if (s := path_items[6].split("seed")[-1]) != "None" else None
+        lr = float(path_items[7].split("_")[0].split("lr")[-1])
+        wd = float(path_items[7].split("_")[1].split("wd")[-1])
+        patience = int(path_items[8].split("patience")[-1])
+        return dataset, feature_type, transfer_type, img_size, cropped, eval_set, seed, lr, wd, patience
+    except:
+        print('bier')
+        print(job_path)
 
 
 def update_eval(line, eval_dict, data_name):
