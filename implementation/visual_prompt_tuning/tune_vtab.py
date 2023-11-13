@@ -64,8 +64,8 @@ def find_best_lrwd(files, data_name):
             print(f"Encounter issue: {e} for file {f}")
             continue
 
+        frag_txt = f.split("/patience")[0]
         if val_result == best_val_acc:
-            frag_txt = f.split("/run")[0]
             cur_lr = float(frag_txt.split("/lr")[-1].split("_wd")[0])
             cur_wd = float(frag_txt.split("_wd")[-1])
             if best_lr is not None and cur_lr < best_lr:
@@ -76,7 +76,6 @@ def find_best_lrwd(files, data_name):
 
         elif val_result > best_val_acc:
             best_val_acc = val_result
-            frag_txt = f.split("/run")[0]
             best_lr = float(frag_txt.split("/lr")[-1].split("_wd")[0])
             best_wd = float(frag_txt.split("_wd")[-1])
     return best_lr, best_wd
