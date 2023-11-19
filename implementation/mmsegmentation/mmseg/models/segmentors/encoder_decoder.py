@@ -170,7 +170,6 @@ class EncoderDecoder(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-        print(len(inputs))
         x = self.extract_feat(inputs)
 
         losses = dict()
