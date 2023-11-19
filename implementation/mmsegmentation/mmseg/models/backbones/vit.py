@@ -443,6 +443,7 @@ class VisionTransformer(BaseModule):
         return pos_embed
 
     def forward(self, inputs):
+        print(inputs.shape)
         B = inputs.shape[0]
 
         x, hw_shape = self.patch_embed(inputs)
@@ -458,7 +459,7 @@ class VisionTransformer(BaseModule):
 
         if self.pre_norm:
             x = self.pre_ln(x)
-
+        print(x.shape)
         outs = []
         if self.out_origin:
             if self.with_cls_token:
@@ -490,7 +491,7 @@ class VisionTransformer(BaseModule):
                 if self.output_cls_token:
                     out = [out, x[:, 0]]
                 outs.append(out)
-
+        print(len(outs))
         return tuple(outs)
 
     def train(self, mode=True):

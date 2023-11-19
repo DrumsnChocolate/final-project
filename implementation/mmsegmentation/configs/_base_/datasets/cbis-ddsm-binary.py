@@ -15,7 +15,7 @@ test_pipeline = [
 val_pipeline = test_pipeline
 tta_pipeline = None  # we don't use test time augmentation
 train_dataloader = dict(
-    batch_size=4,
+    batch_size=16,  # 1 gpu, so total batch size is 16
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type='InfiniteSampler', shuffle=True),
@@ -52,4 +52,3 @@ test_dataloader = dict(
 )
 val_evaluator = dict(type='IoUMetric', iou_metrics=['mIoU'])
 test_evaluator = val_evaluator
-m_

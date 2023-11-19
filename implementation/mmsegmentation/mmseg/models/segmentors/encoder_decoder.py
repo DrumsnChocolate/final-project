@@ -117,6 +117,7 @@ class EncoderDecoder(BaseSegmentor):
     def extract_feat(self, inputs: Tensor) -> List[Tensor]:
         """Extract features from images."""
         x = self.backbone(inputs)
+        print(len(x))
         if self.with_neck:
             x = self.neck(x)
         return x
@@ -170,11 +171,10 @@ class EncoderDecoder(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-
+        print(len(inputs))
         x = self.extract_feat(inputs)
 
         losses = dict()
-
         loss_decode = self._decode_head_forward_train(x, data_samples)
         losses.update(loss_decode)
 
