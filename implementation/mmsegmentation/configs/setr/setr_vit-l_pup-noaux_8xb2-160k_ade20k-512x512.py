@@ -10,16 +10,16 @@ model = dict(
     data_preprocessor=data_preprocessor,
     pretrained=None,
     backbone=dict(
-        img_size=(512, 512),
+        img_size=crop_size,
         drop_rate=0.,
         init_cfg=dict(
             type='Pretrained', checkpoint='pretrain/vit_large_p16.pth'),
-        out_indices=num_layers-1,
         num_layers=num_layers,
+        out_indices=num_layers-1,
     ),
     decode_head=dict(num_classes=150, in_index=0),
     auxiliary_head=[],
-    test_cfg=dict(mode='slide', crop_size=(512, 512), stride=(341, 341)),
+    test_cfg=dict(mode='slide', crop_size=crop_size, stride=(341, 341)),
 )
 
 optimizer = dict(lr=0.001, weight_decay=0.0)
