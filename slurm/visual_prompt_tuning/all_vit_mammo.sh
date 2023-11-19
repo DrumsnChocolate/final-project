@@ -11,6 +11,9 @@ for transfer_type in "finetune"; do
         batch_size=32
       elif [ $img_size == 800 ]; then
         batch_size=8
+        if [ $transfer_type == "finetune" ]; then
+          batch_size=4
+        fi
       fi
       if [ ${transfer_type} == "finetune" ]; then
         CUDA_VISIBLE_DEVICES=0 sbatch -J "full-vit-mammo-${dataset}" --constraint=a40 --gres=gpu:1 slurm/visual_prompt_tuning/vit_mammo.sbatch $dataset $num_classes $transfer_type $img_size $batch_size $patience
