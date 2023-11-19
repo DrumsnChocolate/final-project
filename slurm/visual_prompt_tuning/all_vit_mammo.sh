@@ -4,25 +4,16 @@ num_classes=2
 #for transfer_type in "finetune" "prompt"; do
 for transfer_type in "finetune"; do
   for patience in 7 14 21; do
-#    for img_size in 800 500 200; do
-    for img_size in 800; do
-#    for img_size in 200 500; do
+    for img_size in 500 800; do
       if [ $img_size == 200 ]; then
         batch_size=64
       elif [ $img_size == 500 ]; then
         batch_size=32
-	if [ $transfer_type == "finetune" ]; then
-          batch_size=24  # failed at 32
-        fi
       elif [ $img_size == 800 ]; then
-        batch_size=8  # was 16 and then 12, but that seems to fail?
-	if [ $transfer_type == "finetune" ]; then
-	  batch_size=4  # failed at 8
-	fi
+        batch_size=8
       fi
-
       if [ ${transfer_type} == "finetune" ]; then
-        CUDA_VISIBLE_DEVICES=0 sbatch -J "full-vit-mammo-${dataset}" --constraint=rtx-6000 --gres=gpu:1 slurm/visual_prompt_tuning/vit_mammo.sbatch $dataset $num_classes $transfer_type $img_size $batch_size $patience
+        CUDA_VISIBLE_DEVICES=0 sbatch -J "full-vit-mammo-${dataset}" --constraint=a40 --gres=gpu:1 slurm/visual_prompt_tuning/vit_mammo.sbatch $dataset $num_classes $transfer_type $img_size $batch_size $patience
       else
         sbatch -J "vpt-vit-mammo-${dataset}" --gres=gpu:ampere:1 slurm/visual_prompt_tuning/vit_mammo.sbatch $dataset $num_classes $transfer_type $img_size $batch_size $patience
       fi
