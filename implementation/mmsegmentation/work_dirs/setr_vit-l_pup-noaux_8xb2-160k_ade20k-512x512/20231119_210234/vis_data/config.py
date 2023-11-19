@@ -49,50 +49,7 @@ load_from = None
 log_level = 'INFO'
 log_processor = dict(by_epoch=False)
 model = dict(
-    auxiliary_head=[
-        dict(
-            act_cfg=dict(type='ReLU'),
-            align_corners=False,
-            channels=256,
-            dropout_ratio=0,
-            in_channels=1024,
-            in_index=0,
-            kernel_size=3,
-            loss_decode=dict(
-                loss_weight=0.4, type='CrossEntropyLoss', use_sigmoid=False),
-            norm_cfg=dict(requires_grad=True, type='SyncBN'),
-            num_classes=150,
-            num_convs=2,
-            type='SETRUPHead'),
-        dict(
-            act_cfg=dict(type='ReLU'),
-            align_corners=False,
-            channels=256,
-            dropout_ratio=0,
-            in_channels=1024,
-            in_index=1,
-            kernel_size=3,
-            loss_decode=dict(
-                loss_weight=0.4, type='CrossEntropyLoss', use_sigmoid=False),
-            norm_cfg=dict(requires_grad=True, type='SyncBN'),
-            num_classes=150,
-            num_convs=2,
-            type='SETRUPHead'),
-        dict(
-            act_cfg=dict(type='ReLU'),
-            align_corners=False,
-            channels=256,
-            dropout_ratio=0,
-            in_channels=1024,
-            in_index=2,
-            kernel_size=3,
-            loss_decode=dict(
-                loss_weight=0.4, type='CrossEntropyLoss', use_sigmoid=False),
-            norm_cfg=dict(requires_grad=True, type='SyncBN'),
-            num_classes=150,
-            num_convs=2,
-            type='SETRUPHead'),
-    ],
+    auxiliary_head=[],
     backbone=dict(
         drop_rate=0.0,
         embed_dims=1024,
@@ -107,12 +64,7 @@ model = dict(
         norm_cfg=dict(eps=1e-06, requires_grad=True, type='LN'),
         num_heads=16,
         num_layers=24,
-        out_indices=(
-            9,
-            14,
-            19,
-            23,
-        ),
+        out_indices=23,
         patch_size=16,
         type='VisionTransformer',
         with_cls_token=True),
@@ -140,7 +92,7 @@ model = dict(
         channels=256,
         dropout_ratio=0,
         in_channels=1024,
-        in_index=3,
+        in_index=0,
         kernel_size=3,
         loss_decode=dict(
             loss_weight=1.0, type='CrossEntropyLoss', use_sigmoid=False),
@@ -160,6 +112,7 @@ model = dict(
     train_cfg=dict(),
     type='EncoderDecoder')
 norm_cfg = dict(requires_grad=True, type='SyncBN')
+num_layers = 24
 optim_wrapper = dict(
     clip_grad=None,
     optimizer=dict(lr=0.001, momentum=0.9, type='SGD', weight_decay=0.0),
@@ -213,7 +166,7 @@ test_pipeline = [
 train_cfg = dict(
     max_iters=160000, type='IterBasedTrainLoop', val_interval=16000)
 train_dataloader = dict(
-    batch_size=4,
+    batch_size=16,
     dataset=dict(
         data_prefix=dict(
             img_path='images/training', seg_map_path='annotations/training'),
@@ -327,4 +280,4 @@ visualizer = dict(
     vis_backends=[
         dict(type='LocalVisBackend'),
     ])
-work_dir = './work_dirs/setr_vit-l_pup_8xb2-160k_ade20k-512x512'
+work_dir = './work_dirs/setr_vit-l_pup-noaux_8xb2-160k_ade20k-512x512'

@@ -213,7 +213,7 @@ test_pipeline = [
 train_cfg = dict(
     max_iters=160000, type='IterBasedTrainLoop', val_interval=16000)
 train_dataloader = dict(
-    batch_size=4,
+    batch_size=16,
     dataset=dict(
         data_prefix=dict(
             img_path='images/training', seg_map_path='annotations/training'),
