@@ -17,7 +17,7 @@ model = dict(
             type='Pretrained', checkpoint='pretrain/vit_large_p16.pth'),
         prompt_cfg=dict(
             length=50,  # todo: hyperparameter sweep this? for [1, 5, 10, 50, 100, 200]
-            depth=1,
+            depth=num_layers,
             location='prepend',
             init='random',
             shared=False,
