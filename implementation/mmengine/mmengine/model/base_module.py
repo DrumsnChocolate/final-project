@@ -20,10 +20,10 @@ def get_param_count(module: nn.Module):
 
 def get_param_count_trainable_recursively(module: nn.Module) -> int:
     if isinstance(module, BaseModule):
-        return module.param_count_trainable
+        return module.param_count_trainable()
     direct_child_params = module.parameters(recurse=False)
     named_children = module.named_children()
-    return sum(p.numel() for p in direct_child_params) + sum(get_param_count_trainable_recursively(child) for _, child in named_children)
+    return sum(p.numel() for p in direct_child_params if p.requires_grad) + sum(get_param_count_trainable_recursively(child) for _, child in named_children)
 
 
 class BaseModule(nn.Module, metaclass=ABCMeta):
@@ -168,15 +168,12 @@ class BaseModule(nn.Module, metaclass=ABCMeta):
             for sub_module in self.modules():
                 del sub_module._params_init_info
 
-
-    @property
     def param_count_trainable(self):
         """int: The number of trainable parameters in the model."""
         # sum the trainable param count of all modules + the param count of self outside modules
         direct_child_params = self.parameters(recurse=False)
         named_children = self.named_children()
-        return sum(p.numel() for p in direct_child_params) + sum(get_param_count_trainable_recursively(child) for _, child in named_children)
-
+        return sum(p.numel() for p in direct_child_params if p.requires_grad) + sum(get_param_count_trainable_recursively(child) for _, child in named_children)
 
 
     @master_only

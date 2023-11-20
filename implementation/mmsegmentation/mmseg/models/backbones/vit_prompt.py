@@ -446,8 +446,6 @@ class PromptedVisionTransformer(BaseModule):
                 if isinstance(m, nn.LayerNorm):
                     m.eval()
 
-
-    @property
     def param_count_trainable(self):
         """
         int: The number of trainable parameters in the model.
@@ -455,4 +453,5 @@ class PromptedVisionTransformer(BaseModule):
         This number is differently calculated for the PromptedVisionTransformer than for the BaseModule,
         because only the prompt related parameters are trainable.
         """
-        return self.prompt_dropout.numel() + self.prompt_embeddings.numel()
+        # there's nothing to count about the prompt_dropout, because it's not optimizable
+        return  self.prompt_embeddings.numel()

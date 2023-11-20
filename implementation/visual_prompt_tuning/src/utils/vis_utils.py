@@ -56,7 +56,6 @@ def get_meta(job_path):
         patience = int(path_items[8].split("patience")[-1])
         return dataset, feature_type, transfer_type, img_size, cropped, eval_set, seed, lr, wd, patience
     except:
-        print('bier')
         print(job_path)
 
 
