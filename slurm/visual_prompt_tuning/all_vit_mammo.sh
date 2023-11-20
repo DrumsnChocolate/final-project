@@ -1,8 +1,7 @@
 #!/bin/bash
 dataset="cbis"
 num_classes=2
-#for transfer_type in "finetune" "prompt"; do
-for transfer_type in "finetune"; do
+for transfer_type in "finetune" "prompt"; do
   for patience in 7 14 21; do
     for img_size in 500 800; do
       if [ $img_size == 200 ]; then
@@ -10,10 +9,7 @@ for transfer_type in "finetune"; do
       elif [ $img_size == 500 ]; then
         batch_size=32
       elif [ $img_size == 800 ]; then
-        batch_size=8
-        if [ $transfer_type == "finetune" ]; then
-          batch_size=4
-        fi
+        batch_size=4
       fi
       if [ ${transfer_type} == "finetune" ]; then
         CUDA_VISIBLE_DEVICES=0 sbatch -J "full-vit-mammo-${dataset}" --constraint=a40 --gres=gpu:1 slurm/visual_prompt_tuning/vit_mammo.sbatch $dataset $num_classes $transfer_type $img_size $batch_size $patience
