@@ -6,4 +6,5 @@ mkdir -p implementation/visual_prompt_tuning/model_root  # folder to put model r
 mkdir -p implementation/visual_prompt_tuning/output_dir  # output directory for vpt
 
 
-
+./implementation/mmsegmentation/env_setup.sh
+# todo: rest of mmseg setup

@@ -95,7 +95,7 @@ def main():
         # build customized runner from the registry
         # if 'runner_type' is set in the cfg
         runner = RUNNERS.build(cfg)
-
+    print_log('bier')
     # start training
     runner.train()
 

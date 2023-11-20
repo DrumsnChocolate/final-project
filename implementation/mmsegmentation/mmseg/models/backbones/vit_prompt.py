@@ -10,6 +10,7 @@ import torch.utils.checkpoint as cp
 from mmcv.cnn import build_norm_layer
 from mmengine.logging import print_log
 from mmengine.model import BaseModule, ModuleList
+from mmengine.model.base_module import get_param_count_trainable_recursively
 from mmengine.model.weight_init import (constant_init, kaiming_init,
                                         trunc_normal_)
 from mmengine.runner.checkpoint import CheckpointLoader, load_state_dict
@@ -445,3 +446,13 @@ class PromptedVisionTransformer(BaseModule):
                 if isinstance(m, nn.LayerNorm):
                     m.eval()
 
+
+    @property
+    def param_count_trainable(self):
+        """
+        int: The number of trainable parameters in the model.
+
+        This number is differently calculated for the PromptedVisionTransformer than for the BaseModule,
+        because only the prompt related parameters are trainable.
+        """
+        return self.prompt_dropout.numel() + self.prompt_embeddings.numel()
