@@ -109,7 +109,13 @@ model = dict(
         type='SETRUPHead',
         up_scale=2),
     pretrained=None,
-    test_cfg=dict(mode='whole'),
+    test_cfg=dict(crop_size=(
+        200,
+        200,
+    ), mode='slide', stride=(
+        100,
+        100,
+    )),
     train_cfg=dict(),
     type='EncoderDecoder')
 norm_cfg = dict(requires_grad=True, type='SyncBN')
@@ -165,7 +171,7 @@ test_pipeline = [
     dict(reduce_zero_label=True, type='LoadAnnotations'),
     dict(type='PackSegInputs'),
 ]
-train_cfg = dict(max_iters=2, type='IterBasedTrainLoop', val_interval=3)
+train_cfg = dict(max_iters=200, type='IterBasedTrainLoop', val_interval=100)
 train_dataloader = dict(
     batch_size=1,
     dataset=dict(

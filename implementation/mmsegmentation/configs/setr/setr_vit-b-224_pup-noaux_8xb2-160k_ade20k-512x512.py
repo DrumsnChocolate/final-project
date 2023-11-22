@@ -18,7 +18,7 @@ model = dict(
     ),
     decode_head=dict(num_classes=150, in_index=0),
     auxiliary_head=[],  # no auxiliary head
-    test_cfg=dict(mode='slide', crop_size=crop_size, stride=(341, 341)),
+    test_cfg=dict(mode='slide', crop_size=crop_size, stride=(100, 100)),
 )
 
 optimizer = dict(lr=0.001, weight_decay=0.0)
@@ -30,5 +30,3 @@ optim_wrapper = dict(
 train_dataloader = dict(batch_size=2)
 val_dataloader = dict(batch_size=1)
 test_dataloader = val_dataloader
-
-record_gpu_snapshot = True

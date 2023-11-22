@@ -9,6 +9,6 @@ cd implementation/mmsegmentation
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
 
-python tools/train.py configs/setr/setr_vit-l_pup_8xb2-160k_ade20k-512x512.py --cfg-options train_dataloader.batch_size=4 train_dataloader.num_workers=8
+python tools/train.py configs/setr/setr_vit-l_pup_8xb2-160k_ade20k-512x512.py --cfg-options train_dataloader.batch_size=4 train_dataloader.num_workers=8 record_gpu_snapshot=True
 
 conda deactivate

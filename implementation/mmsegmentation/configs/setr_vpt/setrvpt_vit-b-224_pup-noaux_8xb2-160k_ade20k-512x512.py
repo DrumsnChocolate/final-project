@@ -27,7 +27,7 @@ model = dict(
     ),
     decode_head=dict(num_classes=150, in_index=0),
     auxiliary_head=[],  # no auxiliary head
-    test_cfg=dict(mode='slide', crop_size=crop_size, stride=(341, 341)),
+    test_cfg=dict(mode='whole'),
 )
 
 optimizer = dict(lr=0.0005, weight_decay=0.0)

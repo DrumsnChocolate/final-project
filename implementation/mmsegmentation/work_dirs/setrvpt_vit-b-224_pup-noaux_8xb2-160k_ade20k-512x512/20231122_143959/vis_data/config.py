@@ -165,7 +165,7 @@ test_pipeline = [
     dict(reduce_zero_label=True, type='LoadAnnotations'),
     dict(type='PackSegInputs'),
 ]
-train_cfg = dict(max_iters=2, type='IterBasedTrainLoop', val_interval=3)
+train_cfg = dict(max_iters=2, type='IterBasedTrainLoop', val_interval=1)
 train_dataloader = dict(
     batch_size=1,
     dataset=dict(
