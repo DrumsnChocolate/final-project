@@ -13,3 +13,5 @@ load_from = None
 resume = False
 
 tta_model = dict(type='SegTTAModel')
+
+record_gpu_snapshot = False

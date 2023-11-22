@@ -30,3 +30,5 @@ optim_wrapper = dict(
 train_dataloader = dict(batch_size=2)
 val_dataloader = dict(batch_size=1)
 test_dataloader = val_dataloader
+
+record_gpu_snapshot = True

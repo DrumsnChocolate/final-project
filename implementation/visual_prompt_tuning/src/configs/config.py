@@ -133,6 +133,12 @@ _C.DATA.NUM_WORKERS = 4
 _C.DATA.PIN_MEMORY = True
 
 
+# ----------------------------------------------------------------------
+# extra debug options
+# ----------------------------------------------------------------------
+_C.RECORD_GPU_SNAPSHOT = False
+
+
 
 def get_cfg():
     """

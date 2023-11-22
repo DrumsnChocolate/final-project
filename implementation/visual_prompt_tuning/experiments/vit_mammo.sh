@@ -31,4 +31,5 @@ python visual_prompt_tuning/tune_cbis.py \
   DATA.DATAPATH "$data_path" \
   OUTPUT_DIR "$output_dir" \
   SOLVER.PATIENCE $patience \
-  SOLVER.CRITERION "loss"
+  SOLVER.CRITERION "loss" \
+  RECORD_GPU_SNAPSHOT "True"

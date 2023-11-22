@@ -1710,6 +1710,7 @@ class Runner:
         Returns:
             nn.Module: The model after training.
         """
+        self._enable_gpu_mem_logging()
         if is_model_wrapper(self.model):
             ori_model = self.model.module
         else:
@@ -1781,6 +1782,7 @@ class Runner:
 
         model = self.train_loop.run()  # type: ignore
         self.call_hook('after_run')
+        self._dump_gpu_mem_log()
         return model
 
     def val(self) -> dict:
@@ -2417,3 +2419,12 @@ class Runner:
         setattr(self.model, target, compiled_func)
         self.logger.info('Model has been "compiled". The first few iterations'
                          ' will be slow, please be patient.')
+
+    def _enable_gpu_mem_logging(self):
+        if self.cfg.get('record_gpu_snapshot') and torch.cuda.is_available():
+            torch.cuda.memory._record_memory_history(enabled=True)
+
+    def _dump_gpu_mem_log(self):
+        if self.cfg.get('record_gpu_snapshot') and torch.cuda.is_available():
+            snapshot = torch.cuda.memory.memory_snapshot()
+            torch.save(snapshot, os.path.join(self.log_dir, "memory_snapshot.pickle"))

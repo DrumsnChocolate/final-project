@@ -1,13 +1,10 @@
-import glob
 import os
-import random
 
 import numpy as np
 import torch
 
 
 import src.utils.logging as logging
-from src.configs.config import get_cfg
 from src.data import loader as data_loader
 from src.engine.evaluator import Evaluator
 from src.engine.trainer import Trainer
@@ -25,8 +22,9 @@ DATA2CLS = {
 def train(cfg, args, test=True):
     cfg.freeze()
     # clear up residual cache from previous runs
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
+    empty_cache()
+    # enable memory tracking
+    enable_memory_snapshot(cfg)
     # main training / eval actions here
     seed(cfg)
 
@@ -47,6 +45,23 @@ def train(cfg, args, test=True):
         evaluator.results,
         os.path.join(cfg.OUTPUT_DIR, "eval_results.pth")
     )
+    dump_memory_snapshot(cfg)
+
+
+def empty_cache():
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+
+def enable_memory_snapshot(cfg):
+    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available():
+        torch.cuda.memory._record_memory_history(enabled=True)
+
+
+def dump_memory_snapshot(cfg):
+    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available():
+        snapshot = torch.cuda.memory.memory_snapshot()
+        torch.save(snapshot, os.path.join(cfg.OUTPUT_DIR, "memory_snapshot.pickle"))
 
 
 def get_loaders(cfg, logger, test=True):
