@@ -4,3 +4,6 @@ conda install pytorch==2.0.0 torchvision torchaudio pytorch-cuda=11.8 -c pytorch
 pip install -e .
 pip install opencv-python pycocotools matplotlib onnxruntime onnx
 pip install jupyter
+pip install PyYAML
+pip install prodict
+ln -s ../../mmsegmentation/data/ade data/ade
