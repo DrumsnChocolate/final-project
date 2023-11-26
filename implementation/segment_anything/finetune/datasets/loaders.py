@@ -1,35 +1,36 @@
-import os
-
-import torch
-from PIL import Image
-from prodict import Prodict
+from finetune.datasets.ade import ADE20KDataset
+from finetune.datasets.segmentation_dataset import SegmentationDataset
 
 
-class ADE20KDataset(torch.utils.data.Dataset):
-
-    def __init__(self, cfg: Prodict, split: str):
-        assert split in {
-            "train",
-            "val",
-            "test",
-        }, f"Split '{split}' not supported for {cfg.data.name} dataset"
+class SegmentationLoader:
+    def __init__(self, cfg, dataset: SegmentationDataset):
         self.cfg = cfg
-        self._split = split
-        self.image_names = self.get_image_names()
-        self.image_extension =
+        self.dataset = dataset
 
-    def __getitem__(self, index):
-        image_name = self.image_names[index]
-        image_path = os.path.join(self.cfg.data.root, self.cfg.data[self._split].image_dir, image_name + self.cfg.data.image_extension)
-        annotation_path = os.path.join(self.cfg.data.root, self.cfg.data[self._split].annotation_dir, image_name + self.cfg.data.annotation_extension)
-        image = Image.open(image_path)
-        annotation =
+    def __getitem__(self, item):
+        assert isinstance(item, int), f'only able to provide items by index, not with argument {item}'
+        start_index = item * self.cfg.data[self.dataset._split].batch_size
+        end_index = min(start_index + self.cfg.data[self.dataset._split].batch_size, len(self.dataset))
+        return self.dataset[start_index:end_index]
+
+    def __len__(self):
+        # double negative to round up instead of down https://stackoverflow.com/a/35125872
+        return -(- len(self.dataset) // self.cfg.data[self.dataset._split].batch_size)
 
 
-    def get_image_names(self):
 
 
 
 def build_dataloaders(cfg):
-    # todo: implement
-    return {'train': None, 'val': None, 'test': None}
+    allowed_datasets = ['ade20k']
+    assert cfg.data.name in allowed_datasets, f'only able to build dataloaders for any of {allowed_datasets}, not for {cfg.data.name}'
+    if cfg.data.name == 'ade20k':
+        train_dataset = ADE20KDataset(cfg, 'train')
+        val_dataset = ADE20KDataset(cfg, 'val')
+        test_dataset = ADE20KDataset(cfg, 'test')
+
+    return {
+        'train': SegmentationLoader(cfg, train_dataset),
+        'val': SegmentationLoader(cfg, val_dataset),
+        'test': SegmentationLoader(cfg, test_dataset),
+    }
