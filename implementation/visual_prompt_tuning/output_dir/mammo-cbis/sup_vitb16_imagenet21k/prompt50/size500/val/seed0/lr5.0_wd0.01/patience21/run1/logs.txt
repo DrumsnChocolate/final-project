@@ -1,0 +1,469 @@
+[11/25 19:45:07][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[11/25 19:45:07][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              1
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[11/25 19:45:07][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '32', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.IMGSIZE', '500', 'DATA.NAME', 'mammo-cbis', 'DATA.NUMBER_CLASSES', '2', 'DATA.CROP', 'False', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir', 'SOLVER.PATIENCE', '21', 'SOLVER.CRITERION', 'loss'])
+[11/25 19:45:07][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[11/25 19:45:07][INFO] visual_prompt:  108: Training with config:
+[11/25 19:45:07][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/mammo-cbis/sup_vitb16_imagenet21k/prompt50/size500/val/seed0/lr5.0_wd0.01/patience21/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 0, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.01, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 21, 'CRITERION': 'loss', 'SCHEDULER': 'cosine', 'BASE_LR': 5.0, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'mammo-cbis', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 2, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'IMGSIZE': 500, 'CROP': False, 'NO_TEST': False, 'BATCH_SIZE': 32, 'NUM_WORKERS': 4, 'PIN_MEMORY': True})})
+[11/25 19:45:07][INFO] visual_prompt:   55: Loading training data...
+[11/25 19:45:07][INFO] visual_prompt:   28: Constructing mammo-cbis dataset train...
+[11/25 19:45:07][INFO] visual_prompt:   57: Loading validation data...
+[11/25 19:45:07][INFO] visual_prompt:   28: Constructing mammo-cbis dataset val...
+[11/25 19:45:07][INFO] visual_prompt:   38: Constructing models...
+[11/25 19:45:10][INFO] visual_prompt:   52: Total Parameters: 86848514	 Gradient Parameters: 462338
+[11/25 19:45:10][INFO] visual_prompt:   54: tuned percent:0.532
+[11/25 19:45:10][INFO] visual_prompt:   40: Device used for model: 0
+[11/25 19:45:10][INFO] visual_prompt:   40: Setting up Evaluator...
+[11/25 19:45:10][INFO] visual_prompt:   42: Setting up Trainer...
+[11/25 19:45:10][INFO] visual_prompt:   45: 	Setting up the optimizer...
+[11/25 19:45:11][INFO] visual_prompt:  165: Training 1 / 100 epoch, with learning rate 0.0
+[11/25 19:52:34][INFO] visual_prompt:  217: Epoch 1 / 100: avg data time: 4.88e+00, avg batch time: 6.3309, average train loss: 1.4863
+[11/25 19:53:24][INFO] visual_prompt:  316: Inference (val):avg data time: 2.38e-05, avg batch time: 0.5871, average loss: 1.4553
+[11/25 19:53:24][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 43.60	
+[11/25 19:53:24][INFO] visual_prompt:  165: Training 2 / 100 epoch, with learning rate 0.5
+[11/25 20:00:45][INFO] visual_prompt:  217: Epoch 2 / 100: avg data time: 4.84e+00, avg batch time: 6.2902, average train loss: 2.7848
+[11/25 20:01:35][INFO] visual_prompt:  316: Inference (val):avg data time: 2.57e-05, avg batch time: 0.5866, average loss: 0.9262
+[11/25 20:01:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 49.59	
+[11/25 20:01:35][INFO] visual_prompt:  165: Training 3 / 100 epoch, with learning rate 1.0
+[11/25 20:08:57][INFO] visual_prompt:  217: Epoch 3 / 100: avg data time: 4.87e+00, avg batch time: 6.3211, average train loss: 1.2319
+[11/25 20:09:48][INFO] visual_prompt:  316: Inference (val):avg data time: 2.59e-05, avg batch time: 0.5883, average loss: 3.8233
+[11/25 20:09:48][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 43.98	
+[11/25 20:09:48][INFO] visual_prompt:  165: Training 4 / 100 epoch, with learning rate 1.5
+[11/25 20:17:07][INFO] visual_prompt:  217: Epoch 4 / 100: avg data time: 4.83e+00, avg batch time: 6.2798, average train loss: 1.6728
+[11/25 20:17:58][INFO] visual_prompt:  316: Inference (val):avg data time: 2.51e-05, avg batch time: 0.5897, average loss: 2.7204
+[11/25 20:17:58][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 48.22	
+[11/25 20:17:58][INFO] visual_prompt:  165: Training 5 / 100 epoch, with learning rate 2.0
+[11/25 20:25:25][INFO] visual_prompt:  217: Epoch 5 / 100: avg data time: 4.93e+00, avg batch time: 6.3820, average train loss: 2.3166
+[11/25 20:26:16][INFO] visual_prompt:  316: Inference (val):avg data time: 2.67e-05, avg batch time: 0.5849, average loss: 4.3611
+[11/25 20:26:16][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.06	
+[11/25 20:26:16][INFO] visual_prompt:  165: Training 6 / 100 epoch, with learning rate 2.5
+[11/25 20:33:41][INFO] visual_prompt:  217: Epoch 6 / 100: avg data time: 4.91e+00, avg batch time: 6.3618, average train loss: 3.7838
+[11/25 20:34:32][INFO] visual_prompt:  316: Inference (val):avg data time: 2.67e-05, avg batch time: 0.5879, average loss: 10.6632
+[11/25 20:34:32][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 46.33	
+[11/25 20:34:32][INFO] visual_prompt:  165: Training 7 / 100 epoch, with learning rate 3.0
+[11/25 20:41:59][INFO] visual_prompt:  217: Epoch 7 / 100: avg data time: 4.93e+00, avg batch time: 6.3791, average train loss: 4.9261
+[11/25 20:42:49][INFO] visual_prompt:  316: Inference (val):avg data time: 2.49e-05, avg batch time: 0.5855, average loss: 4.4988
+[11/25 20:42:49][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 47.71	
+[11/25 20:42:49][INFO] visual_prompt:  165: Training 8 / 100 epoch, with learning rate 3.5
+[11/25 20:50:20][INFO] visual_prompt:  217: Epoch 8 / 100: avg data time: 4.98e+00, avg batch time: 6.4318, average train loss: 8.2477
+[11/25 20:51:11][INFO] visual_prompt:  316: Inference (val):avg data time: 2.67e-05, avg batch time: 0.5887, average loss: 8.5580
+[11/25 20:51:11][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 50.83	
+[11/25 20:51:11][INFO] visual_prompt:  165: Training 9 / 100 epoch, with learning rate 4.0
+[11/25 20:58:40][INFO] visual_prompt:  217: Epoch 9 / 100: avg data time: 4.96e+00, avg batch time: 6.4128, average train loss: 9.1507
+[11/25 20:59:31][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5860, average loss: 12.4504
+[11/25 20:59:31][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 50.75	
+[11/25 20:59:31][INFO] visual_prompt:  165: Training 10 / 100 epoch, with learning rate 4.5
+[11/25 21:06:58][INFO] visual_prompt:  217: Epoch 10 / 100: avg data time: 4.92e+00, avg batch time: 6.3739, average train loss: 7.3559
+[11/25 21:07:49][INFO] visual_prompt:  316: Inference (val):avg data time: 2.67e-05, avg batch time: 0.5883, average loss: 7.3023
+[11/25 21:07:49][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 54.39	
+[11/25 21:07:49][INFO] visual_prompt:  165: Training 11 / 100 epoch, with learning rate 5.0
+[11/25 21:15:17][INFO] visual_prompt:  217: Epoch 11 / 100: avg data time: 4.96e+00, avg batch time: 6.4094, average train loss: 7.3332
+[11/25 21:16:08][INFO] visual_prompt:  316: Inference (val):avg data time: 2.54e-05, avg batch time: 0.5866, average loss: 6.1562
+[11/25 21:16:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 45.15	
+[11/25 21:16:08][INFO] visual_prompt:  165: Training 12 / 100 epoch, with learning rate 4.998477067547739
+[11/25 21:23:35][INFO] visual_prompt:  217: Epoch 12 / 100: avg data time: 4.92e+00, avg batch time: 6.3728, average train loss: 10.6316
+[11/25 21:24:26][INFO] visual_prompt:  316: Inference (val):avg data time: 2.62e-05, avg batch time: 0.5844, average loss: 35.5423
+[11/25 21:24:26][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 56.48	
+[11/25 21:24:26][INFO] visual_prompt:  165: Training 13 / 100 epoch, with learning rate 4.993910125649561
+[11/25 21:31:54][INFO] visual_prompt:  217: Epoch 13 / 100: avg data time: 4.95e+00, avg batch time: 6.3977, average train loss: 15.0183
+[11/25 21:32:44][INFO] visual_prompt:  316: Inference (val):avg data time: 2.83e-05, avg batch time: 0.5913, average loss: 11.8189
+[11/25 21:32:44][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 44.09	
+[11/25 21:32:44][INFO] visual_prompt:  165: Training 14 / 100 epoch, with learning rate 4.986304738420683
+[11/25 21:40:10][INFO] visual_prompt:  217: Epoch 14 / 100: avg data time: 4.92e+00, avg batch time: 6.3677, average train loss: 13.3394
+[11/25 21:41:01][INFO] visual_prompt:  316: Inference (val):avg data time: 2.87e-05, avg batch time: 0.5922, average loss: 16.1210
+[11/25 21:41:01][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 47.29	
+[11/25 21:41:01][INFO] visual_prompt:  165: Training 15 / 100 epoch, with learning rate 4.975670171853926
+[11/25 21:48:27][INFO] visual_prompt:  217: Epoch 15 / 100: avg data time: 4.92e+00, avg batch time: 6.3680, average train loss: 8.0343
+[11/25 21:49:19][INFO] visual_prompt:  316: Inference (val):avg data time: 2.91e-05, avg batch time: 0.5881, average loss: 19.8728
+[11/25 21:49:19][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 47.65	
+[11/25 21:49:19][INFO] visual_prompt:  165: Training 16 / 100 epoch, with learning rate 4.962019382530521
+[11/25 21:56:45][INFO] visual_prompt:  217: Epoch 16 / 100: avg data time: 4.92e+00, avg batch time: 6.3715, average train loss: 15.3063
+[11/25 21:57:36][INFO] visual_prompt:  316: Inference (val):avg data time: 2.84e-05, avg batch time: 0.5964, average loss: 8.9128
+[11/25 21:57:36][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 50.36	
+[11/25 21:57:36][INFO] visual_prompt:  165: Training 17 / 100 epoch, with learning rate 4.945369001834514
+[11/25 22:05:03][INFO] visual_prompt:  217: Epoch 17 / 100: avg data time: 4.93e+00, avg batch time: 6.3844, average train loss: 11.2095
+[11/25 22:05:54][INFO] visual_prompt:  316: Inference (val):avg data time: 2.64e-05, avg batch time: 0.5840, average loss: 6.7191
+[11/25 22:05:54][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 38.71	
+[11/25 22:05:54][INFO] visual_prompt:  165: Training 18 / 100 epoch, with learning rate 4.925739315689991
+[11/25 22:13:17][INFO] visual_prompt:  217: Epoch 18 / 100: avg data time: 4.88e+00, avg batch time: 6.3309, average train loss: 12.4548
+[11/25 22:14:08][INFO] visual_prompt:  316: Inference (val):avg data time: 2.52e-05, avg batch time: 0.5875, average loss: 7.6133
+[11/25 22:14:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 55.66	
+[11/25 22:14:08][INFO] visual_prompt:  165: Training 19 / 100 epoch, with learning rate 4.903154239845797
+[11/25 22:21:32][INFO] visual_prompt:  217: Epoch 19 / 100: avg data time: 4.88e+00, avg batch time: 6.3363, average train loss: 9.2137
+[11/25 22:22:23][INFO] visual_prompt:  316: Inference (val):avg data time: 2.42e-05, avg batch time: 0.5877, average loss: 5.8031
+[11/25 22:22:23][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 51.36	
+[11/25 22:22:23][INFO] visual_prompt:   36: Best epoch 19: best metric: -5.803
+[11/25 22:22:23][INFO] visual_prompt:  165: Training 20 / 100 epoch, with learning rate 4.877641290737884
+[11/25 22:29:51][INFO] visual_prompt:  217: Epoch 20 / 100: avg data time: 4.95e+00, avg batch time: 6.4037, average train loss: 10.6842
+[11/25 22:30:42][INFO] visual_prompt:  316: Inference (val):avg data time: 3.05e-05, avg batch time: 0.5883, average loss: 20.7116
+[11/25 22:30:42][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 55.68	
+[11/25 22:30:42][INFO] visual_prompt:  165: Training 21 / 100 epoch, with learning rate 4.849231551964771
+[11/25 22:38:10][INFO] visual_prompt:  217: Epoch 21 / 100: avg data time: 4.95e+00, avg batch time: 6.3999, average train loss: 9.4496
+[11/25 22:39:02][INFO] visual_prompt:  316: Inference (val):avg data time: 2.91e-05, avg batch time: 0.5884, average loss: 11.1390
+[11/25 22:39:02][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 54.00	
+[11/25 22:39:02][INFO] visual_prompt:  165: Training 22 / 100 epoch, with learning rate 4.817959636416969
+[11/25 22:46:27][INFO] visual_prompt:  217: Epoch 22 / 100: avg data time: 4.91e+00, avg batch time: 6.3605, average train loss: 9.6387
+[11/25 22:47:18][INFO] visual_prompt:  316: Inference (val):avg data time: 2.90e-05, avg batch time: 0.5869, average loss: 16.5941
+[11/25 22:47:18][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 49.69	
+[11/25 22:47:18][INFO] visual_prompt:  165: Training 23 / 100 epoch, with learning rate 4.783863644106502
+[11/25 22:54:45][INFO] visual_prompt:  217: Epoch 23 / 100: avg data time: 4.93e+00, avg batch time: 6.3825, average train loss: 12.5725
+[11/25 22:55:33][INFO] visual_prompt:  316: Inference (val):avg data time: 2.35e-05, avg batch time: 0.5849, average loss: 7.6509
+[11/25 22:55:33][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 53.67	
+[11/25 22:55:33][INFO] visual_prompt:  165: Training 24 / 100 epoch, with learning rate 4.7469851157479175
+[11/25 23:02:32][INFO] visual_prompt:  217: Epoch 24 / 100: avg data time: 4.54e+00, avg batch time: 5.9897, average train loss: 13.1446
+[11/25 23:03:21][INFO] visual_prompt:  316: Inference (val):avg data time: 2.34e-05, avg batch time: 0.5890, average loss: 13.6834
+[11/25 23:03:21][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 44.08	
+[11/25 23:03:21][INFO] visual_prompt:  165: Training 25 / 100 epoch, with learning rate 4.707368982147317
+[11/25 23:10:26][INFO] visual_prompt:  217: Epoch 25 / 100: avg data time: 4.62e+00, avg batch time: 6.0696, average train loss: 7.5349
+[11/25 23:11:14][INFO] visual_prompt:  316: Inference (val):avg data time: 2.29e-05, avg batch time: 0.5868, average loss: 12.0203
+[11/25 23:11:14][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.20	
+[11/25 23:11:14][INFO] visual_prompt:  165: Training 26 / 100 epoch, with learning rate 4.665063509461097
+[11/25 23:18:17][INFO] visual_prompt:  217: Epoch 26 / 100: avg data time: 4.59e+00, avg batch time: 6.0443, average train loss: 11.5619
+[11/25 23:19:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.47e-05, avg batch time: 0.5879, average loss: 9.9770
+[11/25 23:19:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 45.05	
+[11/25 23:19:06][INFO] visual_prompt:  165: Training 27 / 100 epoch, with learning rate 4.620120240391064
+[11/25 23:26:08][INFO] visual_prompt:  217: Epoch 27 / 100: avg data time: 4.58e+00, avg batch time: 6.0360, average train loss: 13.0516
+[11/25 23:26:57][INFO] visual_prompt:  316: Inference (val):avg data time: 2.90e-05, avg batch time: 0.5866, average loss: 4.0530
+[11/25 23:26:57][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 38.58	
+[11/25 23:26:57][INFO] visual_prompt:   36: Best epoch 27: best metric: -4.053
+[11/25 23:26:57][INFO] visual_prompt:  165: Training 28 / 100 epoch, with learning rate 4.572593931387604
+[11/25 23:34:01][INFO] visual_prompt:  217: Epoch 28 / 100: avg data time: 4.60e+00, avg batch time: 6.0542, average train loss: 8.3452
+[11/25 23:34:49][INFO] visual_prompt:  316: Inference (val):avg data time: 2.45e-05, avg batch time: 0.5874, average loss: 13.7381
+[11/25 23:34:49][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 54.46	
+[11/25 23:34:49][INFO] visual_prompt:  165: Training 29 / 100 epoch, with learning rate 4.522542485937368
+[11/25 23:41:52][INFO] visual_prompt:  217: Epoch 29 / 100: avg data time: 4.59e+00, avg batch time: 6.0450, average train loss: 11.3038
+[11/25 23:42:41][INFO] visual_prompt:  316: Inference (val):avg data time: 2.55e-05, avg batch time: 0.5870, average loss: 3.0765
+[11/25 23:42:41][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 44.86	
+[11/25 23:42:41][INFO] visual_prompt:   36: Best epoch 29: best metric: -3.076
+[11/25 23:42:41][INFO] visual_prompt:  165: Training 30 / 100 epoch, with learning rate 4.4700268840168045
+[11/25 23:49:46][INFO] visual_prompt:  217: Epoch 30 / 100: avg data time: 4.61e+00, avg batch time: 6.0633, average train loss: 12.1638
+[11/25 23:50:34][INFO] visual_prompt:  316: Inference (val):avg data time: 2.19e-05, avg batch time: 0.5866, average loss: 8.7520
+[11/25 23:50:34][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 53.82	
+[11/25 23:50:34][INFO] visual_prompt:  165: Training 31 / 100 epoch, with learning rate 4.415111107797445
+[11/25 23:57:37][INFO] visual_prompt:  217: Epoch 31 / 100: avg data time: 4.58e+00, avg batch time: 6.0366, average train loss: 7.9387
+[11/25 23:58:25][INFO] visual_prompt:  316: Inference (val):avg data time: 2.40e-05, avg batch time: 0.5843, average loss: 31.3213
+[11/25 23:58:25][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 50.55	
+[11/25 23:58:25][INFO] visual_prompt:  165: Training 32 / 100 epoch, with learning rate 4.357862063693486
+[11/26 00:05:28][INFO] visual_prompt:  217: Epoch 32 / 100: avg data time: 4.60e+00, avg batch time: 6.0479, average train loss: 8.3573
+[11/26 00:06:17][INFO] visual_prompt:  316: Inference (val):avg data time: 2.57e-05, avg batch time: 0.5848, average loss: 15.2481
+[11/26 00:06:17][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 49.90	
+[11/26 00:06:17][INFO] visual_prompt:  165: Training 33 / 100 epoch, with learning rate 4.298349500846628
+[11/26 00:13:21][INFO] visual_prompt:  217: Epoch 33 / 100: avg data time: 4.60e+00, avg batch time: 6.0650, average train loss: 11.0858
+[11/26 00:14:09][INFO] visual_prompt:  316: Inference (val):avg data time: 2.21e-05, avg batch time: 0.5863, average loss: 7.8440
+[11/26 00:14:09][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 51.80	
+[11/26 00:14:09][INFO] visual_prompt:  165: Training 34 / 100 epoch, with learning rate 4.236645926147493
+[11/26 00:21:08][INFO] visual_prompt:  217: Epoch 34 / 100: avg data time: 4.53e+00, avg batch time: 5.9845, average train loss: 8.0202
+[11/26 00:21:56][INFO] visual_prompt:  316: Inference (val):avg data time: 2.28e-05, avg batch time: 0.5873, average loss: 11.2091
+[11/26 00:21:56][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 47.95	
+[11/26 00:21:56][INFO] visual_prompt:  165: Training 35 / 100 epoch, with learning rate 4.172826515897146
+[11/26 00:28:57][INFO] visual_prompt:  217: Epoch 35 / 100: avg data time: 4.55e+00, avg batch time: 6.0058, average train loss: 7.0952
+[11/26 00:29:46][INFO] visual_prompt:  316: Inference (val):avg data time: 2.22e-05, avg batch time: 0.5895, average loss: 18.0191
+[11/26 00:29:46][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.48	
+[11/26 00:29:46][INFO] visual_prompt:  165: Training 36 / 100 epoch, with learning rate 4.106969024216348
+[11/26 00:36:51][INFO] visual_prompt:  217: Epoch 36 / 100: avg data time: 4.62e+00, avg batch time: 6.0733, average train loss: 13.6207
+[11/26 00:37:39][INFO] visual_prompt:  316: Inference (val):avg data time: 2.45e-05, avg batch time: 0.5866, average loss: 1.8677
+[11/26 00:37:39][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 54.25	
+[11/26 00:37:39][INFO] visual_prompt:   36: Best epoch 36: best metric: -1.868
+[11/26 00:37:39][INFO] visual_prompt:  165: Training 37 / 100 epoch, with learning rate 4.039153688314146
+[11/26 00:44:43][INFO] visual_prompt:  217: Epoch 37 / 100: avg data time: 4.60e+00, avg batch time: 6.0512, average train loss: 7.1356
+[11/26 00:45:32][INFO] visual_prompt:  316: Inference (val):avg data time: 2.19e-05, avg batch time: 0.5908, average loss: 2.8733
+[11/26 00:45:32][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 41.03	
+[11/26 00:45:32][INFO] visual_prompt:  165: Training 38 / 100 epoch, with learning rate 3.969463130731183
+[11/26 00:52:37][INFO] visual_prompt:  217: Epoch 38 / 100: avg data time: 4.61e+00, avg batch time: 6.0693, average train loss: 7.6268
+[11/26 00:53:25][INFO] visual_prompt:  316: Inference (val):avg data time: 2.06e-05, avg batch time: 0.5867, average loss: 3.0940
+[11/26 00:53:25][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 50.72	
+[11/26 00:53:25][INFO] visual_prompt:  165: Training 39 / 100 epoch, with learning rate 3.897982258676867
+[11/26 01:00:29][INFO] visual_prompt:  217: Epoch 39 / 100: avg data time: 4.60e+00, avg batch time: 6.0492, average train loss: 11.2297
+[11/26 01:01:17][INFO] visual_prompt:  316: Inference (val):avg data time: 2.37e-05, avg batch time: 0.5854, average loss: 1.2887
+[11/26 01:01:17][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 51.76	
+[11/26 01:01:17][INFO] visual_prompt:   36: Best epoch 39: best metric: -1.289
+[11/26 01:01:17][INFO] visual_prompt:  165: Training 40 / 100 epoch, with learning rate 3.824798160583012
+[11/26 01:08:25][INFO] visual_prompt:  217: Epoch 40 / 100: avg data time: 4.66e+00, avg batch time: 6.1132, average train loss: 10.2636
+[11/26 01:09:14][INFO] visual_prompt:  316: Inference (val):avg data time: 2.35e-05, avg batch time: 0.5866, average loss: 11.4468
+[11/26 01:09:14][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 45.05	
+[11/26 01:09:14][INFO] visual_prompt:  165: Training 41 / 100 epoch, with learning rate 3.75
+[11/26 01:16:18][INFO] visual_prompt:  217: Epoch 41 / 100: avg data time: 4.60e+00, avg batch time: 6.0535, average train loss: 8.0118
+[11/26 01:17:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.18e-05, avg batch time: 0.5881, average loss: 2.2145
+[11/26 01:17:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 39.31	
+[11/26 01:17:06][INFO] visual_prompt:  165: Training 42 / 100 epoch, with learning rate 3.673678906964727
+[11/26 01:24:09][INFO] visual_prompt:  217: Epoch 42 / 100: avg data time: 4.59e+00, avg batch time: 6.0382, average train loss: 10.1627
+[11/26 01:24:57][INFO] visual_prompt:  316: Inference (val):avg data time: 2.46e-05, avg batch time: 0.5851, average loss: 8.4205
+[11/26 01:24:57][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 56.99	
+[11/26 01:24:57][INFO] visual_prompt:  165: Training 43 / 100 epoch, with learning rate 3.5959278669726933
+[11/26 01:32:02][INFO] visual_prompt:  217: Epoch 43 / 100: avg data time: 4.61e+00, avg batch time: 6.0618, average train loss: 7.2841
+[11/26 01:32:50][INFO] visual_prompt:  316: Inference (val):avg data time: 2.37e-05, avg batch time: 0.5904, average loss: 19.0636
+[11/26 01:32:51][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 52.07	
+[11/26 01:32:51][INFO] visual_prompt:  165: Training 44 / 100 epoch, with learning rate 3.516841607689501
+[11/26 01:39:56][INFO] visual_prompt:  217: Epoch 44 / 100: avg data time: 4.62e+00, avg batch time: 6.0713, average train loss: 6.0035
+[11/26 01:40:44][INFO] visual_prompt:  316: Inference (val):avg data time: 2.46e-05, avg batch time: 0.5883, average loss: 12.1730
+[11/26 01:40:44][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.16	
+[11/26 01:40:44][INFO] visual_prompt:  165: Training 45 / 100 epoch, with learning rate 3.4365164835397803
+[11/26 01:47:50][INFO] visual_prompt:  217: Epoch 45 / 100: avg data time: 4.63e+00, avg batch time: 6.0786, average train loss: 5.0494
+[11/26 01:48:38][INFO] visual_prompt:  316: Inference (val):avg data time: 2.76e-05, avg batch time: 0.5950, average loss: 2.5811
+[11/26 01:48:38][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 53.07	
+[11/26 01:48:38][INFO] visual_prompt:  165: Training 46 / 100 epoch, with learning rate 3.3550503583141724
+[11/26 01:55:41][INFO] visual_prompt:  217: Epoch 46 / 100: avg data time: 4.59e+00, avg batch time: 6.0443, average train loss: 6.4797
+[11/26 01:56:30][INFO] visual_prompt:  316: Inference (val):avg data time: 2.53e-05, avg batch time: 0.5881, average loss: 1.0688
+[11/26 01:56:30][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 37.60	
+[11/26 01:56:30][INFO] visual_prompt:   36: Best epoch 46: best metric: -1.069
+[11/26 01:56:30][INFO] visual_prompt:  165: Training 47 / 100 epoch, with learning rate 3.2725424859373686
+[11/26 02:03:36][INFO] visual_prompt:  217: Epoch 47 / 100: avg data time: 4.64e+00, avg batch time: 6.0927, average train loss: 8.5035
+[11/26 02:04:28][INFO] visual_prompt:  316: Inference (val):avg data time: 2.17e-05, avg batch time: 0.5867, average loss: 1.4006
+[11/26 02:04:28][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 55.76	
+[11/26 02:04:28][INFO] visual_prompt:  165: Training 48 / 100 epoch, with learning rate 3.1890933895424975
+[11/26 02:11:32][INFO] visual_prompt:  217: Epoch 48 / 100: avg data time: 4.61e+00, avg batch time: 6.0598, average train loss: 5.4785
+[11/26 02:12:20][INFO] visual_prompt:  316: Inference (val):avg data time: 2.32e-05, avg batch time: 0.5851, average loss: 9.2214
+[11/26 02:12:20][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 49.14	
+[11/26 02:12:20][INFO] visual_prompt:  165: Training 49 / 100 epoch, with learning rate 3.104804738999169
+[11/26 02:19:20][INFO] visual_prompt:  217: Epoch 49 / 100: avg data time: 4.54e+00, avg batch time: 5.9939, average train loss: 6.0560
+[11/26 02:20:08][INFO] visual_prompt:  316: Inference (val):avg data time: 3.01e-05, avg batch time: 0.5951, average loss: 22.8427
+[11/26 02:20:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.96	
+[11/26 02:20:08][INFO] visual_prompt:  165: Training 50 / 100 epoch, with learning rate 3.019779227044398
+[11/26 02:27:08][INFO] visual_prompt:  217: Epoch 50 / 100: avg data time: 4.54e+00, avg batch time: 5.9876, average train loss: 6.4326
+[11/26 02:27:56][INFO] visual_prompt:  316: Inference (val):avg data time: 2.84e-05, avg batch time: 0.5883, average loss: 6.2267
+[11/26 02:27:56][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 43.12	
+[11/26 02:27:56][INFO] visual_prompt:  165: Training 51 / 100 epoch, with learning rate 2.934120444167326
+[11/26 02:34:55][INFO] visual_prompt:  217: Epoch 51 / 100: avg data time: 4.54e+00, avg batch time: 5.9912, average train loss: 7.8440
+[11/26 02:35:43][INFO] visual_prompt:  316: Inference (val):avg data time: 2.38e-05, avg batch time: 0.5847, average loss: 0.7176
+[11/26 02:35:43][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 46.75	rocauc: 52.60	
+[11/26 02:35:43][INFO] visual_prompt:   36: Best epoch 51: best metric: -0.718
+[11/26 02:35:43][INFO] visual_prompt:  165: Training 52 / 100 epoch, with learning rate 2.8479327524001636
+[11/26 02:42:43][INFO] visual_prompt:  217: Epoch 52 / 100: avg data time: 4.55e+00, avg batch time: 5.9991, average train loss: 5.8174
+[11/26 02:43:31][INFO] visual_prompt:  316: Inference (val):avg data time: 2.30e-05, avg batch time: 0.5879, average loss: 0.7059
+[11/26 02:43:31][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 44.63	
+[11/26 02:43:31][INFO] visual_prompt:   36: Best epoch 52: best metric: -0.706
+[11/26 02:43:31][INFO] visual_prompt:  165: Training 53 / 100 epoch, with learning rate 2.761321158169134
+[11/26 02:50:32][INFO] visual_prompt:  217: Epoch 53 / 100: avg data time: 4.55e+00, avg batch time: 6.0048, average train loss: 5.2114
+[11/26 02:51:20][INFO] visual_prompt:  316: Inference (val):avg data time: 2.20e-05, avg batch time: 0.5869, average loss: 6.7011
+[11/26 02:51:20][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 50.00	
+[11/26 02:51:20][INFO] visual_prompt:  165: Training 54 / 100 epoch, with learning rate 2.6743911843603128
+[11/26 02:58:22][INFO] visual_prompt:  217: Epoch 54 / 100: avg data time: 4.58e+00, avg batch time: 6.0317, average train loss: 7.7452
+[11/26 02:59:11][INFO] visual_prompt:  316: Inference (val):avg data time: 2.33e-05, avg batch time: 0.5892, average loss: 25.7155
+[11/26 02:59:11][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 47.73	
+[11/26 02:59:11][INFO] visual_prompt:  165: Training 55 / 100 epoch, with learning rate 2.5872487417562526
+[11/26 03:06:14][INFO] visual_prompt:  217: Epoch 55 / 100: avg data time: 4.60e+00, avg batch time: 6.0539, average train loss: 4.6377
+[11/26 03:07:03][INFO] visual_prompt:  316: Inference (val):avg data time: 2.32e-05, avg batch time: 0.5879, average loss: 5.6612
+[11/26 03:07:03][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 41.38	
+[11/26 03:07:03][INFO] visual_prompt:  165: Training 56 / 100 epoch, with learning rate 2.5
+[11/26 03:14:07][INFO] visual_prompt:  217: Epoch 56 / 100: avg data time: 4.60e+00, avg batch time: 6.0540, average train loss: 3.1049
+[11/26 03:14:55][INFO] visual_prompt:  316: Inference (val):avg data time: 2.35e-05, avg batch time: 0.5894, average loss: 1.9974
+[11/26 03:14:55][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 50.42	
+[11/26 03:14:55][INFO] visual_prompt:  165: Training 57 / 100 epoch, with learning rate 2.4127512582437483
+[11/26 03:22:00][INFO] visual_prompt:  217: Epoch 57 / 100: avg data time: 4.62e+00, avg batch time: 6.0701, average train loss: 7.2028
+[11/26 03:22:49][INFO] visual_prompt:  316: Inference (val):avg data time: 2.25e-05, avg batch time: 0.5874, average loss: 12.0926
+[11/26 03:22:49][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 59.37	
+[11/26 03:22:49][INFO] visual_prompt:  165: Training 58 / 100 epoch, with learning rate 2.325608815639687
+[11/26 03:29:52][INFO] visual_prompt:  217: Epoch 58 / 100: avg data time: 4.59e+00, avg batch time: 6.0420, average train loss: 6.2803
+[11/26 03:30:40][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5917, average loss: 4.2504
+[11/26 03:30:41][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 50.98	
+[11/26 03:30:41][INFO] visual_prompt:  165: Training 59 / 100 epoch, with learning rate 2.2386788418308665
+[11/26 03:37:46][INFO] visual_prompt:  217: Epoch 59 / 100: avg data time: 4.61e+00, avg batch time: 6.0695, average train loss: 5.1015
+[11/26 03:38:34][INFO] visual_prompt:  316: Inference (val):avg data time: 2.73e-05, avg batch time: 0.5912, average loss: 2.8702
+[11/26 03:38:34][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 49.66	
+[11/26 03:38:34][INFO] visual_prompt:  165: Training 60 / 100 epoch, with learning rate 2.1520672475998373
+[11/26 03:45:38][INFO] visual_prompt:  217: Epoch 60 / 100: avg data time: 4.60e+00, avg batch time: 6.0495, average train loss: 5.0333
+[11/26 03:46:26][INFO] visual_prompt:  316: Inference (val):avg data time: 2.44e-05, avg batch time: 0.5863, average loss: 0.8204
+[11/26 03:46:26][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 49.76	
+[11/26 03:46:26][INFO] visual_prompt:  165: Training 61 / 100 epoch, with learning rate 2.0658795558326744
+[11/26 03:53:31][INFO] visual_prompt:  217: Epoch 61 / 100: avg data time: 4.61e+00, avg batch time: 6.0730, average train loss: 2.9351
+[11/26 03:54:20][INFO] visual_prompt:  316: Inference (val):avg data time: 2.36e-05, avg batch time: 0.5914, average loss: 2.7852
+[11/26 03:54:20][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 43.39	
+[11/26 03:54:20][INFO] visual_prompt:  165: Training 62 / 100 epoch, with learning rate 1.980220772955602
+[11/26 04:01:25][INFO] visual_prompt:  217: Epoch 62 / 100: avg data time: 4.61e+00, avg batch time: 6.0667, average train loss: 4.6942
+[11/26 04:02:13][INFO] visual_prompt:  316: Inference (val):avg data time: 2.60e-05, avg batch time: 0.5876, average loss: 4.1326
+[11/26 04:02:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 50.83	
+[11/26 04:02:13][INFO] visual_prompt:  165: Training 63 / 100 epoch, with learning rate 1.895195261000831
+[11/26 04:09:18][INFO] visual_prompt:  217: Epoch 63 / 100: avg data time: 4.61e+00, avg batch time: 6.0615, average train loss: 2.7773
+[11/26 04:10:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.70e-05, avg batch time: 0.5898, average loss: 7.2329
+[11/26 04:10:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 51.46	
+[11/26 04:10:06][INFO] visual_prompt:  165: Training 64 / 100 epoch, with learning rate 1.8109066104575022
+[11/26 04:17:08][INFO] visual_prompt:  217: Epoch 64 / 100: avg data time: 4.58e+00, avg batch time: 6.0340, average train loss: 2.9002
+[11/26 04:17:57][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5859, average loss: 1.0962
+[11/26 04:17:57][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 48.44	
+[11/26 04:17:57][INFO] visual_prompt:  165: Training 65 / 100 epoch, with learning rate 1.7274575140626316
+[11/26 04:25:00][INFO] visual_prompt:  217: Epoch 65 / 100: avg data time: 4.58e+00, avg batch time: 6.0342, average train loss: 2.2727
+[11/26 04:25:48][INFO] visual_prompt:  316: Inference (val):avg data time: 2.32e-05, avg batch time: 0.5882, average loss: 0.6925
+[11/26 04:25:48][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 56.92	
+[11/26 04:25:48][INFO] visual_prompt:   36: Best epoch 65: best metric: -0.693
+[11/26 04:25:48][INFO] visual_prompt:  165: Training 66 / 100 epoch, with learning rate 1.6449496416858285
+[11/26 04:32:47][INFO] visual_prompt:  217: Epoch 66 / 100: avg data time: 4.53e+00, avg batch time: 5.9876, average train loss: 1.4498
+[11/26 04:33:35][INFO] visual_prompt:  316: Inference (val):avg data time: 2.14e-05, avg batch time: 0.5861, average loss: 0.9905
+[11/26 04:33:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 48.02	
+[11/26 04:33:35][INFO] visual_prompt:  165: Training 67 / 100 epoch, with learning rate 1.5634835164602199
+[11/26 04:40:34][INFO] visual_prompt:  217: Epoch 67 / 100: avg data time: 4.53e+00, avg batch time: 5.9879, average train loss: 1.9112
+[11/26 04:41:22][INFO] visual_prompt:  316: Inference (val):avg data time: 2.29e-05, avg batch time: 0.5868, average loss: 1.9140
+[11/26 04:41:22][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 48.73	
+[11/26 04:41:22][INFO] visual_prompt:  165: Training 68 / 100 epoch, with learning rate 1.4831583923104998
+[11/26 04:48:22][INFO] visual_prompt:  217: Epoch 68 / 100: avg data time: 4.54e+00, avg batch time: 5.9919, average train loss: 1.7048
+[11/26 04:49:10][INFO] visual_prompt:  316: Inference (val):avg data time: 2.52e-05, avg batch time: 0.5888, average loss: 0.9801
+[11/26 04:49:10][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 51.73	
+[11/26 04:49:10][INFO] visual_prompt:  165: Training 69 / 100 epoch, with learning rate 1.4040721330273063
+[11/26 04:56:10][INFO] visual_prompt:  217: Epoch 69 / 100: avg data time: 4.54e+00, avg batch time: 5.9956, average train loss: 1.7174
+[11/26 04:56:58][INFO] visual_prompt:  316: Inference (val):avg data time: 2.45e-05, avg batch time: 0.5845, average loss: 1.5635
+[11/26 04:56:58][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 53.93	
+[11/26 04:56:58][INFO] visual_prompt:  165: Training 70 / 100 epoch, with learning rate 1.3263210930352738
+[11/26 05:04:00][INFO] visual_prompt:  217: Epoch 70 / 100: avg data time: 4.57e+00, avg batch time: 6.0265, average train loss: 1.1911
+[11/26 05:04:48][INFO] visual_prompt:  316: Inference (val):avg data time: 2.30e-05, avg batch time: 0.5887, average loss: 0.7427
+[11/26 05:04:48][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 41.53	
+[11/26 05:04:48][INFO] visual_prompt:  165: Training 71 / 100 epoch, with learning rate 1.2500000000000004
+[11/26 05:11:49][INFO] visual_prompt:  217: Epoch 71 / 100: avg data time: 4.56e+00, avg batch time: 6.0112, average train loss: 2.0104
+[11/26 05:12:37][INFO] visual_prompt:  316: Inference (val):avg data time: 2.32e-05, avg batch time: 0.5901, average loss: 2.5056
+[11/26 05:12:37][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 47.35	
+[11/26 05:12:37][INFO] visual_prompt:  165: Training 72 / 100 epoch, with learning rate 1.175201839416988
+[11/26 05:19:36][INFO] visual_prompt:  217: Epoch 72 / 100: avg data time: 4.53e+00, avg batch time: 5.9848, average train loss: 3.0487
+[11/26 05:20:24][INFO] visual_prompt:  316: Inference (val):avg data time: 2.10e-05, avg batch time: 0.5893, average loss: 4.9806
+[11/26 05:20:24][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 53.67	
+[11/26 05:20:24][INFO] visual_prompt:  165: Training 73 / 100 epoch, with learning rate 1.1020177413231333
+[11/26 05:27:25][INFO] visual_prompt:  217: Epoch 73 / 100: avg data time: 4.56e+00, avg batch time: 6.0083, average train loss: 1.3755
+[11/26 05:28:13][INFO] visual_prompt:  316: Inference (val):avg data time: 2.58e-05, avg batch time: 0.5867, average loss: 0.8977
+[11/26 05:28:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 49.26	
+[11/26 05:28:13][INFO] visual_prompt:  165: Training 74 / 100 epoch, with learning rate 1.0305368692688175
+[11/26 05:35:17][INFO] visual_prompt:  217: Epoch 74 / 100: avg data time: 4.60e+00, avg batch time: 6.0528, average train loss: 1.2382
+[11/26 05:36:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.37e-05, avg batch time: 0.5920, average loss: 2.1079
+[11/26 05:36:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 52.18	
+[11/26 05:36:06][INFO] visual_prompt:  165: Training 75 / 100 epoch, with learning rate 0.9608463116858543
+[11/26 05:43:10][INFO] visual_prompt:  217: Epoch 75 / 100: avg data time: 4.61e+00, avg batch time: 6.0585, average train loss: 0.9729
+[11/26 05:43:59][INFO] visual_prompt:  316: Inference (val):avg data time: 2.17e-05, avg batch time: 0.5876, average loss: 2.1979
+[11/26 05:43:59][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 53.84	
+[11/26 05:43:59][INFO] visual_prompt:  165: Training 76 / 100 epoch, with learning rate 0.8930309757836516
+[11/26 05:51:02][INFO] visual_prompt:  217: Epoch 76 / 100: avg data time: 4.59e+00, avg batch time: 6.0483, average train loss: 0.9251
+[11/26 05:51:51][INFO] visual_prompt:  316: Inference (val):avg data time: 2.37e-05, avg batch time: 0.5845, average loss: 0.7825
+[11/26 05:51:51][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.85	
+[11/26 05:51:51][INFO] visual_prompt:  165: Training 77 / 100 epoch, with learning rate 0.8271734841028553
+[11/26 05:58:54][INFO] visual_prompt:  217: Epoch 77 / 100: avg data time: 4.60e+00, avg batch time: 6.0526, average train loss: 1.0279
+[11/26 05:59:43][INFO] visual_prompt:  316: Inference (val):avg data time: 2.31e-05, avg batch time: 0.5875, average loss: 0.7550
+[11/26 05:59:43][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 44.77	
+[11/26 05:59:43][INFO] visual_prompt:  165: Training 78 / 100 epoch, with learning rate 0.7633540738525066
+[11/26 06:06:46][INFO] visual_prompt:  217: Epoch 78 / 100: avg data time: 4.59e+00, avg batch time: 6.0449, average train loss: 0.7910
+[11/26 06:07:35][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5908, average loss: 1.0162
+[11/26 06:07:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 56.34	
+[11/26 06:07:35][INFO] visual_prompt:  165: Training 79 / 100 epoch, with learning rate 0.7016504991533725
+[11/26 06:14:38][INFO] visual_prompt:  217: Epoch 79 / 100: avg data time: 4.60e+00, avg batch time: 6.0501, average train loss: 0.7969
+[11/26 06:15:27][INFO] visual_prompt:  316: Inference (val):avg data time: 2.09e-05, avg batch time: 0.5884, average loss: 0.7253
+[11/26 06:15:27][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 46.19	
+[11/26 06:15:27][INFO] visual_prompt:  165: Training 80 / 100 epoch, with learning rate 0.6421379363065141
+[11/26 06:22:32][INFO] visual_prompt:  217: Epoch 80 / 100: avg data time: 4.62e+00, avg batch time: 6.0765, average train loss: 0.7884
+[11/26 06:23:21][INFO] visual_prompt:  316: Inference (val):avg data time: 2.53e-05, avg batch time: 0.5867, average loss: 0.6886
+[11/26 06:23:21][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 48.02	
+[11/26 06:23:21][INFO] visual_prompt:   36: Best epoch 80: best metric: -0.689
+[11/26 06:23:21][INFO] visual_prompt:  165: Training 81 / 100 epoch, with learning rate 0.5848888922025552
+[11/26 06:30:24][INFO] visual_prompt:  217: Epoch 81 / 100: avg data time: 4.60e+00, avg batch time: 6.0474, average train loss: 0.8506
+[11/26 06:31:13][INFO] visual_prompt:  316: Inference (val):avg data time: 2.63e-05, avg batch time: 0.5924, average loss: 1.2597
+[11/26 06:31:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 42.17	
+[11/26 06:31:13][INFO] visual_prompt:  165: Training 82 / 100 epoch, with learning rate 0.5299731159831953
+[11/26 06:38:17][INFO] visual_prompt:  217: Epoch 82 / 100: avg data time: 4.60e+00, avg batch time: 6.0553, average train loss: 0.8426
+[11/26 06:39:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.25e-05, avg batch time: 0.5885, average loss: 3.8597
+[11/26 06:39:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 46.66	
+[11/26 06:39:06][INFO] visual_prompt:  165: Training 83 / 100 epoch, with learning rate 0.47745751406263165
+[11/26 06:46:08][INFO] visual_prompt:  217: Epoch 83 / 100: avg data time: 4.58e+00, avg batch time: 6.0312, average train loss: 0.9086
+[11/26 06:46:56][INFO] visual_prompt:  316: Inference (val):avg data time: 2.38e-05, avg batch time: 0.5870, average loss: 0.8274
+[11/26 06:46:56][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 55.17	
+[11/26 06:46:56][INFO] visual_prompt:  165: Training 84 / 100 epoch, with learning rate 0.42740606861239594
+[11/26 06:54:02][INFO] visual_prompt:  217: Epoch 84 / 100: avg data time: 4.62e+00, avg batch time: 6.0747, average train loss: 0.8051
+[11/26 06:54:50][INFO] visual_prompt:  316: Inference (val):avg data time: 2.34e-05, avg batch time: 0.5871, average loss: 1.8962
+[11/26 06:54:50][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.81	
+[11/26 06:54:50][INFO] visual_prompt:  165: Training 85 / 100 epoch, with learning rate 0.3798797596089351
+[11/26 07:01:55][INFO] visual_prompt:  217: Epoch 85 / 100: avg data time: 4.61e+00, avg batch time: 6.0686, average train loss: 0.7563
+[11/26 07:02:44][INFO] visual_prompt:  316: Inference (val):avg data time: 2.30e-05, avg batch time: 0.5897, average loss: 0.7077
+[11/26 07:02:44][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 51.85	
+[11/26 07:02:44][INFO] visual_prompt:  165: Training 86 / 100 epoch, with learning rate 0.33493649053890323
+[11/26 07:09:48][INFO] visual_prompt:  217: Epoch 86 / 100: avg data time: 4.60e+00, avg batch time: 6.0559, average train loss: 0.7527
+[11/26 07:10:36][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5840, average loss: 0.7161
+[11/26 07:10:36][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 43.32	
+[11/26 07:10:36][INFO] visual_prompt:  165: Training 87 / 100 epoch, with learning rate 0.29263101785268253
+[11/26 07:17:40][INFO] visual_prompt:  217: Epoch 87 / 100: avg data time: 4.60e+00, avg batch time: 6.0511, average train loss: 0.7372
+[11/26 07:18:29][INFO] visual_prompt:  316: Inference (val):avg data time: 2.41e-05, avg batch time: 0.5859, average loss: 0.7572
+[11/26 07:18:29][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 52.58	
+[11/26 07:18:29][INFO] visual_prompt:  165: Training 88 / 100 epoch, with learning rate 0.25301488425208296
+[11/26 07:25:33][INFO] visual_prompt:  217: Epoch 88 / 100: avg data time: 4.60e+00, avg batch time: 6.0590, average train loss: 0.7249
+[11/26 07:26:21][INFO] visual_prompt:  316: Inference (val):avg data time: 2.33e-05, avg batch time: 0.5891, average loss: 0.7026
+[11/26 07:26:21][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 56.82	
+[11/26 07:26:21][INFO] visual_prompt:  165: Training 89 / 100 epoch, with learning rate 0.21613635589349756
+[11/26 07:33:25][INFO] visual_prompt:  217: Epoch 89 / 100: avg data time: 4.59e+00, avg batch time: 6.0436, average train loss: 0.7001
+[11/26 07:34:13][INFO] visual_prompt:  316: Inference (val):avg data time: 2.32e-05, avg batch time: 0.5865, average loss: 0.8604
+[11/26 07:34:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.27	
+[11/26 07:34:13][INFO] visual_prompt:  165: Training 90 / 100 epoch, with learning rate 0.18204036358303172
+[11/26 07:41:18][INFO] visual_prompt:  217: Epoch 90 / 100: avg data time: 4.61e+00, avg batch time: 6.0638, average train loss: 0.7093
+[11/26 07:42:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.33e-05, avg batch time: 0.5892, average loss: 0.7423
+[11/26 07:42:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 62.92	
+[11/26 07:42:06][INFO] visual_prompt:  165: Training 91 / 100 epoch, with learning rate 0.1507684480352292
+[11/26 07:49:10][INFO] visual_prompt:  217: Epoch 91 / 100: avg data time: 4.59e+00, avg batch time: 6.0491, average train loss: 0.7153
+[11/26 07:49:58][INFO] visual_prompt:  316: Inference (val):avg data time: 2.19e-05, avg batch time: 0.5872, average loss: 0.7559
+[11/26 07:49:58][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 53.55	
+[11/26 07:49:58][INFO] visual_prompt:  165: Training 92 / 100 epoch, with learning rate 0.12235870926211617
+[11/26 07:57:02][INFO] visual_prompt:  217: Epoch 92 / 100: avg data time: 4.60e+00, avg batch time: 6.0571, average train loss: 0.7118
+[11/26 07:57:51][INFO] visual_prompt:  316: Inference (val):avg data time: 2.33e-05, avg batch time: 0.5902, average loss: 0.7379
+[11/26 07:57:51][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 52.94	
+[11/26 07:57:51][INFO] visual_prompt:  165: Training 93 / 100 epoch, with learning rate 0.09684576015420276
+[11/26 08:04:56][INFO] visual_prompt:  217: Epoch 93 / 100: avg data time: 4.61e+00, avg batch time: 6.0655, average train loss: 0.7016
+[11/26 08:05:44][INFO] visual_prompt:  316: Inference (val):avg data time: 2.49e-05, avg batch time: 0.5876, average loss: 0.7159
+[11/26 08:05:44][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 58.56	
+[11/26 08:05:44][INFO] visual_prompt:  165: Training 94 / 100 epoch, with learning rate 0.07426068431000882
+[11/26 08:12:50][INFO] visual_prompt:  217: Epoch 94 / 100: avg data time: 4.62e+00, avg batch time: 6.0714, average train loss: 0.6966
+[11/26 08:13:38][INFO] visual_prompt:  316: Inference (val):avg data time: 2.56e-05, avg batch time: 0.5848, average loss: 0.6910
+[11/26 08:13:38][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 56.27	
+[11/26 08:13:38][INFO] visual_prompt:  165: Training 95 / 100 epoch, with learning rate 0.05463099816548578
+[11/26 08:20:42][INFO] visual_prompt:  217: Epoch 95 / 100: avg data time: 4.60e+00, avg batch time: 6.0536, average train loss: 0.6925
+[11/26 08:21:30][INFO] visual_prompt:  316: Inference (val):avg data time: 2.19e-05, avg batch time: 0.5868, average loss: 0.6898
+[11/26 08:21:30][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.54	
+[11/26 08:21:30][INFO] visual_prompt:  165: Training 96 / 100 epoch, with learning rate 0.03798061746947995
+[11/26 08:28:36][INFO] visual_prompt:  217: Epoch 96 / 100: avg data time: 4.62e+00, avg batch time: 6.0753, average train loss: 0.6901
+[11/26 08:29:24][INFO] visual_prompt:  316: Inference (val):avg data time: 2.31e-05, avg batch time: 0.5864, average loss: 0.6882
+[11/26 08:29:24][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.81	
+[11/26 08:29:24][INFO] visual_prompt:   36: Best epoch 96: best metric: -0.688
+[11/26 08:29:24][INFO] visual_prompt:  165: Training 97 / 100 epoch, with learning rate 0.024329828146074095
+[11/26 08:36:28][INFO] visual_prompt:  217: Epoch 97 / 100: avg data time: 4.59e+00, avg batch time: 6.0463, average train loss: 0.6910
+[11/26 08:37:17][INFO] visual_prompt:  316: Inference (val):avg data time: 2.24e-05, avg batch time: 0.5893, average loss: 0.6882
+[11/26 08:37:17][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.19	
+[11/26 08:37:17][INFO] visual_prompt:   36: Best epoch 97: best metric: -0.688
+[11/26 08:37:17][INFO] visual_prompt:  165: Training 98 / 100 epoch, with learning rate 0.013695261579316775
+[11/26 08:44:22][INFO] visual_prompt:  217: Epoch 98 / 100: avg data time: 4.61e+00, avg batch time: 6.0659, average train loss: 0.6924
+[11/26 08:45:10][INFO] visual_prompt:  316: Inference (val):avg data time: 1.66e-04, avg batch time: 0.5900, average loss: 0.6884
+[11/26 08:45:10][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.05	
+[11/26 08:45:10][INFO] visual_prompt:  165: Training 99 / 100 epoch, with learning rate 0.006089874350439506
+[11/26 08:52:14][INFO] visual_prompt:  217: Epoch 99 / 100: avg data time: 4.61e+00, avg batch time: 6.0576, average train loss: 0.6895
+[11/26 08:53:03][INFO] visual_prompt:  316: Inference (val):avg data time: 2.12e-05, avg batch time: 0.5861, average loss: 0.6880
+[11/26 08:53:03][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 59.08	
+[11/26 08:53:03][INFO] visual_prompt:   36: Best epoch 99: best metric: -0.688
+[11/26 08:53:03][INFO] visual_prompt:  165: Training 100 / 100 epoch, with learning rate 0.0015229324522605947
+[11/26 09:00:08][INFO] visual_prompt:  217: Epoch 100 / 100: avg data time: 4.61e+00, avg batch time: 6.0625, average train loss: 0.6883
+[11/26 09:00:56][INFO] visual_prompt:  316: Inference (val):avg data time: 2.43e-05, avg batch time: 0.5897, average loss: 0.6880
+[11/26 09:00:56][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.80	
+[11/26 09:00:56][INFO] visual_prompt:   36: Best epoch 100: best metric: -0.688
