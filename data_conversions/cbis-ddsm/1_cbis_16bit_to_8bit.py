@@ -2,10 +2,10 @@ import cv2
 import pandas as pd
 import os
 
-cbis_root = os.path.join(os.getcwd(), "data", "mammography", "cbis-ddsm")
+cbis_root = os.path.join(os.getcwd(), "data", "mammography", "")
 
 
-def convert_16_to_18(sample):
+def convert_16_to_8(sample):
     img16_path = os.path.join(cbis_root, 'multiinstance_data_16bit', sample['ShortPath'])
     img16 = cv2.imread(img16_path, cv2.IMREAD_UNCHANGED)
     img8_path = os.path.join(cbis_root, 'reprocessed_data_8bit', sample['ShortPath'])
@@ -16,7 +16,7 @@ def convert_16_to_18(sample):
 def main():
     samples_df_path = os.path.join(cbis_root, 'cbis-ddsm_singleinstance_groundtruth.csv')
     samples_df = pd.read_csv(samples_df_path, sep=';')
-    samples_df.apply(convert_16_to_18, axis=1)
+    samples_df.apply(convert_16_to_8, axis=1)
 
 
 if __name__ == '__main__':

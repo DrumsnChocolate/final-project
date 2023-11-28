@@ -15,7 +15,7 @@ python visual_prompt_tuning/tune_vtab.py \
   --config-file ${config} \
   --train-type ${transfer_type} \
   MODEL.TYPE "vit" \
-  DATA.BATCH_SIZE "64" \
+  DATA.BATCH_SIZE "1" \
   MODEL.PROMPT.NUM_TOKENS "50" \
   MODEL.PROMPT.DEEP "True" \
   MODEL.PROMPT.DROPOUT "0.1" \

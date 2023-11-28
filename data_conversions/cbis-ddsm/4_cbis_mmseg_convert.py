@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 mammo_root = os.path.join(os.getcwd(), "data", "mammography")
-cbis_root = os.path.join(mammo_root, "cbis-ddsm")
+cbis_root = os.path.join(mammo_root, "")
 cbis_linked_root = os.path.join(mammo_root, "cbis-linked")
 mmseg_data_root = os.path.join(os.path.dirname(os.getcwd()), "implementation", "mmsegmentation", "data")
 
