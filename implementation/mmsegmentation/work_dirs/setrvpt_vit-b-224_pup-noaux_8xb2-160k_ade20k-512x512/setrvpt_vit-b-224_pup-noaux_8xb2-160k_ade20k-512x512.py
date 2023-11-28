@@ -129,7 +129,7 @@ param_scheduler = [
         power=0.9,
         type='PolyLR'),
 ]
-record_gpu_snapshot = True
+record_gpu_snapshot = False
 resume = False
 test_cfg = dict(type='TestLoop')
 test_dataloader = dict(
@@ -165,7 +165,8 @@ test_pipeline = [
     dict(reduce_zero_label=True, type='LoadAnnotations'),
     dict(type='PackSegInputs'),
 ]
-train_cfg = dict(max_iters=2, type='IterBasedTrainLoop', val_interval=3)
+train_cfg = dict(
+    max_iters=160000, type='IterBasedTrainLoop', val_interval=16000)
 train_dataloader = dict(
     batch_size=1,
     dataset=dict(

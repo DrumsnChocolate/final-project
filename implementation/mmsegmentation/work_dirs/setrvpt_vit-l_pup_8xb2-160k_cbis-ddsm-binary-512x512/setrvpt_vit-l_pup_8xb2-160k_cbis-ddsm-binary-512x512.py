@@ -149,13 +149,7 @@ model = dict(
         type='SETRUPHead',
         up_scale=2),
     pretrained=None,
-    test_cfg=dict(crop_size=(
-        512,
-        512,
-    ), mode='slide', stride=(
-        341,
-        341,
-    )),
+    test_cfg=dict(mode='whole'),
     train_cfg=dict(),
     type='EncoderDecoder')
 norm_cfg = dict(requires_grad=True, type='SyncBN')
@@ -175,6 +169,7 @@ param_scheduler = [
         power=0.9,
         type='PolyLR'),
 ]
+record_gpu_snapshot = False
 resume = False
 test_cfg = dict(type='TestLoop')
 test_dataloader = dict(
