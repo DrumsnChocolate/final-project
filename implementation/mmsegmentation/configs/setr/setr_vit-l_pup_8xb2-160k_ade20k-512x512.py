@@ -9,7 +9,7 @@ model = dict(
     data_preprocessor=data_preprocessor,
     pretrained=None,
     backbone=dict(
-        img_size=(512, 512),
+        img_size=crop_size,
         drop_rate=0.,
         init_cfg=dict(
             type='Pretrained', checkpoint='pretrain/vit_large_p16.pth')),
@@ -58,7 +58,7 @@ model = dict(
             loss_decode=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=0.4)),
     ],
-    test_cfg=dict(mode='slide', crop_size=(512, 512), stride=(341, 341)),
+    test_cfg=dict(mode='slide', crop_size=crop_size, stride=(341, 341)),
 )
 
 optimizer = dict(lr=0.001, weight_decay=0.0)
