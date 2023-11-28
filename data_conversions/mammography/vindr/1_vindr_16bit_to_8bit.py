@@ -2,7 +2,7 @@ import cv2
 import pandas as pd
 import os
 
-vindr_root = os.path.join(os.getcwd(), "mammography", 'vindr')
+vindr_root = os.path.join(os.getcwd(), "data", "mammography", 'vindr')
 
 
 def convert_16_to_8(sample):
