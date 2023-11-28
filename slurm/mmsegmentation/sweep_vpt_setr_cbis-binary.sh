@@ -5,12 +5,12 @@
 # let's first investigate the optimal lr and weight decay and prompt dropout, at img size 512 and iteration count 160k
 #for lr in 0.01 0.005 0.001 0.0005 0.0001; do
 #  for wd in 0.01 0.001 0.0001 0.0; do
-#    sbatch -J "vpt-setr-cbis-lr${lr}_wd${wd}" slurm/mmsegmentation/vpt_setr_cbis-binary.sbatch ${lr} ${wd}
+#    sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/vpt_setr_cbis-binary.sbatch ${lr} ${wd}
 #  done
 #done
 lr=0.1
 wd=0.001
-sbatch -J "vpt-setr-cbis-lr${lr}_wd${wd}" slurm/mmsegmentation/vpt_setr_cbis-binary.sbatch ${lr} ${wd}
+sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/vpt_setr_cbis-binary.sbatch ${lr} ${wd}
 
 #for dataset_size in 3103 2500 2000 1500 1000 500; do
 #  for iterations in 160000 80000 40000; do
