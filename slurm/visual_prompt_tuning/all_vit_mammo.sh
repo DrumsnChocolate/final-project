@@ -1,9 +1,9 @@
 #!/bin/bash
 dataset="cbis"
 num_classes=2
-for transfer_type in "finetune" "prompt"; do
+for transfer_type in "finetune"; do
   for patience in 7 14 21; do
-    for img_size in 200; do
+    for img_size in 500; do
       if [ $img_size == 200 ]; then
         batch_size=64
       elif [ $img_size == 500 ]; then
