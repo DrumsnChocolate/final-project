@@ -2,7 +2,7 @@ import cv2
 import pandas as pd
 import os
 
-cbis_root = os.path.join(os.getcwd(), "data", "mammography")
+cbis_root = os.path.join(os.getcwd(), "data", "mammography", "cbis-ddsm")
 
 
 def convert_16_to_8(sample):
