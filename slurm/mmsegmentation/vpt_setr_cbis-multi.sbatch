@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J vpt-setr-cbis
+#SBATCH -J vpt-setr-cbis-multi
 #SBATCH -c 8
 #SBATCH --gres=gpu:1
 #SBATCH --mail-type=END,FAIL
