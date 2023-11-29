@@ -19,6 +19,7 @@ python tools/train.py configs/setr_vpt/setrvpt_vit-l_pup_8xb2-160k_cbis-ddsm-mul
   optimizer.lr=$lr \
   optimizer.weight_decay=$wd \
   optim_wrapper.optimizer.lr=$lr \
-  optim_wrapper.optimizer.weight_decay=$wd
+  optim_wrapper.optimizer.weight_decay=$wd \
+  record_gpu_snapshot=True
 
 conda deactivate

@@ -128,6 +128,7 @@ param_scheduler = [
         power=0.9,
         type='PolyLR'),
 ]
+record_gpu_snapshot = False
 resume = False
 test_cfg = dict(type='TestLoop')
 test_dataloader = dict(
@@ -166,7 +167,7 @@ test_pipeline = [
 train_cfg = dict(
     max_iters=160000, type='IterBasedTrainLoop', val_interval=16000)
 train_dataloader = dict(
-    batch_size=8,
+    batch_size=1,
     dataset=dict(
         data_prefix=dict(
             img_path='images/training', seg_map_path='annotations/training'),
@@ -195,7 +196,7 @@ train_dataloader = dict(
             dict(type='PackSegInputs'),
         ],
         type='ADE20KDataset'),
-    num_workers=8,
+    num_workers=4,
     persistent_workers=True,
     sampler=dict(shuffle=True, type='InfiniteSampler'))
 train_pipeline = [
