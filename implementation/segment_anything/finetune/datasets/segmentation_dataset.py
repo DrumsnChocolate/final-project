@@ -54,6 +54,15 @@ class SegmentationDataset(Dataset):
         return image, annotation
 
     def get_item_by_slice(self, _slice):
+        """
+        Returns a tuple of a batch of images and a batch of annotations.
+        The images are stacked into a single tensor, and so are the annotations.
+        The dimensions of the returned images are [B, C, H, W].
+        The dimensions of the returned annotations are [B, 1, H, W].
+
+        Arguments:
+            _slice (slice): slice object that indicates which indices to obtain.
+        """
         image_names = self.image_names[_slice]
         image_paths = [self.get_image_path(image_name) for image_name in image_names]
         annotation_paths = [self.get_annotation_path(image_name) for image_name in image_names]

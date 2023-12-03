@@ -24,7 +24,7 @@ def train(cfg, args, test=True):
     # clear up residual cache from previous runs
     empty_cache()
     # enable memory tracking
-    enable_memory_snapshot(cfg)
+    enable_memory_snapshot(cfg, test=test)
     # main training / eval actions here
     seed(cfg)
 
@@ -45,7 +45,7 @@ def train(cfg, args, test=True):
         evaluator.results,
         os.path.join(cfg.OUTPUT_DIR, "eval_results.pth")
     )
-    dump_memory_snapshot(cfg)
+    dump_memory_snapshot(cfg, test=test)
 
 
 def empty_cache():
@@ -53,13 +53,13 @@ def empty_cache():
         torch.cuda.empty_cache()
 
 
-def enable_memory_snapshot(cfg):
-    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available():
+def enable_memory_snapshot(cfg, test=True):
+    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available() and test:
         torch.cuda.memory._record_memory_history(enabled=True)
 
 
-def dump_memory_snapshot(cfg):
-    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available():
+def dump_memory_snapshot(cfg, test=True):
+    if cfg.RECORD_GPU_SNAPSHOT and torch.cuda.is_available() and test:
         snapshot = torch.cuda.memory.memory_snapshot()
         torch.save(snapshot, os.path.join(cfg.OUTPUT_DIR, "memory_snapshot.pickle"))
 

@@ -4,9 +4,11 @@ from prodict import Prodict
 from torch.optim import SGD
 from yaml import load, Loader
 from configs.config_options import DictAction
-from models import build_model
+from configs.config_validation import validate_cfg
+from logger import Logger
+from models import build_model, call_model
 from datasets.loaders import build_dataloaders
-
+from segment_anything.modeling import Sam
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train the segment anything model')
@@ -49,6 +51,8 @@ def cfg_to_prodict(cfg):
     return cfg
 
 
+
+
 def build_optimizer(cfg, model):
     if cfg.model.optimizer.name == 'sgd':
         return SGD(
@@ -59,7 +63,7 @@ def build_optimizer(cfg, model):
         )
     raise NotImplementedError()
 
-def train_epoch(cfg, model, loss_function, eval_function, optimizer, dataloaders, epoch, logger):
+def train_epoch(cfg, model: Sam, loss_function, eval_function, optimizer, dataloaders, epoch, logger):
     train_loader = dataloaders['train']
     model.train()
     total_epoch_train_loss = 0
@@ -67,7 +71,7 @@ def train_epoch(cfg, model, loss_function, eval_function, optimizer, dataloaders
     total_epoch_train_samples = 0
     for i, batch in enumerate(train_loader):
         samples, targets = batch
-        outputs = model(samples)
+        outputs = call_model(model, samples, logger)
         loss = loss_function(outputs, targets)
         evaluation = eval_function(outputs, targets)
         logger.log(f'Epoch {epoch}, batch {i}, train loss {loss / len(samples)}, train evaluation {evaluation / len(samples)}')
@@ -78,19 +82,19 @@ def train_epoch(cfg, model, loss_function, eval_function, optimizer, dataloaders
         optimizer.step()
     logger.log(f'Epoch {epoch}, average train loss {total_epoch_train_loss / total_epoch_train_samples}')
 
-def train_iteration(cfg, model, loss_function, eval_function, optimizer, dataloaders, iteration, logger):
+def train_iteration(cfg, model: Sam, loss_function, eval_function, optimizer, dataloaders, iteration, logger):
     infinite_train_loader = dataloaders['infinite_train']
     model.train()
     batch = next(infinite_train_loader)
     samples, targets = batch
-    outputs = model(samples)
+    outputs = call_model(model, samples, logger)
     loss = loss_function(outputs, targets)
     evaluation = eval_function(outputs, targets)
     logger.log(f'Iteration {iteration}, train loss {loss / len(samples)}, train evaluation {evaluation / len(samples)}')
     loss.backward()
     optimizer.step()
 
-def validate_epoch(cfg, model, loss_function, eval_function, dataloaders, epoch, logger):
+def validate_epoch(cfg, model: Sam, loss_function, eval_function, dataloaders, epoch, logger):
     val_loader = dataloaders['val']
     model.eval()
     total_val_loss = 0
@@ -98,7 +102,7 @@ def validate_epoch(cfg, model, loss_function, eval_function, dataloaders, epoch,
     total_val_samples = 0
     for i, batch in enumerate(val_loader):
         samples, targets = batch
-        outputs = model(samples)
+        outputs = call_model(model, samples, logger)
         loss = loss_function(outputs, targets)
         evaluation = eval_function(outputs, targets)
         total_val_loss += loss
@@ -107,7 +111,7 @@ def validate_epoch(cfg, model, loss_function, eval_function, dataloaders, epoch,
     logger.log(f'Epoch {epoch}, average val loss {total_val_loss / total_val_samples}, average val evaluation {total_val_eval / total_val_samples}')
 
 
-def validate_iteration(cfg, model, loss_function, eval_function, dataloaders, iteration, logger):
+def validate_iteration(cfg, model: Sam, loss_function, eval_function, dataloaders, iteration, logger):
     val_loader = dataloaders['val']
     model.eval()
     total_val_loss = 0
@@ -115,7 +119,7 @@ def validate_iteration(cfg, model, loss_function, eval_function, dataloaders, it
     total_val_samples = 0
     for i, batch in enumerate(val_loader):
         samples, targets = batch
-        outputs = model(samples)
+        outputs = call_model(model, samples, logger)
         loss = loss_function(outputs, targets)
         evaluation = eval_function(outputs, targets)
         total_val_loss += loss
@@ -124,7 +128,7 @@ def validate_iteration(cfg, model, loss_function, eval_function, dataloaders, it
     logger.log(f'Iteration {iteration}, average val loss {total_val_loss / total_val_samples}, average val evaluation {total_val_eval / total_val_samples}')
 
 
-def test(cfg, model, loss_function, eval_function, dataloaders, logger):
+def test(cfg, model: Sam, loss_function, eval_function, dataloaders, logger):
     test_loader = dataloaders['test']
     model.eval()
     total_test_loss = 0
@@ -132,7 +136,7 @@ def test(cfg, model, loss_function, eval_function, dataloaders, logger):
     total_test_samples = 0
     for i, batch in enumerate(test_loader):
         samples, targets = batch
-        outputs = model(samples)
+        outputs = call_model(model, samples, logger)
         loss = loss_function(outputs, targets)
         evaluation = eval_function(outputs, targets)
         total_test_loss += loss
@@ -141,7 +145,7 @@ def test(cfg, model, loss_function, eval_function, dataloaders, logger):
     logger.log(f'Average test loss {total_test_loss/total_test_samples}')
 
 
-def train_epochs(cfg, model, loss_function, eval_function, optimizer, dataloaders, logger):
+def train_epochs(cfg, model: Sam, loss_function, eval_function, optimizer, dataloaders, logger):
     for epoch in range(cfg.schedule.epochs):
         train_epoch(cfg, model, loss_function, eval_function, optimizer, dataloaders, epoch, logger)
         validate_epoch(cfg, model, loss_function, eval_function, dataloaders, epoch, logger)
@@ -161,7 +165,7 @@ class InfiniteIterator:
             return next(self.iterator)
 
 
-def train_iterations(cfg, model, loss_function, eval_function, optimizer, dataloaders, logger):
+def train_iterations(cfg, model: Sam, loss_function, eval_function, optimizer, dataloaders, logger):
     dataloaders['infinite_train'] = InfiniteIterator(dataloaders['train'])
     for iteration in range(cfg.schedule.iterations):
         train_iteration(cfg, model, loss_function, eval_function, optimizer, dataloaders, iteration, logger)
@@ -171,7 +175,7 @@ def train_iterations(cfg, model, loss_function, eval_function, optimizer, datalo
 
 
 def train(cfg):
-    logger = Prodict(log=print)  # todo: construct something that can .log() to a file? and possibly make it efficient? idk man
+    logger = Logger(log=print)  # todo: construct something that can .log() to a file? and possibly make it efficient? idk man
     logger.log(cfg)
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg)
@@ -184,10 +188,13 @@ def train(cfg):
         train_epochs(cfg, model, loss_function, eval_function, optimizer, dataloaders, logger)
 
 
+
+
 def main():
     # parse config
     args = parse_args()
     cfg = cfg_to_prodict(get_cfg(args))
+    validate_cfg(cfg)
     train(cfg)
 
 
