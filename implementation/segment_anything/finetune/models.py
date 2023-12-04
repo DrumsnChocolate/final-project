@@ -1,3 +1,5 @@
+import torch
+
 from logger import Logger
 from segment_anything import sam_model_registry
 from segment_anything.modeling import Sam
@@ -58,9 +60,6 @@ class SamWrapper:
             boxes=None,
             masks=None,
         )
-        self.log(samples.shape)
-        self.log(self.model.image_encoder.img_size)
-
         low_res_masks, iou_predictions = self.model.mask_decoder(
             image_embeddings=image_embeddings,
             image_pe=self.model.prompt_encoder.get_dense_pe(),
@@ -74,6 +73,7 @@ class SamWrapper:
             # logits for calculating and backpropagating loss.
             masks = masks > self.model.mask_threshold
         self.log(masks.shape)
+        self.log(torch.min(masks), torch.max(masks))
         return masks, iou_predictions, low_res_masks
 
     def log(self, *args):
