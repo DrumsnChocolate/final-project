@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J full-setr-cbis-binary
+#SBATCH -J full-setr-cbis-multi
 #SBATCH -c 8
 #SBATCH --gres=gpu:1
 #SBATCH --mail-type=END,FAIL
