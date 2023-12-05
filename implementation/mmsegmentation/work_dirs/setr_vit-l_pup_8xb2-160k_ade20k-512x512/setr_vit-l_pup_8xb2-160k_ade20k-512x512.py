@@ -45,7 +45,7 @@ img_ratios = [
     1.75,
 ]
 launcher = 'none'
-load_from = None
+load_from = 'work_dirs/setr_vit-l_pup_8xb2-160k_ade20k-512x512/iter_160000.pth'
 log_level = 'INFO'
 log_processor = dict(by_epoch=False)
 model = dict(
@@ -175,6 +175,7 @@ param_scheduler = [
         power=0.9,
         type='PolyLR'),
 ]
+record_gpu_snapshot = False
 resume = False
 test_cfg = dict(type='TestLoop')
 test_dataloader = dict(
@@ -213,7 +214,7 @@ test_pipeline = [
 train_cfg = dict(
     max_iters=160000, type='IterBasedTrainLoop', val_interval=16000)
 train_dataloader = dict(
-    batch_size=4,
+    batch_size=2,
     dataset=dict(
         data_prefix=dict(
             img_path='images/training', seg_map_path='annotations/training'),
@@ -242,7 +243,7 @@ train_dataloader = dict(
             dict(type='PackSegInputs'),
         ],
         type='ADE20KDataset'),
-    num_workers=8,
+    num_workers=4,
     persistent_workers=True,
     sampler=dict(shuffle=True, type='InfiniteSampler'))
 train_pipeline = [

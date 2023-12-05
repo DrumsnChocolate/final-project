@@ -34,20 +34,28 @@ def override_cfg(cfg, cfg_overrides):
             cfg[k] = v
     return cfg
 
-
-def get_cfg(args):
-    cfg = load_cfg(args.config)
+def load_cfg_from_file(filename):
+    cfg = load_cfg(filename)
     bases = cfg.get('_bases_', None)
     if bases:
         for base in bases:
             cfg = override_cfg(load_cfg(base), cfg)
-    if args.cfg_options:
+    return cfg
+
+def get_cfg_dict(args):
+    cfg = load_cfg_from_file(args.config)
+    if args.cfg_options is not None:
         cfg = override_cfg(cfg, args.cfg_options)
     return cfg
 
 def cfg_to_prodict(cfg):
     cfg = Prodict.from_dict(cfg)
     cfg.data.preprocess = [Prodict.from_dict(step) for step in cfg.data.preprocess]
+    return cfg
+
+def get_cfg(args):
+    cfg = cfg_to_prodict(get_cfg_dict(args))
+    validate_cfg(cfg)
     return cfg
 
 
@@ -180,7 +188,8 @@ def train(cfg):
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg)
     optimizer = build_optimizer(cfg, model)
-    loss_function = None  # todo: construct crossentropy as a sum over batch?
+    # todo: optionally include background in loss computation (not for ade20k, yes for cbis)
+    loss_function = None  # todo: construct (20*focal + 1*dice)/21 as a sum over batch?
     eval_function = None  # todo: construct iou as a sum over batch?
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, eval_function, optimizer, dataloaders, logger)
@@ -193,8 +202,7 @@ def train(cfg):
 def main():
     # parse config
     args = parse_args()
-    cfg = cfg_to_prodict(get_cfg(args))
-    validate_cfg(cfg)
+    cfg = get_cfg(args)
     train(cfg)
 
 

@@ -4,7 +4,8 @@ def validate_cfg(cfg):
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
     assert cfg.model.backbone in ['vit_h', 'vit_l', 'vit_b'], f'only able to train with one of vit_h, vit_l, vit_b, not {cfg.model.backbone}'
     # dataset
-    assert cfg.data.name == 'ade20k', f'only able to train on ade20k, not {cfg.data.name}'
+    permitted_datasets = ['ade20k', 'cbis-binary', 'cbis-multi']
+    assert cfg.data.name in permitted_datasets, f'only able to train on one of {permitted_datasets}, not {cfg.data.name}'
     assert cfg.data.get('train') is not None, 'must specify train split'
     assert cfg.data.get('val') is not None, 'must specify val split'
     assert cfg.data.get('test') is not None, 'must specify test split'

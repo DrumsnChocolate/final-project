@@ -7,3 +7,4 @@ pip install jupyter
 pip install PyYAML
 pip install prodict
 ln -s ../../mmsegmentation/data/ade data/ade
+ln -s ../../mmsegmentation/data/cbis data/cbis

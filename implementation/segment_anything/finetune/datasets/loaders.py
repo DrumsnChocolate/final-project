@@ -1,4 +1,5 @@
 from finetune.datasets.ade import ADE20KDataset
+from finetune.datasets.cbis import CBISMultiDataset, CBISBinaryDataset
 from finetune.datasets.segmentation_dataset import SegmentationDataset
 
 
@@ -22,12 +23,20 @@ class SegmentationLoader:
 
 
 def build_dataloaders(cfg):
-    allowed_datasets = ['ade20k']
-    assert cfg.data.name in allowed_datasets, f'only able to build dataloaders for any of {allowed_datasets}, not for {cfg.data.name}'
     if cfg.data.name == 'ade20k':
         train_dataset = ADE20KDataset(cfg, 'train')
         val_dataset = ADE20KDataset(cfg, 'val')
         test_dataset = ADE20KDataset(cfg, 'test')
+    elif cfg.data.name == 'cbis-binary':
+        train_dataset = CBISBinaryDataset(cfg, 'train')
+        val_dataset = CBISBinaryDataset(cfg, 'val')
+        test_dataset = CBISBinaryDataset(cfg, 'test')
+    elif cfg.data.name == 'cbis-multi':
+        train_dataset = CBISMultiDataset(cfg, 'train')
+        val_dataset = CBISMultiDataset(cfg, 'val')
+        test_dataset = CBISMultiDataset(cfg, 'test')
+    else:
+        raise NotImplementedError()
 
     return {
         'train': SegmentationLoader(cfg, train_dataset),
