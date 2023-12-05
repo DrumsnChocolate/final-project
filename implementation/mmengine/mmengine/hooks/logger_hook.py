@@ -43,12 +43,12 @@ class LoggerHook(Hook):
             feature is to help users conveniently get the experiment
             information from screen or log file. Defaults to 1000.
         out_dir (str or Path, optional): The root directory to save
-            checkpoints. If not specified, ``runner.work_dir`` will be used
+            checkpoints. If not specified, ``runner.log_dir`` will be used
             by default. If specified, the ``out_dir`` will be the concatenation
-            of ``out_dir`` and the last level directory of ``runner.work_dir``.
+            of ``out_dir`` and the last two directory levels of ``runner.log_dir``.
             For example, if the input ``out_dir`` is ``./tmp`` and
-            ``runner.work_dir`` is ``./work_dir/cur_exp``, then the log will be
-            saved in ``./tmp/cur_exp``. Defaults to None.
+            ``runner.log_dir`` is ``./work_dir/cur_exp/timestamp``, then the log will be
+            saved in ``./tmp/cur_exp/timestamp``. Defaults to None.
         out_suffix (Tuple[str] or str): Those files in ``runner._log_dir``
             ending with ``out_suffix`` will be copied to ``out_dir``. Defaults
             to ('json', '.log', '.py').
@@ -153,9 +153,10 @@ class LoggerHook(Hook):
         """
         if self.out_dir is not None:
             # The final `self.out_dir` is the concatenation of `self.out_dir`
-            # and the last level directory of `runner.work_dir`
-            basename = osp.basename(runner.work_dir.rstrip(osp.sep))
-            self.out_dir = self.file_backend.join_path(self.out_dir, basename)
+            # and the last two directory levels of `runner.log_dir`
+            dirname = osp.basename(osp.dirname(runner.log_dir.rstrip(osp.sep)))
+            basename = osp.basename(runner.log_dir.rstrip(osp.sep))
+            self.out_dir = self.file_backend.join_path(self.out_dir, dirname, basename)
             runner.logger.info(
                 f'Text logs will be saved to {self.out_dir} after the '
                 'training process.')

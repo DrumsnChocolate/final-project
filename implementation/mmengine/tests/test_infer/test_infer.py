@@ -70,8 +70,8 @@ class TestBaseInferencer(RunnerTestCase):
         super().setUp()
         runner = self.build_runner(copy.deepcopy(self.epoch_based_cfg))
         runner.train()
-        self.cfg_path = osp.join(runner.work_dir, f'{runner.timestamp}.py')
-        self.ckpt_path = osp.join(runner.work_dir, 'epoch_1.pth')
+        self.cfg_path = osp.join(runner.log_dir, f'{runner.timestamp}.py')
+        self.ckpt_path = osp.join(runner.log_dir, 'epoch_1.pth')
         VISUALIZERS.register_module(module=ToyVisualizer, name='ToyVisualizer')
 
     def test_custom_inferencer(self):

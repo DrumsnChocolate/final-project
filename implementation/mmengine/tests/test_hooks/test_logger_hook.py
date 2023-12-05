@@ -221,7 +221,7 @@ class TestLoggerHook(RunnerTestCase):
         self.assertTrue(osp.isfile(json_path))
 
         # Test out_dir
-        out_dir = osp.join(cfg.work_dir, 'test')
+        out_dir = osp.join(runner.log_dir, 'test')
         mkdir_or_exist(out_dir)
         cfg.default_hooks.logger = dict(type='LoggerHook', out_dir=out_dir)
         runner = self.build_runner(cfg)

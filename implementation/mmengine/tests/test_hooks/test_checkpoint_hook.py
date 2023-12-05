@@ -120,14 +120,14 @@ class TestCheckpointHook(RunnerTestCase):
         # the out_dir of the checkpoint hook is None
         checkpoint_hook = CheckpointHook(interval=1, by_epoch=True)
         checkpoint_hook.before_train(runner)
-        self.assertEqual(checkpoint_hook.out_dir, runner.work_dir)
+        self.assertEqual(checkpoint_hook.out_dir, runner.log_dir)
 
         # the out_dir of the checkpoint hook is not None
         checkpoint_hook = CheckpointHook(
             interval=1, by_epoch=True, out_dir='test_dir')
         checkpoint_hook.before_train(runner)
         self.assertEqual(checkpoint_hook.out_dir,
-                         osp.join('test_dir', osp.basename(cfg.work_dir)))
+                         osp.join('test_dir', osp.dirname(runner.log_dir), osp.basename(runner.log_dir)))
 
         # If `save_best` is a list of string, the path to save the best
         # checkpoint will be defined in attribute `best_ckpt_path_dict`.
@@ -312,7 +312,7 @@ class TestCheckpointHook(RunnerTestCase):
 
         # after_val_epoch should not save last_checkpoint
         self.assertFalse(
-            osp.isfile(osp.join(runner.work_dir, 'last_checkpoint')))
+            osp.isfile(osp.join(runner.log_dir, 'last_checkpoint')))
 
         # There should only one best checkpoint be reserved
         # dist backend
@@ -325,7 +325,8 @@ class TestCheckpointHook(RunnerTestCase):
                 interval=2, by_epoch=by_epoch, save_best='acc')
             checkpoint_hook.before_train(runner)
             checkpoint_hook.after_val_epoch(runner, metrics)
-            all_files = os.listdir(runner.work_dir)
+            # not sure if this is gonna work now, but we'll see when we need this
+            all_files = os.listdir(runner.log_dir)
             best_ckpts = [
                 file for file in all_files if file.startswith('best')
             ]
@@ -375,21 +376,21 @@ class TestCheckpointHook(RunnerTestCase):
         self.assertEqual((runner.epoch + 1) % 2, 0)
         self.assertEqual(
             runner.message_hub.get_info('last_ckpt'),
-            osp.join(cfg.work_dir, 'epoch_10.pth'))
+            osp.join(runner.log_dir, 'epoch_10.pth'))
 
-        last_ckpt_path = osp.join(cfg.work_dir, 'last_checkpoint')
+        last_ckpt_path = osp.join(runner.log_dir, 'last_checkpoint')
         self.assertTrue(osp.isfile(last_ckpt_path))
 
         with open(last_ckpt_path) as f:
             filepath = f.read()
-            self.assertEqual(filepath, osp.join(cfg.work_dir, 'epoch_10.pth'))
+            self.assertEqual(filepath, osp.join(runner.log_dir, 'epoch_10.pth'))
 
         # epoch can not be evenly divided by 2
         runner.train_loop._epoch = 10
         checkpoint_hook.after_train_epoch(runner)
         self.assertEqual(
             runner.message_hub.get_info('last_ckpt'),
-            osp.join(cfg.work_dir, 'epoch_10.pth'))
+            osp.join(runner.log_dir, 'epoch_10.pth'))
         runner.message_hub.runtime_info.clear()
 
         # by epoch is False
@@ -418,14 +419,14 @@ class TestCheckpointHook(RunnerTestCase):
         self.assertIn('last_ckpt', runner.message_hub.runtime_info)
         self.assertEqual(
             runner.message_hub.get_info('last_ckpt'),
-            osp.join(cfg.work_dir, 'iter_10.pth'))
+            osp.join(runner.log_dir, 'iter_10.pth'))
 
         # epoch can not be evenly divided by 2
         runner.train_loop._iter = 10
         checkpoint_hook.after_train_epoch(runner)
         self.assertEqual(
             runner.message_hub.get_info('last_ckpt'),
-            osp.join(cfg.work_dir, 'iter_10.pth'))
+            osp.join(runner.log_dir, 'iter_10.pth'))
 
     @parameterized.expand([['iter'], ['epoch']])
     def test_with_runner(self, training_type):
@@ -445,12 +446,12 @@ class TestCheckpointHook(RunnerTestCase):
 
         for i in range(1, 11):
             self.assertEqual(
-                osp.isfile(osp.join(cfg.work_dir, f'{training_type}_{i}.pth')),
+                osp.isfile(osp.join(runner.log_dir, f'{training_type}_{i}.pth')),
                 i % 2 == 0)
 
         # save_last=True
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_11.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_11.pth')))
 
         self.clear_work_dir()
 
@@ -458,13 +459,13 @@ class TestCheckpointHook(RunnerTestCase):
         cfg = copy.deepcopy(common_cfg)
         runner = self.build_runner(cfg)
         runner.train()
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_11.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_11.pth'))
         self.assertIn('optimizer', ckpt)
 
         cfg.default_hooks.checkpoint.save_optimizer = False
         runner = self.build_runner(cfg)
         runner.train()
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_11.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_11.pth'))
         self.assertNotIn('optimizer', ckpt)
 
         # Test save_param_scheduler=False
@@ -479,13 +480,13 @@ class TestCheckpointHook(RunnerTestCase):
         ]
         runner = self.build_runner(cfg)
         runner.train()
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_11.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_11.pth'))
         self.assertIn('param_schedulers', ckpt)
 
         cfg.default_hooks.checkpoint.save_param_scheduler = False
         runner = self.build_runner(cfg)
         runner.train()
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_11.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_11.pth'))
         self.assertNotIn('param_schedulers', ckpt)
 
         self.clear_work_dir()
@@ -498,7 +499,7 @@ class TestCheckpointHook(RunnerTestCase):
         runner.train()
         self.assertTrue(
             osp.isfile(
-                osp.join(out_dir, osp.basename(cfg.work_dir),
+                osp.join(out_dir, osp.basename(runner.log_dir),
                          f'{training_type}_11.pth')))
 
         self.clear_work_dir()
@@ -509,11 +510,11 @@ class TestCheckpointHook(RunnerTestCase):
         runner = self.build_runner(cfg)
         runner.train()
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_11.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_11.pth')))
 
         for i in range(11):
             self.assertFalse(
-                osp.isfile(osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                osp.isfile(osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
 
         self.clear_work_dir()
 
@@ -523,17 +524,17 @@ class TestCheckpointHook(RunnerTestCase):
         runner = self.build_runner(cfg)
         runner.train()
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_9.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_9.pth')))
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_10.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_10.pth')))
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_11.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_11.pth')))
 
         for i in range(9):
             self.assertFalse(
-                osp.isfile(osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                osp.isfile(osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
 
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_11.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_11.pth'))
         self.assertEqual(ckpt['message_hub']['runtime_info']['keep_ckpt_ids'],
                          [9, 10, 11])
 
@@ -541,18 +542,18 @@ class TestCheckpointHook(RunnerTestCase):
         cfg = copy.deepcopy(common_cfg)
         setattr(cfg.train_cfg, f'max_{training_type}s', 12)
         cfg.default_hooks.checkpoint.max_keep_ckpts = 2
-        cfg.load_from = osp.join(cfg.work_dir, f'{training_type}_11.pth')
+        cfg.load_from = osp.join(runner.log_dir, f'{training_type}_11.pth')
         cfg.resume = True
         runner = self.build_runner(cfg)
         runner.train()
         self.assertFalse(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_9.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_9.pth')))
         self.assertFalse(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_10.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_10.pth')))
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_11.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_11.pth')))
         self.assertTrue(
-            osp.isfile(osp.join(cfg.work_dir, f'{training_type}_12.pth')))
+            osp.isfile(osp.join(runner.log_dir, f'{training_type}_12.pth')))
 
         self.clear_work_dir()
 
@@ -561,7 +562,7 @@ class TestCheckpointHook(RunnerTestCase):
         cfg.default_hooks.checkpoint.filename_tmpl = 'test_{}.pth'
         runner = self.build_runner(cfg)
         runner.train()
-        self.assertTrue(osp.isfile(osp.join(cfg.work_dir, 'test_11.pth')))
+        self.assertTrue(osp.isfile(osp.join(runner.log_dir, 'test_11.pth')))
 
         self.clear_work_dir()
 
@@ -572,11 +573,11 @@ class TestCheckpointHook(RunnerTestCase):
         cfg.train_cfg.val_interval = 1
         runner = self.build_runner(cfg)
         runner.train()
-        best_ckpt_path = osp.join(cfg.work_dir,
+        best_ckpt_path = osp.join(runner.log_dir,
                                   f'best_test_acc_{training_type}_5.pth')
         best_ckpt = torch.load(best_ckpt_path)
 
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_5.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_5.pth'))
         self.assertEqual(best_ckpt_path,
                          ckpt['message_hub']['runtime_info']['best_ckpt'])
 
@@ -601,13 +602,13 @@ class TestCheckpointHook(RunnerTestCase):
         cfg.train_cfg.val_interval = 1
         runner = self.build_runner(cfg)
         runner.train()
-        best_ckpt_path = osp.join(cfg.work_dir,
+        best_ckpt_path = osp.join(runner.log_dir,
                                   f'best_test_acc_{training_type}_5.pth')
         best_ckpt = torch.load(best_ckpt_path)
 
         # if the current ckpt is the best, the interval will be ignored the
         # the ckpt will also be saved
-        ckpt = torch.load(osp.join(cfg.work_dir, f'{training_type}_5.pth'))
+        ckpt = torch.load(osp.join(runner.log_dir, f'{training_type}_5.pth'))
         self.assertEqual(best_ckpt_path,
                          ckpt['message_hub']['runtime_info']['best_ckpt'])
 
@@ -627,7 +628,7 @@ class TestCheckpointHook(RunnerTestCase):
         cfg.default_hooks.checkpoint.published_keys = ['meta', 'state_dict']
         runner = self.build_runner(cfg)
         runner.train()
-        ckpt_files = os.listdir(runner.work_dir)
+        ckpt_files = os.listdir(runner.log_dir)
         self.assertTrue(
             any(re.findall(r'-[\d\w]{8}\.pth', file) for file in ckpt_files))
 
@@ -642,16 +643,16 @@ class TestCheckpointHook(RunnerTestCase):
 
         for i in range(5):
             self.assertFalse(
-                osp.isfile(osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                osp.isfile(osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
         for i in range(5, 11):
             if (i - 5) % 2 == 1:
                 self.assertFalse(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
             else:
                 self.assertTrue(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
         self.clear_work_dir()
 
         # Test save_begin with interval=2, save_begin=0
@@ -664,11 +665,11 @@ class TestCheckpointHook(RunnerTestCase):
             if i % 2 == 1:
                 self.assertFalse(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
             else:
                 self.assertTrue(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
         self.clear_work_dir()
 
         # Test save_begin with interval=2, save_begin=1
@@ -682,9 +683,9 @@ class TestCheckpointHook(RunnerTestCase):
             if i % 2 == 1:
                 self.assertTrue(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
             else:
                 self.assertFalse(
                     osp.isfile(
-                        osp.join(cfg.work_dir, f'{training_type}_{i}.pth')))
+                        osp.join(runner.log_dir, f'{training_type}_{i}.pth')))
         self.clear_work_dir()

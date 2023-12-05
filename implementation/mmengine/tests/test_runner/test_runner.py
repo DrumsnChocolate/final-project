@@ -739,7 +739,7 @@ class TestRunner(TestCase):
             cfg.experiment_name = f'test_dump{idx}'
             runner = Runner.from_cfg(cfg=cfg)
             assert osp.exists(
-                osp.join(runner.work_dir, f'{runner.timestamp}.py'))
+                osp.join(runner.log_dir, f'{runner.timestamp}.py'))
             # dump config from file.
             with tempfile.TemporaryDirectory() as temp_config_dir:
                 # Set `delete=Flase` and close the file to make it
@@ -753,7 +753,7 @@ class TestRunner(TestCase):
                 file_cfg.experiment_name = f'test_dump2{idx}'
                 runner = Runner.from_cfg(cfg=file_cfg)
                 assert osp.exists(
-                    osp.join(runner.work_dir,
+                    osp.join(runner.log_dir,
                              osp.basename(temp_config_file.name)))
 
     def test_from_cfg(self):

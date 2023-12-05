@@ -1130,6 +1130,7 @@ class FlexibleRunner:
             resume_from = self._resume
         elif self._resume and self._load_from is None:
             # auto resume from the latest checkpoint
+            raise NotImplementedError('We have moved checkpoints from the work_dir to the log_dir, so it is undefined what checkpoint we should be loading now')
             resume_from = find_latest_checkpoint(self.work_dir)
             self.logger.info(
                 f'Auto resumed from the latest checkpoint {resume_from}.')
@@ -1620,12 +1621,8 @@ class FlexibleRunner:
 
     @master_only
     def dump_config(self) -> None:
-        """Dump config to `work_dir`."""
-        if self.cfg.filename is not None:
-            filename = osp.basename(self.cfg.filename)
-        else:
-            filename = f'{self.timestamp}.py'
-        self.cfg.dump(osp.join(self.work_dir, filename))
+        """Dump config to `log_dir`."""
+        self.cfg.dump(osp.join(self.log_dir, 'config.py'))
 
     def _log_env(self) -> None:
         """Logging environment information of the current task.
