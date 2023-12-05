@@ -1,8 +1,8 @@
 _base_ = [
-    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-multi.py',
+    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm-binary.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
 ]
-num_classes = 2  # 1 classes + 1 background
+num_classes = 5  # 4 classes + 1 background
 crop_size = (512, 512)
 data_preprocessor = dict(size=crop_size)
 norm_cfg = dict(type='SyncBN', requires_grad=True)
