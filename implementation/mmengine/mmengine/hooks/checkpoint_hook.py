@@ -459,7 +459,7 @@ class CheckpointHook(Hook):
 
         save_file = osp.join(self.out_dir, 'last_checkpoint')
         with open(save_file, 'w') as f:
-            f.write(self.last_ckpt)  # type: ignore
+            f.write(osp.relpath(self.last_ckpt))  # type: ignore
 
     def _save_checkpoint(self, runner) -> None:
         """Save the current checkpoint and delete outdated checkpoint.

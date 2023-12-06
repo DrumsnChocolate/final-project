@@ -383,7 +383,7 @@ class TestCheckpointHook(RunnerTestCase):
 
         with open(last_ckpt_path) as f:
             filepath = f.read()
-            self.assertEqual(filepath, osp.join(runner.log_dir, 'epoch_10.pth'))
+            self.assertEqual(filepath, osp.relpath(osp.join(runner.log_dir, 'epoch_10.pth')))
 
         # epoch can not be evenly divided by 2
         runner.train_loop._epoch = 10
