@@ -1690,7 +1690,6 @@ class Runner:
         resume_from = None
         if self._resume and self._load_from is None:
             # auto resume from the latest checkpoint
-            raise NotImplementedError('We have moved checkpoints from the work_dir to the log_dir, so it is undefined what checkpoint we should be loading now')
             resume_from = find_latest_checkpoint(self.work_dir)
             self.logger.info(
                 f'Auto resumed from the latest checkpoint {resume_from}.')
@@ -1704,6 +1703,7 @@ class Runner:
         elif self._load_from is not None:
             self.load_checkpoint(self._load_from)
             self._has_loaded = True
+
 
     def train(self) -> nn.Module:
         """Launch training.
