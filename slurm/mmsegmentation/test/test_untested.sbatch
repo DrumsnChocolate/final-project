@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J test-setr-untested
 #SBATCH -c 8
-#SBATCH -gres=gpu:ampere:1
+#SBATCH --gres=gpu:ampere:1
 #SBATCH --mail-type=END,FAIL
 
 cd implementation/mmsegmentation
