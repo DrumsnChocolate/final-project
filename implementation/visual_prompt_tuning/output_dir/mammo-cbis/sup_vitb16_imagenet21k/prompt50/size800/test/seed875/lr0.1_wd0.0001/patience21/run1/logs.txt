@@ -1,0 +1,856 @@
+[12/09 12:29:16][INFO] visual_prompt:   95: Rank of current process: 0. World size: 1
+[12/09 12:29:16][INFO] visual_prompt:   97: Environment info:
+-------------------  -------------------------------------------------
+Python               3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
+ENV_MODULE           <not set>
+PyTorch              2.0.1+cu118
+PyTorch Debug Build  False
+CUDA available       True
+CUDA ID              1
+GPU 0                NVIDIA A40
+Pillow               9.3.0
+cv2                  4.8.0
+-------------------  -------------------------------------------------
+PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+[12/09 12:29:16][INFO] visual_prompt:   99: Command line arguments: Namespace(config_file='visual_prompt_tuning/configs/prompt/cub.yaml', train_type='prompt', opts=['MODEL.TYPE', 'vit', 'DATA.BATCH_SIZE', '4', 'MODEL.PROMPT.NUM_TOKENS', '50', 'MODEL.PROMPT.DEEP', 'True', 'MODEL.PROMPT.DROPOUT', '0.1', 'DATA.FEATURE', 'sup_vitb16_imagenet21k', 'DATA.IMGSIZE', '800', 'DATA.NAME', 'mammo-cbis', 'DATA.NUMBER_CLASSES', '2', 'DATA.CROP', 'False', 'MODEL.MODEL_ROOT', 'visual_prompt_tuning/model_root', 'DATA.DATAPATH', 'visual_prompt_tuning/data_path', 'OUTPUT_DIR', 'visual_prompt_tuning/output_dir', 'SOLVER.PATIENCE', '21', 'SOLVER.CRITERION', 'loss', 'RECORD_GPU_SNAPSHOT', 'True'])
+[12/09 12:29:16][INFO] visual_prompt:  101: Contents of args.config_file=visual_prompt_tuning/configs/prompt/cub.yaml:
+_BASE_: "../base-prompt.yaml"
+RUN_N_TIMES: 1
+DATA:
+  NAME: "CUB"
+  DATAPATH: ""  #TODO: need to specify here
+  NUMBER_CLASSES: 200
+  MULTILABEL: False
+MODEL:
+  TYPE: "vit"
+SOLVER:
+  BASE_LR: 0.1
+  WEIGHT_DECAY: 0.01
+[12/09 12:29:16][INFO] visual_prompt:  108: Training with config:
+[12/09 12:29:16][INFO] visual_prompt:  109: CfgNode({'DBG': False, 'OUTPUT_DIR': 'visual_prompt_tuning/output_dir/mammo-cbis/sup_vitb16_imagenet21k/prompt50/size800/test/seed875/lr0.1_wd0.0001/patience21/run1', 'RUN_N_TIMES': 1, 'CUDNN_BENCHMARK': False, 'NUM_GPUS': 1, 'NUM_SHARDS': 1, 'SEED': 875, 'MODEL': CfgNode({'TRANSFER_TYPE': 'prompt', 'WEIGHT_PATH': '', 'SAVE_CKPT': False, 'MODEL_ROOT': 'visual_prompt_tuning/model_root', 'TYPE': 'vit', 'MLP_NUM': 0, 'LINEAR': CfgNode({'MLP_SIZES': [], 'DROPOUT': 0.1}), 'PROMPT': CfgNode({'NUM_TOKENS': 50, 'LOCATION': 'prepend', 'INITIATION': 'random', 'CLSEMB_FOLDER': '', 'CLSEMB_PATH': '', 'PROJECT': -1, 'DEEP': True, 'NUM_DEEP_LAYERS': None, 'REVERSE_DEEP': False, 'DEEP_SHARED': False, 'FORWARD_DEEP_NOEXPAND': False, 'VIT_POOL_TYPE': 'original', 'DROPOUT': 0.1, 'SAVE_FOR_EACH_EPOCH': False}), 'ADAPTER': CfgNode({'REDUCATION_FACTOR': 8, 'STYLE': 'Pfeiffer'})}), 'SOLVER': CfgNode({'LOSS': 'softmax', 'LOSS_ALPHA': 0.01, 'OPTIMIZER': 'sgd', 'MOMENTUM': 0.9, 'WEIGHT_DECAY': 0.0001, 'WEIGHT_DECAY_BIAS': 0, 'PATIENCE': 21, 'CRITERION': 'loss', 'SCHEDULER': 'cosine', 'BASE_LR': 0.1, 'BIAS_MULTIPLIER': 1.0, 'WARMUP_EPOCH': 10, 'TOTAL_EPOCH': 100, 'LOG_EVERY_N': 100, 'DBG_TRAINABLE': False}), 'DATA': CfgNode({'NAME': 'mammo-cbis', 'DATAPATH': 'visual_prompt_tuning/data_path', 'FEATURE': 'sup_vitb16_imagenet21k', 'PERCENTAGE': 1.0, 'NUMBER_CLASSES': 2, 'MULTILABEL': False, 'CLASS_WEIGHTS_TYPE': 'none', 'IMGSIZE': 800, 'CROP': False, 'NO_TEST': False, 'BATCH_SIZE': 4, 'NUM_WORKERS': 4, 'PIN_MEMORY': True}), 'RECORD_GPU_SNAPSHOT': True})
+[12/09 12:29:16][INFO] visual_prompt:   70: Loading training data...
+[12/09 12:29:16][INFO] visual_prompt:   28: Constructing mammo-cbis dataset train...
+[12/09 12:29:16][INFO] visual_prompt:   72: Loading validation data...
+[12/09 12:29:16][INFO] visual_prompt:   28: Constructing mammo-cbis dataset val...
+[12/09 12:29:16][INFO] visual_prompt:   76: Loading test data...
+[12/09 12:29:16][INFO] visual_prompt:   28: Constructing mammo-cbis dataset test...
+[12/09 12:29:16][INFO] visual_prompt:   36: Constructing models...
+[12/09 12:29:19][INFO] visual_prompt:   52: Total Parameters: 88030466	 Gradient Parameters: 462338
+[12/09 12:29:19][INFO] visual_prompt:   54: tuned percent:0.525
+[12/09 12:29:19][INFO] visual_prompt:   40: Device used for model: 0
+[12/09 12:29:19][INFO] visual_prompt:   38: Setting up Evaluator...
+[12/09 12:29:19][INFO] visual_prompt:   40: Setting up Trainer...
+[12/09 12:29:19][INFO] visual_prompt:   45: 	Setting up the optimizer...
+[12/09 12:29:19][INFO] visual_prompt:  165: Training 1 / 100 epoch, with learning rate 0.0
+[12/09 12:31:00][INFO] visual_prompt:  204: 	Training 100/553. train loss: 1.0429,	0.8512 s / batch. (data: 2.31e-02). ETA=13:03:03, max mem: 20.9 GB 
+[12/09 12:32:35][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3218,	0.8373 s / batch. (data: 2.79e-04). ETA=12:48:53, max mem: 20.9 GB 
+[12/09 12:34:12][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3637,	0.8400 s / batch. (data: 7.45e-04). ETA=12:50:00, max mem: 20.9 GB 
+[12/09 12:35:47][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.6380,	0.8610 s / batch. (data: 2.10e-02). ETA=13:07:49, max mem: 20.9 GB 
+[12/09 12:37:24][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.9039,	0.8400 s / batch. (data: 2.75e-04). ETA=12:47:13, max mem: 20.9 GB 
+[12/09 12:38:15][INFO] visual_prompt:  217: Epoch 1 / 100: avg data time: 1.36e-01, avg batch time: 0.9695, average train loss: 0.8745
+[12/09 12:39:10][INFO] visual_prompt:  316: Inference (val):avg data time: 3.20e-05, avg batch time: 0.3089, average loss: 0.8075
+[12/09 12:39:10][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 55.69	rocauc: 50.32	
+[12/09 12:40:39][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.717, 0.3082 s / batch. (data: 4.32e-05)max mem: 20.92594 GB 
+[12/09 12:41:30][INFO] visual_prompt:  316: Inference (test):avg data time: 3.54e-05, avg batch time: 0.3110, average loss: 0.7936
+[12/09 12:41:30][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 57.52	rocauc: 51.15	
+[12/09 12:41:30][INFO] visual_prompt:  165: Training 2 / 100 epoch, with learning rate 0.010000000000000002
+[12/09 12:43:12][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6899,	0.8346 s / batch. (data: 7.36e-04). ETA=12:40:05, max mem: 20.9 GB 
+[12/09 12:44:49][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.8724,	0.8468 s / batch. (data: 5.41e-03). ETA=12:49:52, max mem: 20.9 GB 
+[12/09 12:46:22][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6424,	0.8200 s / batch. (data: 2.81e-04). ETA=12:24:07, max mem: 20.9 GB 
+[12/09 12:47:57][INFO] visual_prompt:  204: 	Training 400/553. train loss: 1.0254,	0.8323 s / batch. (data: 3.70e-04). ETA=12:33:54, max mem: 20.9 GB 
+[12/09 12:49:33][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.8007,	0.8312 s / batch. (data: 2.91e-04). ETA=12:31:28, max mem: 20.9 GB 
+[12/09 12:50:24][INFO] visual_prompt:  217: Epoch 2 / 100: avg data time: 1.33e-01, avg batch time: 0.9655, average train loss: 0.7432
+[12/09 12:51:18][INFO] visual_prompt:  316: Inference (val):avg data time: 3.27e-05, avg batch time: 0.3103, average loss: 0.6800
+[12/09 12:51:18][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 56.23	
+[12/09 12:52:48][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.654, 0.3043 s / batch. (data: 3.34e-05)max mem: 20.92594 GB 
+[12/09 12:53:39][INFO] visual_prompt:  316: Inference (test):avg data time: 3.42e-05, avg batch time: 0.3104, average loss: 0.6703
+[12/09 12:53:39][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.00	rocauc: 54.80	
+[12/09 12:53:39][INFO] visual_prompt:  165: Training 3 / 100 epoch, with learning rate 0.020000000000000004
+[12/09 12:55:19][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5913,	0.8408 s / batch. (data: 2.57e-02). ETA=12:38:03, max mem: 20.9 GB 
+[12/09 12:56:56][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5281,	0.8234 s / batch. (data: 5.62e-03). ETA=12:20:58, max mem: 20.9 GB 
+[12/09 12:58:31][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1675,	0.8319 s / batch. (data: 2.74e-04). ETA=12:27:12, max mem: 20.9 GB 
+[12/09 13:00:07][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.0849,	0.8200 s / batch. (data: 2.78e-04). ETA=12:15:10, max mem: 20.9 GB 
+[12/09 13:01:46][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.9907,	0.8360 s / batch. (data: 2.84e-04). ETA=12:28:07, max mem: 20.9 GB 
+[12/09 13:02:39][INFO] visual_prompt:  217: Epoch 3 / 100: avg data time: 1.44e-01, avg batch time: 0.9760, average train loss: 0.7937
+[12/09 13:03:35][INFO] visual_prompt:  316: Inference (val):avg data time: 3.23e-05, avg batch time: 0.3105, average loss: 0.7778
+[12/09 13:03:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 55.45	
+[12/09 13:05:08][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.744, 0.3094 s / batch. (data: 3.24e-05)max mem: 20.92594 GB 
+[12/09 13:06:00][INFO] visual_prompt:  316: Inference (test):avg data time: 2.40e-04, avg batch time: 0.3093, average loss: 0.8040
+[12/09 13:06:00][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 41.09	rocauc: 56.22	
+[12/09 13:06:00][INFO] visual_prompt:  165: Training 4 / 100 epoch, with learning rate 0.03
+[12/09 13:07:44][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.9114,	0.8383 s / batch. (data: 9.09e-03). ETA=12:28:01, max mem: 20.9 GB 
+[12/09 13:09:21][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.0151,	0.8413 s / batch. (data: 5.40e-03). ETA=12:29:20, max mem: 20.9 GB 
+[12/09 13:11:00][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6463,	0.8409 s / batch. (data: 2.33e-02). ETA=12:27:34, max mem: 20.9 GB 
+[12/09 13:12:40][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7458,	0.8680 s / batch. (data: 2.91e-04). ETA=12:50:12, max mem: 20.9 GB 
+[12/09 13:14:18][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.1739,	0.8284 s / batch. (data: 3.22e-04). ETA=12:13:40, max mem: 20.9 GB 
+[12/09 13:15:13][INFO] visual_prompt:  217: Epoch 4 / 100: avg data time: 1.67e-01, avg batch time: 0.9984, average train loss: 0.7832
+[12/09 13:16:08][INFO] visual_prompt:  316: Inference (val):avg data time: 3.09e-05, avg batch time: 0.3121, average loss: 0.6924
+[12/09 13:16:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 54.56	
+[12/09 13:17:43][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.653, 0.3049 s / batch. (data: 5.03e-05)max mem: 20.92594 GB 
+[12/09 13:18:38][INFO] visual_prompt:  316: Inference (test):avg data time: 1.02e-04, avg batch time: 0.3105, average loss: 0.6717
+[12/09 13:18:38][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 55.65	
+[12/09 13:18:38][INFO] visual_prompt:  165: Training 5 / 100 epoch, with learning rate 0.04000000000000001
+[12/09 13:20:20][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6814,	0.8320 s / batch. (data: 3.19e-04). ETA=12:14:45, max mem: 20.9 GB 
+[12/09 13:22:00][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6608,	0.8265 s / batch. (data: 5.42e-03). ETA=12:08:34, max mem: 20.9 GB 
+[12/09 13:23:40][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6878,	0.8373 s / batch. (data: 3.13e-04). ETA=12:16:41, max mem: 20.9 GB 
+[12/09 13:25:21][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7826,	0.8314 s / batch. (data: 7.52e-04). ETA=12:10:05, max mem: 20.9 GB 
+[12/09 13:26:58][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5251,	0.9158 s / batch. (data: 8.79e-02). ETA=13:22:42, max mem: 20.9 GB 
+[12/09 13:27:49][INFO] visual_prompt:  217: Epoch 5 / 100: avg data time: 1.65e-01, avg batch time: 0.9957, average train loss: 0.7822
+[12/09 13:28:46][INFO] visual_prompt:  316: Inference (val):avg data time: 3.09e-05, avg batch time: 0.3084, average loss: 0.7410
+[12/09 13:28:46][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 58.14	
+[12/09 13:30:25][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.732, 0.3038 s / batch. (data: 3.46e-05)max mem: 20.92594 GB 
+[12/09 13:31:21][INFO] visual_prompt:  316: Inference (test):avg data time: 3.40e-05, avg batch time: 0.3086, average loss: 0.6994
+[12/09 13:31:21][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 58.22	
+[12/09 13:31:21][INFO] visual_prompt:  165: Training 6 / 100 epoch, with learning rate 0.05
+[12/09 13:33:01][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5940,	0.8360 s / batch. (data: 2.94e-04). ETA=12:10:35, max mem: 20.9 GB 
+[12/09 13:34:38][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7508,	1.5053 s / batch. (data: 6.68e-01). ETA=21:53:02, max mem: 20.9 GB 
+[12/09 13:36:15][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7530,	1.1851 s / batch. (data: 3.67e-01). ETA=17:11:46, max mem: 20.9 GB 
+[12/09 13:37:52][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8362,	0.8208 s / batch. (data: 2.80e-04). ETA=11:53:10, max mem: 20.9 GB 
+[12/09 13:39:27][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6444,	0.8282 s / batch. (data: 2.78e-04). ETA=11:58:13, max mem: 20.9 GB 
+[12/09 13:40:16][INFO] visual_prompt:  217: Epoch 6 / 100: avg data time: 1.36e-01, avg batch time: 0.9687, average train loss: 0.7787
+[12/09 13:41:11][INFO] visual_prompt:  316: Inference (val):avg data time: 3.14e-05, avg batch time: 0.3111, average loss: 0.9075
+[12/09 13:41:11][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 59.10	
+[12/09 13:42:41][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.810, 0.3151 s / batch. (data: 4.22e-05)max mem: 20.92594 GB 
+[12/09 13:43:31][INFO] visual_prompt:  316: Inference (test):avg data time: 3.25e-05, avg batch time: 0.3109, average loss: 0.9556
+[12/09 13:43:31][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 40.93	rocauc: 60.55	
+[12/09 13:43:31][INFO] visual_prompt:  165: Training 7 / 100 epoch, with learning rate 0.06
+[12/09 13:45:11][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8474,	0.8164 s / batch. (data: 2.54e-04). ETA=11:45:58, max mem: 20.9 GB 
+[12/09 13:46:54][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7674,	2.2229 s / batch. (data: 1.38e+00). ETA=1 day, 7:58:25, max mem: 20.9 GB 
+[12/09 13:48:28][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.1346,	1.0242 s / batch. (data: 1.73e-01). ETA=14:42:14, max mem: 20.9 GB 
+[12/09 13:50:03][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7343,	0.8306 s / batch. (data: 1.05e-02). ETA=11:54:06, max mem: 20.9 GB 
+[12/09 13:51:39][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.8522,	1.6000 s / batch. (data: 7.51e-01). ETA=22:52:50, max mem: 20.9 GB 
+[12/09 13:52:31][INFO] visual_prompt:  217: Epoch 7 / 100: avg data time: 1.44e-01, avg batch time: 0.9769, average train loss: 0.7918
+[12/09 13:53:26][INFO] visual_prompt:  316: Inference (val):avg data time: 3.20e-05, avg batch time: 0.3111, average loss: 0.7843
+[12/09 13:53:26][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 62.77	
+[12/09 13:54:57][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.740, 0.3174 s / batch. (data: 3.41e-05)max mem: 20.92594 GB 
+[12/09 13:55:50][INFO] visual_prompt:  316: Inference (test):avg data time: 7.35e-05, avg batch time: 0.3105, average loss: 0.7358
+[12/09 13:55:50][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 61.26	
+[12/09 13:55:50][INFO] visual_prompt:  165: Training 8 / 100 epoch, with learning rate 0.06999999999999999
+[12/09 13:57:27][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7038,	0.8320 s / batch. (data: 3.02e-04). ETA=11:51:46, max mem: 20.9 GB 
+[12/09 13:59:06][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.8235,	0.8208 s / batch. (data: 2.98e-04). ETA=11:40:46, max mem: 20.9 GB 
+[12/09 14:00:42][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6913,	0.8372 s / batch. (data: 4.10e-03). ETA=11:53:25, max mem: 20.9 GB 
+[12/09 14:02:19][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5187,	0.8550 s / batch. (data: 7.19e-04). ETA=12:07:07, max mem: 20.9 GB 
+[12/09 14:03:52][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.6564,	0.8640 s / batch. (data: 1.60e-02). ETA=12:13:21, max mem: 20.9 GB 
+[12/09 14:04:43][INFO] visual_prompt:  217: Epoch 8 / 100: avg data time: 1.31e-01, avg batch time: 0.9646, average train loss: 0.7850
+[12/09 14:05:39][INFO] visual_prompt:  316: Inference (val):avg data time: 3.07e-05, avg batch time: 0.3109, average loss: 0.7071
+[12/09 14:05:39][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 62.44	
+[12/09 14:07:09][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.654, 0.3041 s / batch. (data: 5.13e-05)max mem: 20.92594 GB 
+[12/09 14:08:01][INFO] visual_prompt:  316: Inference (test):avg data time: 1.02e-04, avg batch time: 0.3101, average loss: 0.6699
+[12/09 14:08:01][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 63.06	
+[12/09 14:08:01][INFO] visual_prompt:  165: Training 9 / 100 epoch, with learning rate 0.08000000000000002
+[12/09 14:09:41][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6658,	0.8303 s / batch. (data: 2.81e-04). ETA=11:42:41, max mem: 20.9 GB 
+[12/09 14:11:16][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7457,	0.8200 s / batch. (data: 2.81e-04). ETA=11:32:34, max mem: 20.9 GB 
+[12/09 14:12:50][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2332,	0.8560 s / batch. (data: 3.16e-04). ETA=12:01:32, max mem: 20.9 GB 
+[12/09 14:14:26][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.6118,	0.8336 s / batch. (data: 1.50e-02). ETA=11:41:15, max mem: 20.9 GB 
+[12/09 14:16:04][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.8352,	2.1405 s / batch. (data: 1.31e+00). ETA=1 day, 5:57:12, max mem: 20.9 GB 
+[12/09 14:16:51][INFO] visual_prompt:  217: Epoch 9 / 100: avg data time: 1.26e-01, avg batch time: 0.9596, average train loss: 0.8369
+[12/09 14:17:46][INFO] visual_prompt:  316: Inference (val):avg data time: 2.13e-04, avg batch time: 0.3103, average loss: 0.8519
+[12/09 14:17:46][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 61.33	
+[12/09 14:19:15][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.718, 0.3078 s / batch. (data: 3.27e-05)max mem: 20.92594 GB 
+[12/09 14:20:06][INFO] visual_prompt:  316: Inference (test):avg data time: 1.11e-04, avg batch time: 0.3094, average loss: 0.9050
+[12/09 14:20:06][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 40.93	rocauc: 61.98	
+[12/09 14:20:06][INFO] visual_prompt:  165: Training 10 / 100 epoch, with learning rate 0.09000000000000001
+[12/09 14:21:48][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6431,	0.8360 s / batch. (data: 2.97e-04). ETA=11:39:44, max mem: 20.9 GB 
+[12/09 14:23:25][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.2226,	0.8230 s / batch. (data: 3.04e-04). ETA=11:27:32, max mem: 20.9 GB 
+[12/09 14:25:04][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6665,	0.8560 s / batch. (data: 7.27e-04). ETA=11:53:40, max mem: 20.9 GB 
+[12/09 14:26:39][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7140,	0.8216 s / batch. (data: 2.77e-04). ETA=11:23:37, max mem: 20.9 GB 
+[12/09 14:28:14][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.8337,	0.8360 s / batch. (data: 7.95e-03). ETA=11:34:12, max mem: 20.9 GB 
+[12/09 14:29:04][INFO] visual_prompt:  217: Epoch 10 / 100: avg data time: 1.41e-01, avg batch time: 0.9739, average train loss: 0.8241
+[12/09 14:29:59][INFO] visual_prompt:  316: Inference (val):avg data time: 3.13e-05, avg batch time: 0.3110, average loss: 0.8905
+[12/09 14:29:59][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 60.49	
+[12/09 14:31:30][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.933, 0.3042 s / batch. (data: 5.05e-05)max mem: 20.92594 GB 
+[12/09 14:32:20][INFO] visual_prompt:  316: Inference (test):avg data time: 3.38e-05, avg batch time: 0.3102, average loss: 0.8138
+[12/09 14:32:20][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 61.82	
+[12/09 14:32:20][INFO] visual_prompt:  165: Training 11 / 100 epoch, with learning rate 0.1
+[12/09 14:34:01][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7620,	0.8455 s / batch. (data: 1.60e-02). ETA=11:39:56, max mem: 20.9 GB 
+[12/09 14:35:34][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6446,	0.9846 s / batch. (data: 1.33e-01). ETA=13:33:25, max mem: 20.9 GB 
+[12/09 14:37:10][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.0160,	0.8760 s / batch. (data: 1.20e-02). ETA=12:02:15, max mem: 20.9 GB 
+[12/09 14:38:47][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.6927,	1.1040 s / batch. (data: 2.68e-01). ETA=15:08:23, max mem: 20.9 GB 
+[12/09 14:40:28][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5009,	0.8270 s / batch. (data: 3.32e-04). ETA=11:19:05, max mem: 20.9 GB 
+[12/09 14:41:17][INFO] visual_prompt:  217: Epoch 11 / 100: avg data time: 1.37e-01, avg batch time: 0.9701, average train loss: 0.7886
+[12/09 14:42:11][INFO] visual_prompt:  316: Inference (val):avg data time: 3.16e-05, avg batch time: 0.3118, average loss: 0.7061
+[12/09 14:42:11][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 49.19	rocauc: 63.33	
+[12/09 14:43:41][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.598, 0.3184 s / batch. (data: 3.77e-05)max mem: 20.92594 GB 
+[12/09 14:44:32][INFO] visual_prompt:  316: Inference (test):avg data time: 1.03e-04, avg batch time: 0.3119, average loss: 0.7297
+[12/09 14:44:32][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 44.19	rocauc: 64.23	
+[12/09 14:44:32][INFO] visual_prompt:  165: Training 12 / 100 epoch, with learning rate 0.0999695413509548
+[12/09 14:46:16][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3397,	1.4107 s / batch. (data: 5.63e-01). ETA=19:14:48, max mem: 20.9 GB 
+[12/09 14:47:52][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6901,	0.8440 s / batch. (data: 4.57e-04). ETA=11:29:27, max mem: 20.9 GB 
+[12/09 14:49:27][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5158,	0.8383 s / batch. (data: 3.05e-04). ETA=11:23:24, max mem: 20.9 GB 
+[12/09 14:51:03][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8078,	0.8258 s / batch. (data: 3.04e-04). ETA=11:11:55, max mem: 20.9 GB 
+[12/09 14:52:40][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.7607,	0.8280 s / batch. (data: 2.85e-04). ETA=11:12:18, max mem: 20.9 GB 
+[12/09 14:53:29][INFO] visual_prompt:  217: Epoch 12 / 100: avg data time: 1.38e-01, avg batch time: 0.9716, average train loss: 0.7652
+[12/09 14:54:24][INFO] visual_prompt:  316: Inference (val):avg data time: 3.18e-05, avg batch time: 0.3104, average loss: 0.7990
+[12/09 14:54:24][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.93	rocauc: 64.44	
+[12/09 14:55:54][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.611, 0.3039 s / batch. (data: 5.01e-05)max mem: 20.92594 GB 
+[12/09 14:56:44][INFO] visual_prompt:  316: Inference (test):avg data time: 3.40e-05, avg batch time: 0.3107, average loss: 0.8502
+[12/09 14:56:44][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 42.02	rocauc: 65.97	
+[12/09 14:56:44][INFO] visual_prompt:  165: Training 13 / 100 epoch, with learning rate 0.09987820251299122
+[12/09 14:58:24][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7474,	0.8237 s / batch. (data: 8.47e-03). ETA=11:06:41, max mem: 20.9 GB 
+[12/09 14:59:59][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5156,	0.8436 s / batch. (data: 2.93e-04). ETA=11:21:24, max mem: 20.9 GB 
+[12/09 15:01:36][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6888,	1.6760 s / batch. (data: 8.58e-01). ETA=22:30:57, max mem: 20.9 GB 
+[12/09 15:03:13][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8481,	0.8400 s / batch. (data: 2.91e-04). ETA=11:15:41, max mem: 20.9 GB 
+[12/09 15:04:48][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6448,	1.6440 s / batch. (data: 7.92e-01). ETA=21:59:42, max mem: 20.9 GB 
+[12/09 15:05:37][INFO] visual_prompt:  217: Epoch 13 / 100: avg data time: 1.30e-01, avg batch time: 0.9629, average train loss: 0.7769
+[12/09 15:06:31][INFO] visual_prompt:  316: Inference (val):avg data time: 1.59e-04, avg batch time: 0.3105, average loss: 0.6978
+[12/09 15:06:31][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 56.50	rocauc: 66.52	
+[12/09 15:07:59][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.485, 0.3198 s / batch. (data: 3.19e-05)max mem: 20.92594 GB 
+[12/09 15:08:50][INFO] visual_prompt:  316: Inference (test):avg data time: 3.35e-05, avg batch time: 0.3109, average loss: 0.7305
+[12/09 15:08:50][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 52.40	rocauc: 66.21	
+[12/09 15:08:50][INFO] visual_prompt:   36: Best epoch 13: best metric: -0.698
+[12/09 15:08:50][INFO] visual_prompt:  165: Training 14 / 100 epoch, with learning rate 0.09972609476841367
+[12/09 15:10:31][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7631,	0.8440 s / batch. (data: 7.39e-04). ETA=11:15:23, max mem: 20.9 GB 
+[12/09 15:12:06][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.9062,	0.9400 s / batch. (data: 1.12e-01). ETA=12:30:36, max mem: 20.9 GB 
+[12/09 15:13:41][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5377,	0.8308 s / batch. (data: 2.82e-04). ETA=11:02:02, max mem: 20.9 GB 
+[12/09 15:15:18][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7483,	0.8745 s / batch. (data: 1.42e-02). ETA=11:35:25, max mem: 20.9 GB 
+[12/09 15:16:51][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6833,	2.0999 s / batch. (data: 1.25e+00). ETA=1 day, 3:46:19, max mem: 20.9 GB 
+[12/09 15:17:41][INFO] visual_prompt:  217: Epoch 14 / 100: avg data time: 1.26e-01, avg batch time: 0.9598, average train loss: 0.7697
+[12/09 15:18:35][INFO] visual_prompt:  316: Inference (val):avg data time: 3.11e-05, avg batch time: 0.3103, average loss: 0.8483
+[12/09 15:18:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.88	rocauc: 64.31	
+[12/09 15:20:05][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.834, 0.3251 s / batch. (data: 3.27e-05)max mem: 20.92594 GB 
+[12/09 15:20:55][INFO] visual_prompt:  316: Inference (test):avg data time: 3.41e-05, avg batch time: 0.3108, average loss: 0.7671
+[12/09 15:20:55][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.07	rocauc: 64.02	
+[12/09 15:20:55][INFO] visual_prompt:  165: Training 15 / 100 epoch, with learning rate 0.09951340343707853
+[12/09 15:22:34][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.9466,	0.8424 s / batch. (data: 2.23e-02). ETA=11:06:18, max mem: 20.9 GB 
+[12/09 15:24:11][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7390,	1.0431 s / batch. (data: 2.07e-01). ETA=13:43:17, max mem: 20.9 GB 
+[12/09 15:25:46][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.8323,	0.8332 s / batch. (data: 1.26e-02). ETA=10:56:13, max mem: 20.9 GB 
+[12/09 15:27:22][INFO] visual_prompt:  204: 	Training 400/553. train loss: 1.0234,	0.8245 s / batch. (data: 5.39e-03). ETA=10:48:01, max mem: 20.9 GB 
+[12/09 15:28:57][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6185,	0.8482 s / batch. (data: 1.06e-02). ETA=11:05:14, max mem: 20.9 GB 
+[12/09 15:29:46][INFO] visual_prompt:  217: Epoch 15 / 100: avg data time: 1.27e-01, avg batch time: 0.9594, average train loss: 0.8001
+[12/09 15:30:40][INFO] visual_prompt:  316: Inference (val):avg data time: 1.45e-04, avg batch time: 0.3122, average loss: 0.6472
+[12/09 15:30:40][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 64.23	rocauc: 66.32	
+[12/09 15:32:10][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.525, 0.3225 s / batch. (data: 3.10e-05)max mem: 20.92594 GB 
+[12/09 15:33:01][INFO] visual_prompt:  316: Inference (test):avg data time: 3.47e-05, avg batch time: 0.3103, average loss: 0.6329
+[12/09 15:33:01][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 63.57	rocauc: 67.27	
+[12/09 15:33:01][INFO] visual_prompt:   36: Best epoch 15: best metric: -0.647
+[12/09 15:33:01][INFO] visual_prompt:  165: Training 16 / 100 epoch, with learning rate 0.09924038765061041
+[12/09 15:34:41][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5281,	0.8621 s / batch. (data: 3.07e-02). ETA=11:13:54, max mem: 20.9 GB 
+[12/09 15:36:14][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6990,	0.8480 s / batch. (data: 2.78e-04). ETA=11:01:31, max mem: 20.9 GB 
+[12/09 15:37:51][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5612,	1.4640 s / batch. (data: 6.30e-01). ETA=18:59:35, max mem: 20.9 GB 
+[12/09 15:39:31][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7101,	0.8280 s / batch. (data: 2.87e-04). ETA=10:43:07, max mem: 20.9 GB 
+[12/09 15:41:09][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.8871,	0.8408 s / batch. (data: 1.27e-02). ETA=10:51:41, max mem: 20.9 GB 
+[12/09 15:41:58][INFO] visual_prompt:  217: Epoch 16 / 100: avg data time: 1.38e-01, avg batch time: 0.9713, average train loss: 0.7388
+[12/09 15:42:53][INFO] visual_prompt:  316: Inference (val):avg data time: 3.35e-05, avg batch time: 0.3109, average loss: 0.9261
+[12/09 15:42:53][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 45.12	rocauc: 67.58	
+[12/09 15:44:23][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.641, 0.3038 s / batch. (data: 3.50e-05)max mem: 20.92594 GB 
+[12/09 15:45:14][INFO] visual_prompt:  316: Inference (test):avg data time: 7.46e-05, avg batch time: 0.3099, average loss: 1.0138
+[12/09 15:45:14][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 40.93	rocauc: 65.75	
+[12/09 15:45:14][INFO] visual_prompt:  165: Training 17 / 100 epoch, with learning rate 0.09890738003669029
+[12/09 15:46:55][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8133,	0.8320 s / batch. (data: 2.96e-04). ETA=10:42:44, max mem: 20.9 GB 
+[12/09 15:48:31][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3872,	0.8430 s / batch. (data: 7.44e-04). ETA=10:49:49, max mem: 20.9 GB 
+[12/09 15:50:07][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.0691,	0.8520 s / batch. (data: 3.19e-04). ETA=10:55:22, max mem: 20.9 GB 
+[12/09 15:51:45][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7024,	0.8315 s / batch. (data: 2.80e-04). ETA=10:38:11, max mem: 20.9 GB 
+[12/09 15:53:20][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.5071,	0.8181 s / batch. (data: 2.82e-04). ETA=10:26:33, max mem: 20.9 GB 
+[12/09 15:54:09][INFO] visual_prompt:  217: Epoch 17 / 100: avg data time: 1.33e-01, avg batch time: 0.9675, average train loss: 0.7228
+[12/09 15:55:04][INFO] visual_prompt:  316: Inference (val):avg data time: 3.07e-05, avg batch time: 0.3102, average loss: 0.8570
+[12/09 15:55:04][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 55.28	rocauc: 67.32	
+[12/09 15:56:34][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.659, 0.3138 s / batch. (data: 5.20e-05)max mem: 20.92594 GB 
+[12/09 15:57:25][INFO] visual_prompt:  316: Inference (test):avg data time: 3.49e-05, avg batch time: 0.3112, average loss: 0.7541
+[12/09 15:57:25][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.53	rocauc: 67.50	
+[12/09 15:57:25][INFO] visual_prompt:  165: Training 18 / 100 epoch, with learning rate 0.09851478631379983
+[12/09 15:59:06][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6793,	1.0068 s / batch. (data: 1.91e-01). ETA=12:48:30, max mem: 20.9 GB 
+[12/09 16:00:44][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5791,	0.8291 s / batch. (data: 2.96e-04). ETA=10:31:26, max mem: 20.9 GB 
+[12/09 16:02:18][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7461,	0.8362 s / batch. (data: 2.95e-04). ETA=10:35:28, max mem: 20.9 GB 
+[12/09 16:03:52][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8407,	0.9487 s / batch. (data: 1.30e-01). ETA=11:59:23, max mem: 20.9 GB 
+[12/09 16:05:31][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4755,	2.0700 s / batch. (data: 1.23e+00). ETA=1 day, 2:06:17, max mem: 20.9 GB 
+[12/09 16:06:19][INFO] visual_prompt:  217: Epoch 18 / 100: avg data time: 1.30e-01, avg batch time: 0.9649, average train loss: 0.6910
+[12/09 16:07:13][INFO] visual_prompt:  316: Inference (val):avg data time: 3.06e-05, avg batch time: 0.3108, average loss: 0.6836
+[12/09 16:07:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.94	rocauc: 69.79	
+[12/09 16:08:42][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.443, 0.3041 s / batch. (data: 5.63e-05)max mem: 20.92594 GB 
+[12/09 16:09:32][INFO] visual_prompt:  316: Inference (test):avg data time: 3.63e-05, avg batch time: 0.3112, average loss: 0.7408
+[12/09 16:09:32][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 54.73	rocauc: 67.73	
+[12/09 16:09:32][INFO] visual_prompt:  165: Training 19 / 100 epoch, with learning rate 0.09806308479691594
+[12/09 16:11:12][INFO] visual_prompt:  204: 	Training 100/553. train loss: 1.7957,	0.8360 s / batch. (data: 2.79e-04). ETA=10:30:26, max mem: 20.9 GB 
+[12/09 16:12:51][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6303,	0.8440 s / batch. (data: 1.05e-02). ETA=10:35:03, max mem: 20.9 GB 
+[12/09 16:14:25][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7012,	0.8439 s / batch. (data: 1.19e-02). ETA=10:33:33, max mem: 20.9 GB 
+[12/09 16:15:57][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.4173,	0.8193 s / batch. (data: 2.96e-04). ETA=10:13:43, max mem: 20.9 GB 
+[12/09 16:17:32][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.2736,	0.8308 s / batch. (data: 5.40e-03). ETA=10:20:58, max mem: 20.9 GB 
+[12/09 16:18:22][INFO] visual_prompt:  217: Epoch 19 / 100: avg data time: 1.26e-01, avg batch time: 0.9586, average train loss: 0.7258
+[12/09 16:19:17][INFO] visual_prompt:  316: Inference (val):avg data time: 1.71e-04, avg batch time: 0.3105, average loss: 0.6482
+[12/09 16:19:17][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.45	rocauc: 67.00	
+[12/09 16:20:46][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.471, 0.3041 s / batch. (data: 3.34e-05)max mem: 20.92594 GB 
+[12/09 16:21:37][INFO] visual_prompt:  316: Inference (test):avg data time: 8.01e-05, avg batch time: 0.3100, average loss: 0.6320
+[12/09 16:21:37][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.34	rocauc: 67.37	
+[12/09 16:21:37][INFO] visual_prompt:  165: Training 20 / 100 epoch, with learning rate 0.09755282581475769
+[12/09 16:23:19][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6659,	1.3480 s / batch. (data: 5.25e-01). ETA=16:44:07, max mem: 20.9 GB 
+[12/09 16:24:51][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6685,	0.8361 s / batch. (data: 3.02e-04). ETA=10:21:23, max mem: 20.9 GB 
+[12/09 16:26:28][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6375,	0.9640 s / batch. (data: 1.42e-01). ETA=11:54:51, max mem: 20.9 GB 
+[12/09 16:28:07][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5673,	0.8215 s / batch. (data: 3.42e-04). ETA=10:07:50, max mem: 20.9 GB 
+[12/09 16:29:43][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6930,	0.8440 s / batch. (data: 7.95e-03). ETA=10:23:03, max mem: 20.9 GB 
+[12/09 16:30:31][INFO] visual_prompt:  217: Epoch 20 / 100: avg data time: 1.32e-01, avg batch time: 0.9656, average train loss: 0.7080
+[12/09 16:31:26][INFO] visual_prompt:  316: Inference (val):avg data time: 1.95e-04, avg batch time: 0.3098, average loss: 0.8232
+[12/09 16:31:26][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 56.10	rocauc: 71.74	
+[12/09 16:32:55][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.776, 0.3172 s / batch. (data: 3.36e-05)max mem: 20.92594 GB 
+[12/09 16:33:46][INFO] visual_prompt:  316: Inference (test):avg data time: 3.41e-05, avg batch time: 0.3105, average loss: 0.7470
+[12/09 16:33:46][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.31	rocauc: 69.32	
+[12/09 16:33:46][INFO] visual_prompt:  165: Training 21 / 100 epoch, with learning rate 0.09698463103929543
+[12/09 16:35:27][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8648,	0.8291 s / batch. (data: 1.05e-02). ETA=10:09:56, max mem: 20.9 GB 
+[12/09 16:37:00][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7219,	0.8413 s / batch. (data: 5.60e-03). ETA=10:17:32, max mem: 20.9 GB 
+[12/09 16:38:35][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3147,	0.8320 s / batch. (data: 5.40e-03). ETA=10:09:17, max mem: 20.9 GB 
+[12/09 16:40:11][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.6567,	0.8219 s / batch. (data: 2.75e-04). ETA=10:00:34, max mem: 20.9 GB 
+[12/09 16:41:50][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.7948,	0.8372 s / batch. (data: 5.42e-03). ETA=10:10:20, max mem: 20.9 GB 
+[12/09 16:42:41][INFO] visual_prompt:  217: Epoch 21 / 100: avg data time: 1.34e-01, avg batch time: 0.9673, average train loss: 0.6962
+[12/09 16:43:36][INFO] visual_prompt:  316: Inference (val):avg data time: 1.50e-04, avg batch time: 0.3106, average loss: 0.7414
+[12/09 16:43:36][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.47	rocauc: 69.75	
+[12/09 16:45:05][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.586, 0.3106 s / batch. (data: 3.46e-05)max mem: 20.92594 GB 
+[12/09 16:45:55][INFO] visual_prompt:  316: Inference (test):avg data time: 3.45e-05, avg batch time: 0.3108, average loss: 0.8154
+[12/09 16:45:55][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 50.54	rocauc: 68.51	
+[12/09 16:45:55][INFO] visual_prompt:  165: Training 22 / 100 epoch, with learning rate 0.09635919272833937
+[12/09 16:47:36][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3439,	0.8476 s / batch. (data: 2.78e-04). ETA=10:15:44, max mem: 20.9 GB 
+[12/09 16:49:11][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.9687,	0.8440 s / batch. (data: 3.16e-04). ETA=10:11:41, max mem: 20.9 GB 
+[12/09 16:50:50][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2471,	0.8179 s / batch. (data: 2.75e-04). ETA=9:51:26, max mem: 20.9 GB 
+[12/09 16:52:25][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8328,	0.8248 s / batch. (data: 2.93e-04). ETA=9:55:03, max mem: 20.9 GB 
+[12/09 16:54:00][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.4213,	0.8403 s / batch. (data: 7.98e-03). ETA=10:04:48, max mem: 20.9 GB 
+[12/09 16:54:51][INFO] visual_prompt:  217: Epoch 22 / 100: avg data time: 1.36e-01, avg batch time: 0.9693, average train loss: 0.6664
+[12/09 16:55:46][INFO] visual_prompt:  316: Inference (val):avg data time: 3.40e-05, avg batch time: 0.3092, average loss: 0.6957
+[12/09 16:55:46][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.54	rocauc: 70.94	
+[12/09 16:57:16][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.623, 0.3073 s / batch. (data: 5.20e-05)max mem: 20.92594 GB 
+[12/09 16:58:06][INFO] visual_prompt:  316: Inference (test):avg data time: 1.06e-04, avg batch time: 0.3099, average loss: 0.6593
+[12/09 16:58:06][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 61.86	rocauc: 68.46	
+[12/09 16:58:06][INFO] visual_prompt:  165: Training 23 / 100 epoch, with learning rate 0.09567727288213004
+[12/09 16:59:45][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7409,	0.8396 s / batch. (data: 1.19e-02). ETA=10:02:11, max mem: 20.9 GB 
+[12/09 17:01:24][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3880,	1.3320 s / batch. (data: 4.98e-01). ETA=15:53:07, max mem: 20.9 GB 
+[12/09 17:02:59][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4984,	0.8400 s / batch. (data: 3.00e-04). ETA=9:59:40, max mem: 20.9 GB 
+[12/09 17:04:37][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7248,	0.8180 s / batch. (data: 2.92e-04). ETA=9:42:36, max mem: 20.9 GB 
+[12/09 17:06:12][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5065,	1.2502 s / batch. (data: 4.26e-01). ETA=14:48:19, max mem: 20.9 GB 
+[12/09 17:07:03][INFO] visual_prompt:  217: Epoch 23 / 100: avg data time: 1.38e-01, avg batch time: 0.9708, average train loss: 0.6875
+[12/09 17:07:58][INFO] visual_prompt:  316: Inference (val):avg data time: 3.28e-05, avg batch time: 0.3105, average loss: 0.6302
+[12/09 17:07:58][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 67.48	rocauc: 71.59	
+[12/09 17:09:28][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.620, 0.3078 s / batch. (data: 3.62e-05)max mem: 20.92594 GB 
+[12/09 17:10:18][INFO] visual_prompt:  316: Inference (test):avg data time: 3.20e-05, avg batch time: 0.3103, average loss: 0.6257
+[12/09 17:10:18][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 65.43	rocauc: 68.95	
+[12/09 17:10:18][INFO] visual_prompt:   36: Best epoch 23: best metric: -0.630
+[12/09 17:10:18][INFO] visual_prompt:  165: Training 24 / 100 epoch, with learning rate 0.09493970231495835
+[12/09 17:12:01][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.9241,	0.8494 s / batch. (data: 1.11e-02). ETA=10:01:24, max mem: 20.9 GB 
+[12/09 17:13:38][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4302,	0.8176 s / batch. (data: 2.98e-04). ETA=9:37:31, max mem: 20.9 GB 
+[12/09 17:15:15][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.8313,	0.8213 s / batch. (data: 2.90e-04). ETA=9:38:47, max mem: 20.9 GB 
+[12/09 17:16:52][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.4996,	0.8390 s / batch. (data: 5.39e-03). ETA=9:49:50, max mem: 20.9 GB 
+[12/09 17:18:25][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2214,	0.8695 s / batch. (data: 5.40e-03). ETA=10:09:47, max mem: 20.9 GB 
+[12/09 17:19:14][INFO] visual_prompt:  217: Epoch 24 / 100: avg data time: 1.34e-01, avg batch time: 0.9676, average train loss: 0.6851
+[12/09 17:20:08][INFO] visual_prompt:  316: Inference (val):avg data time: 3.07e-05, avg batch time: 0.3105, average loss: 0.6298
+[12/09 17:20:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 63.01	rocauc: 71.30	
+[12/09 17:21:36][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.502, 0.3041 s / batch. (data: 3.48e-05)max mem: 20.92594 GB 
+[12/09 17:22:26][INFO] visual_prompt:  316: Inference (test):avg data time: 3.42e-05, avg batch time: 0.3103, average loss: 0.6312
+[12/09 17:22:26][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.34	rocauc: 68.11	
+[12/09 17:22:26][INFO] visual_prompt:   36: Best epoch 24: best metric: -0.630
+[12/09 17:22:26][INFO] visual_prompt:  165: Training 25 / 100 epoch, with learning rate 0.09414737964294635
+[12/09 17:24:10][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4944,	0.8320 s / batch. (data: 3.10e-04). ETA=9:41:24, max mem: 20.9 GB 
+[12/09 17:25:45][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.8682,	0.8390 s / batch. (data: 2.99e-04). ETA=9:44:55, max mem: 20.9 GB 
+[12/09 17:27:22][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.0196,	0.8551 s / batch. (data: 5.39e-03). ETA=9:54:43, max mem: 20.9 GB 
+[12/09 17:28:54][INFO] visual_prompt:  204: 	Training 400/553. train loss: 1.1433,	0.8592 s / batch. (data: 2.75e-02). ETA=9:56:06, max mem: 20.9 GB 
+[12/09 17:30:30][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6099,	0.8190 s / batch. (data: 2.91e-04). ETA=9:26:50, max mem: 20.9 GB 
+[12/09 17:31:20][INFO] visual_prompt:  217: Epoch 25 / 100: avg data time: 1.32e-01, avg batch time: 0.9643, average train loss: 0.6620
+[12/09 17:32:14][INFO] visual_prompt:  316: Inference (val):avg data time: 3.18e-05, avg batch time: 0.3096, average loss: 0.7449
+[12/09 17:32:14][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 56.10	rocauc: 73.26	
+[12/09 17:33:43][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.542, 0.3044 s / batch. (data: 3.53e-05)max mem: 20.92594 GB 
+[12/09 17:34:33][INFO] visual_prompt:  316: Inference (test):avg data time: 3.33e-05, avg batch time: 0.3103, average loss: 0.8614
+[12/09 17:34:33][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 51.94	rocauc: 68.68	
+[12/09 17:34:33][INFO] visual_prompt:  165: Training 26 / 100 epoch, with learning rate 0.09330127018922195
+[12/09 17:36:14][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7053,	1.0556 s / batch. (data: 2.23e-01). ETA=12:07:57, max mem: 20.9 GB 
+[12/09 17:37:51][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4016,	0.8736 s / batch. (data: 1.32e-02). ETA=10:00:59, max mem: 20.9 GB 
+[12/09 17:39:26][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4282,	0.8360 s / batch. (data: 2.67e-04). ETA=9:33:43, max mem: 20.9 GB 
+[12/09 17:41:01][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5773,	1.1640 s / batch. (data: 3.15e-01). ETA=13:16:52, max mem: 20.9 GB 
+[12/09 17:42:36][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4980,	0.9080 s / batch. (data: 6.94e-02). ETA=10:20:05, max mem: 20.9 GB 
+[12/09 17:43:27][INFO] visual_prompt:  217: Epoch 26 / 100: avg data time: 1.32e-01, avg batch time: 0.9656, average train loss: 0.6631
+[12/09 17:44:22][INFO] visual_prompt:  316: Inference (val):avg data time: 3.12e-05, avg batch time: 0.3113, average loss: 0.7470
+[12/09 17:44:22][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.13	rocauc: 70.54	
+[12/09 17:45:52][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.620, 0.3041 s / batch. (data: 3.41e-05)max mem: 20.92594 GB 
+[12/09 17:46:43][INFO] visual_prompt:  316: Inference (test):avg data time: 3.41e-05, avg batch time: 0.3098, average loss: 0.6847
+[12/09 17:46:43][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 62.79	rocauc: 68.78	
+[12/09 17:46:43][INFO] visual_prompt:  165: Training 27 / 100 epoch, with learning rate 0.0924024048078213
+[12/09 17:48:24][INFO] visual_prompt:  204: 	Training 100/553. train loss: 1.9886,	0.8372 s / batch. (data: 1.05e-02). ETA=9:29:37, max mem: 20.9 GB 
+[12/09 17:50:02][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6017,	0.8492 s / batch. (data: 5.83e-03). ETA=9:36:22, max mem: 20.9 GB 
+[12/09 17:51:38][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.8443,	0.8640 s / batch. (data: 2.77e-04). ETA=9:44:57, max mem: 20.9 GB 
+[12/09 17:53:13][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5503,	0.8440 s / batch. (data: 7.95e-03). ETA=9:30:01, max mem: 20.9 GB 
+[12/09 17:54:48][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6659,	0.8480 s / batch. (data: 3.10e-04). ETA=9:31:17, max mem: 20.9 GB 
+[12/09 17:55:38][INFO] visual_prompt:  217: Epoch 27 / 100: avg data time: 1.35e-01, avg batch time: 0.9688, average train loss: 0.6905
+[12/09 17:56:33][INFO] visual_prompt:  316: Inference (val):avg data time: 4.93e-04, avg batch time: 0.3117, average loss: 0.6217
+[12/09 17:56:33][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.04	rocauc: 71.59	
+[12/09 17:58:04][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.507, 0.3178 s / batch. (data: 3.77e-05)max mem: 20.92594 GB 
+[12/09 17:58:54][INFO] visual_prompt:  316: Inference (test):avg data time: 1.03e-04, avg batch time: 0.3114, average loss: 0.6543
+[12/09 17:58:54][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.47	rocauc: 68.07	
+[12/09 17:58:54][INFO] visual_prompt:   36: Best epoch 27: best metric: -0.622
+[12/09 17:58:54][INFO] visual_prompt:  165: Training 28 / 100 epoch, with learning rate 0.09145187862775209
+[12/09 18:00:34][INFO] visual_prompt:  204: 	Training 100/553. train loss: 1.2855,	1.3001 s / batch. (data: 4.69e-01). ETA=14:32:33, max mem: 20.9 GB 
+[12/09 18:02:12][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.9202,	0.8344 s / batch. (data: 1.05e-02). ETA=9:18:37, max mem: 20.9 GB 
+[12/09 18:03:47][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4127,	0.8891 s / batch. (data: 3.31e-02). ETA=9:53:44, max mem: 20.9 GB 
+[12/09 18:05:22][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3706,	0.8400 s / batch. (data: 3.05e-04). ETA=9:19:33, max mem: 20.9 GB 
+[12/09 18:06:56][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6352,	0.8312 s / batch. (data: 2.86e-04). ETA=9:12:19, max mem: 20.9 GB 
+[12/09 18:07:49][INFO] visual_prompt:  217: Epoch 28 / 100: avg data time: 1.35e-01, avg batch time: 0.9678, average train loss: 0.6351
+[12/09 18:08:44][INFO] visual_prompt:  316: Inference (val):avg data time: 3.09e-05, avg batch time: 0.3098, average loss: 1.0178
+[12/09 18:08:44][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 57.72	rocauc: 72.59	
+[12/09 18:10:14][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.027, 0.3039 s / batch. (data: 5.34e-05)max mem: 20.92594 GB 
+[12/09 18:11:04][INFO] visual_prompt:  316: Inference (test):avg data time: 3.43e-05, avg batch time: 0.3106, average loss: 0.8993
+[12/09 18:11:04][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.78	rocauc: 71.26	
+[12/09 18:11:04][INFO] visual_prompt:  165: Training 29 / 100 epoch, with learning rate 0.09045084971874738
+[12/09 18:12:43][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4013,	0.8360 s / batch. (data: 2.97e-04). ETA=9:13:22, max mem: 20.9 GB 
+[12/09 18:14:22][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.3623,	0.8440 s / batch. (data: 2.75e-04). ETA=9:17:16, max mem: 20.9 GB 
+[12/09 18:15:56][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3627,	0.8360 s / batch. (data: 3.02e-04). ETA=9:10:34, max mem: 20.9 GB 
+[12/09 18:17:30][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5655,	0.8222 s / batch. (data: 3.05e-04). ETA=9:00:09, max mem: 20.9 GB 
+[12/09 18:19:07][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5122,	1.2240 s / batch. (data: 4.06e-01). ETA=13:22:03, max mem: 20.9 GB 
+[12/09 18:19:58][INFO] visual_prompt:  217: Epoch 29 / 100: avg data time: 1.31e-01, avg batch time: 0.9648, average train loss: 0.6299
+[12/09 18:20:53][INFO] visual_prompt:  316: Inference (val):avg data time: 3.28e-05, avg batch time: 0.3106, average loss: 0.6706
+[12/09 18:20:53][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 64.63	rocauc: 73.07	
+[12/09 18:22:23][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.413, 0.3163 s / batch. (data: 3.36e-05)max mem: 20.92594 GB 
+[12/09 18:23:14][INFO] visual_prompt:  316: Inference (test):avg data time: 1.62e-04, avg batch time: 0.3105, average loss: 0.7731
+[12/09 18:23:14][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 57.52	rocauc: 69.89	
+[12/09 18:23:14][INFO] visual_prompt:  165: Training 30 / 100 epoch, with learning rate 0.0894005376803361
+[12/09 18:24:56][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6938,	0.8340 s / batch. (data: 5.40e-03). ETA=9:04:21, max mem: 20.9 GB 
+[12/09 18:26:30][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.2545,	0.8320 s / batch. (data: 7.95e-03). ETA=9:01:40, max mem: 20.9 GB 
+[12/09 18:28:06][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7712,	0.8280 s / batch. (data: 3.18e-04). ETA=8:57:40, max mem: 20.9 GB 
+[12/09 18:29:40][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2091,	0.8440 s / batch. (data: 3.07e-04). ETA=9:06:40, max mem: 20.9 GB 
+[12/09 18:31:19][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6219,	0.8168 s / batch. (data: 2.89e-04). ETA=8:47:42, max mem: 20.9 GB 
+[12/09 18:32:09][INFO] visual_prompt:  217: Epoch 30 / 100: avg data time: 1.35e-01, avg batch time: 0.9680, average train loss: 0.6196
+[12/09 18:33:04][INFO] visual_prompt:  316: Inference (val):avg data time: 3.29e-05, avg batch time: 0.3109, average loss: 0.6591
+[12/09 18:33:04][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 63.01	rocauc: 70.74	
+[12/09 18:34:34][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.557, 0.3163 s / batch. (data: 5.56e-05)max mem: 20.92594 GB 
+[12/09 18:35:25][INFO] visual_prompt:  316: Inference (test):avg data time: 3.45e-05, avg batch time: 0.3111, average loss: 0.6485
+[12/09 18:35:25][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 66.05	rocauc: 68.55	
+[12/09 18:35:25][INFO] visual_prompt:  165: Training 31 / 100 epoch, with learning rate 0.0883022221559489
+[12/09 18:37:06][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4267,	0.8280 s / batch. (data: 2.97e-04). ETA=8:52:48, max mem: 20.9 GB 
+[12/09 18:38:40][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7115,	0.8560 s / batch. (data: 1.20e-02). ETA=9:09:24, max mem: 20.9 GB 
+[12/09 18:40:17][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.9602,	0.8326 s / batch. (data: 3.22e-04). ETA=8:52:58, max mem: 20.9 GB 
+[12/09 18:41:54][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3882,	1.3934 s / batch. (data: 5.61e-01). ETA=14:49:39, max mem: 20.9 GB 
+[12/09 18:43:30][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4379,	0.8251 s / batch. (data: 2.83e-04). ETA=8:45:28, max mem: 20.9 GB 
+[12/09 18:44:20][INFO] visual_prompt:  217: Epoch 31 / 100: avg data time: 1.34e-01, avg batch time: 0.9671, average train loss: 0.6084
+[12/09 18:45:15][INFO] visual_prompt:  316: Inference (val):avg data time: 3.30e-05, avg batch time: 0.3111, average loss: 0.6296
+[12/09 18:45:15][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 67.48	rocauc: 72.77	
+[12/09 18:46:44][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.536, 0.3278 s / batch. (data: 3.39e-05)max mem: 20.92594 GB 
+[12/09 18:47:35][INFO] visual_prompt:  316: Inference (test):avg data time: 3.42e-05, avg batch time: 0.3110, average loss: 0.6569
+[12/09 18:47:35][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.19	rocauc: 72.24	
+[12/09 18:47:35][INFO] visual_prompt:  165: Training 32 / 100 epoch, with learning rate 0.08715724127386971
+[12/09 18:49:16][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8466,	0.8418 s / batch. (data: 7.95e-03). ETA=8:53:58, max mem: 20.9 GB 
+[12/09 18:50:55][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.1891,	0.8275 s / batch. (data: 2.72e-04). ETA=8:43:29, max mem: 20.9 GB 
+[12/09 18:52:29][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.9514,	0.8388 s / batch. (data: 5.41e-03). ETA=8:49:15, max mem: 20.9 GB 
+[12/09 18:54:06][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2822,	0.8400 s / batch. (data: 2.78e-04). ETA=8:48:35, max mem: 20.9 GB 
+[12/09 18:55:42][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4122,	1.2956 s / batch. (data: 4.60e-01). ETA=13:33:07, max mem: 20.9 GB 
+[12/09 18:56:32][INFO] visual_prompt:  217: Epoch 32 / 100: avg data time: 1.36e-01, avg batch time: 0.9698, average train loss: 0.6168
+[12/09 18:57:27][INFO] visual_prompt:  316: Inference (val):avg data time: 3.05e-05, avg batch time: 0.3105, average loss: 0.6223
+[12/09 18:57:27][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.04	rocauc: 71.67	
+[12/09 18:58:57][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.588, 0.3137 s / batch. (data: 1.16e-04)max mem: 20.92594 GB 
+[12/09 18:59:47][INFO] visual_prompt:  316: Inference (test):avg data time: 7.89e-05, avg batch time: 0.3103, average loss: 0.6119
+[12/09 18:59:47][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 66.36	rocauc: 70.99	
+[12/09 18:59:47][INFO] visual_prompt:  165: Training 33 / 100 epoch, with learning rate 0.08596699001693256
+[12/09 19:01:27][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8626,	1.7801 s / batch. (data: 9.28e-01). ETA=18:32:42, max mem: 20.9 GB 
+[12/09 19:03:05][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.1373,	0.8274 s / batch. (data: 9.28e-03). ETA=8:35:46, max mem: 20.9 GB 
+[12/09 19:04:43][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4212,	0.8486 s / batch. (data: 1.09e-02). ETA=8:47:35, max mem: 20.9 GB 
+[12/09 19:06:17][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.0912,	0.8600 s / batch. (data: 2.87e-04). ETA=8:53:15, max mem: 20.9 GB 
+[12/09 19:07:53][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.1008,	1.7137 s / batch. (data: 8.91e-01). ETA=17:39:45, max mem: 20.9 GB 
+[12/09 19:08:43][INFO] visual_prompt:  217: Epoch 33 / 100: avg data time: 1.35e-01, avg batch time: 0.9683, average train loss: 0.6026
+[12/09 19:09:38][INFO] visual_prompt:  316: Inference (val):avg data time: 3.13e-05, avg batch time: 0.3103, average loss: 0.9126
+[12/09 19:09:38][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 54.07	rocauc: 71.56	
+[12/09 19:11:08][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.652, 0.3042 s / batch. (data: 3.29e-05)max mem: 20.92594 GB 
+[12/09 19:11:58][INFO] visual_prompt:  316: Inference (test):avg data time: 3.26e-05, avg batch time: 0.3107, average loss: 1.0737
+[12/09 19:11:58][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 48.68	rocauc: 69.34	
+[12/09 19:11:58][INFO] visual_prompt:  165: Training 34 / 100 epoch, with learning rate 0.08473291852294987
+[12/09 19:13:38][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3097,	0.8399 s / batch. (data: 5.60e-04). ETA=8:37:16, max mem: 20.9 GB 
+[12/09 19:15:15][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6802,	0.8417 s / batch. (data: 6.95e-03). ETA=8:36:56, max mem: 20.9 GB 
+[12/09 19:16:50][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5550,	0.8398 s / batch. (data: 2.98e-04). ETA=8:34:22, max mem: 20.9 GB 
+[12/09 19:18:28][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.1667,	0.8437 s / batch. (data: 2.76e-04). ETA=8:35:23, max mem: 20.9 GB 
+[12/09 19:20:03][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.9188,	0.8492 s / batch. (data: 2.94e-04). ETA=8:37:19, max mem: 20.9 GB 
+[12/09 19:20:52][INFO] visual_prompt:  217: Epoch 34 / 100: avg data time: 1.32e-01, avg batch time: 0.9659, average train loss: 0.6141
+[12/09 19:21:47][INFO] visual_prompt:  316: Inference (val):avg data time: 3.19e-05, avg batch time: 0.3103, average loss: 0.7418
+[12/09 19:21:47][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 59.35	rocauc: 74.90	
+[12/09 19:23:16][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.596, 0.3040 s / batch. (data: 3.24e-05)max mem: 20.92594 GB 
+[12/09 19:24:06][INFO] visual_prompt:  316: Inference (test):avg data time: 3.47e-05, avg batch time: 0.3099, average loss: 0.8383
+[12/09 19:24:06][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 55.04	rocauc: 71.18	
+[12/09 19:24:06][INFO] visual_prompt:  165: Training 35 / 100 epoch, with learning rate 0.08345653031794292
+[12/09 19:25:47][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5214,	0.8281 s / batch. (data: 1.33e-02). ETA=8:22:19, max mem: 20.9 GB 
+[12/09 19:27:24][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.7724,	0.8330 s / batch. (data: 7.97e-03). ETA=8:23:57, max mem: 20.9 GB 
+[12/09 19:29:00][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6964,	0.8480 s / batch. (data: 2.94e-04). ETA=8:31:36, max mem: 20.9 GB 
+[12/09 19:30:35][INFO] visual_prompt:  204: 	Training 400/553. train loss: 1.0018,	0.8294 s / batch. (data: 3.10e-04). ETA=8:18:58, max mem: 20.9 GB 
+[12/09 19:32:12][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2861,	0.8518 s / batch. (data: 1.20e-02). ETA=8:31:01, max mem: 20.9 GB 
+[12/09 19:33:01][INFO] visual_prompt:  217: Epoch 35 / 100: avg data time: 1.33e-01, avg batch time: 0.9663, average train loss: 0.5678
+[12/09 19:33:55][INFO] visual_prompt:  316: Inference (val):avg data time: 2.48e-04, avg batch time: 0.3104, average loss: 0.6924
+[12/09 19:33:55][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.45	rocauc: 70.44	
+[12/09 19:35:25][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.044, 0.3043 s / batch. (data: 5.27e-05)max mem: 20.92594 GB 
+[12/09 19:36:16][INFO] visual_prompt:  316: Inference (test):avg data time: 3.54e-05, avg batch time: 0.3107, average loss: 0.6722
+[12/09 19:36:16][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.19	rocauc: 68.40	
+[12/09 19:36:16][INFO] visual_prompt:  165: Training 36 / 100 epoch, with learning rate 0.08213938048432697
+[12/09 19:37:57][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5696,	0.8567 s / batch. (data: 5.86e-03). ETA=8:31:48, max mem: 20.9 GB 
+[12/09 19:39:34][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5584,	0.8280 s / batch. (data: 2.84e-04). ETA=8:13:17, max mem: 20.9 GB 
+[12/09 19:41:12][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3889,	0.8439 s / batch. (data: 1.17e-02). ETA=8:21:21, max mem: 20.9 GB 
+[12/09 19:42:48][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.7348,	0.8565 s / batch. (data: 7.03e-04). ETA=8:27:24, max mem: 20.9 GB 
+[12/09 19:44:25][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4476,	0.8643 s / batch. (data: 5.02e-03). ETA=8:30:35, max mem: 20.9 GB 
+[12/09 19:45:14][INFO] visual_prompt:  217: Epoch 36 / 100: avg data time: 1.40e-01, avg batch time: 0.9736, average train loss: 0.6352
+[12/09 19:46:09][INFO] visual_prompt:  316: Inference (val):avg data time: 1.09e-04, avg batch time: 0.3111, average loss: 0.6704
+[12/09 19:46:09][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 64.63	rocauc: 73.49	
+[12/09 19:47:38][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.611, 0.3322 s / batch. (data: 3.67e-05)max mem: 20.92594 GB 
+[12/09 19:48:29][INFO] visual_prompt:  316: Inference (test):avg data time: 3.39e-05, avg batch time: 0.3116, average loss: 0.6465
+[12/09 19:48:29][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 65.43	rocauc: 70.47	
+[12/09 19:48:29][INFO] visual_prompt:  165: Training 37 / 100 epoch, with learning rate 0.08078307376628291
+[12/09 19:50:06][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.0673,	0.8291 s / batch. (data: 2.66e-04). ETA=8:07:42, max mem: 20.9 GB 
+[12/09 19:51:41][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.6868,	0.8834 s / batch. (data: 1.55e-02). ETA=8:38:08, max mem: 20.9 GB 
+[12/09 19:53:17][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5335,	1.1359 s / batch. (data: 3.18e-01). ETA=11:04:20, max mem: 20.9 GB 
+[12/09 19:54:53][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.4194,	0.8442 s / batch. (data: 1.05e-02). ETA=8:12:18, max mem: 20.9 GB 
+[12/09 19:56:31][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.8958,	0.8520 s / batch. (data: 2.98e-04). ETA=8:15:28, max mem: 20.9 GB 
+[12/09 19:57:19][INFO] visual_prompt:  217: Epoch 37 / 100: avg data time: 1.25e-01, avg batch time: 0.9589, average train loss: 0.5898
+[12/09 19:58:14][INFO] visual_prompt:  316: Inference (val):avg data time: 3.20e-05, avg batch time: 0.3104, average loss: 0.6310
+[12/09 19:58:14][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 67.07	rocauc: 72.03	
+[12/09 19:59:43][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.516, 0.3046 s / batch. (data: 3.60e-05)max mem: 20.92594 GB 
+[12/09 20:00:35][INFO] visual_prompt:  316: Inference (test):avg data time: 3.46e-05, avg batch time: 0.3107, average loss: 0.6585
+[12/09 20:00:35][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.65	rocauc: 68.62	
+[12/09 20:00:35][INFO] visual_prompt:  165: Training 38 / 100 epoch, with learning rate 0.07938926261462366
+[12/09 20:02:13][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5999,	0.8173 s / batch. (data: 2.84e-04). ETA=7:53:12, max mem: 20.9 GB 
+[12/09 20:03:52][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.8243,	0.8229 s / batch. (data: 5.39e-03). ETA=7:55:05, max mem: 20.9 GB 
+[12/09 20:05:28][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.2677,	1.3880 s / batch. (data: 5.36e-01). ETA=13:19:00, max mem: 20.9 GB 
+[12/09 20:07:04][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3237,	1.2800 s / batch. (data: 4.50e-01). ETA=12:14:41, max mem: 20.9 GB 
+[12/09 20:08:40][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2017,	0.8440 s / batch. (data: 3.16e-04). ETA=8:03:02, max mem: 20.9 GB 
+[12/09 20:09:29][INFO] visual_prompt:  217: Epoch 38 / 100: avg data time: 1.32e-01, avg batch time: 0.9661, average train loss: 0.5853
+[12/09 20:10:24][INFO] visual_prompt:  316: Inference (val):avg data time: 3.95e-05, avg batch time: 0.3095, average loss: 0.6393
+[12/09 20:10:24][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 61.79	rocauc: 74.70	
+[12/09 20:11:54][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.593, 0.3204 s / batch. (data: 3.81e-05)max mem: 20.92594 GB 
+[12/09 20:12:44][INFO] visual_prompt:  316: Inference (test):avg data time: 3.41e-05, avg batch time: 0.3114, average loss: 0.6772
+[12/09 20:12:44][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 62.95	rocauc: 67.56	
+[12/09 20:12:44][INFO] visual_prompt:  165: Training 39 / 100 epoch, with learning rate 0.07795964517353735
+[12/09 20:14:27][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3681,	0.8580 s / batch. (data: 2.91e-04). ETA=8:08:50, max mem: 20.9 GB 
+[12/09 20:16:01][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.1238,	0.8720 s / batch. (data: 1.99e-02). ETA=8:15:21, max mem: 20.9 GB 
+[12/09 20:17:39][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7140,	0.8258 s / batch. (data: 5.43e-03). ETA=7:47:44, max mem: 20.9 GB 
+[12/09 20:19:17][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3730,	0.8555 s / batch. (data: 7.46e-04). ETA=8:03:07, max mem: 20.9 GB 
+[12/09 20:20:50][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4169,	0.8190 s / batch. (data: 2.82e-04). ETA=7:41:11, max mem: 20.9 GB 
+[12/09 20:21:38][INFO] visual_prompt:  217: Epoch 39 / 100: avg data time: 1.32e-01, avg batch time: 0.9662, average train loss: 0.5543
+[12/09 20:22:34][INFO] visual_prompt:  316: Inference (val):avg data time: 3.27e-05, avg batch time: 0.3106, average loss: 0.7063
+[12/09 20:22:34][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 60.16	rocauc: 71.47	
+[12/09 20:24:05][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.730, 0.3044 s / batch. (data: 3.72e-05)max mem: 20.92594 GB 
+[12/09 20:24:55][INFO] visual_prompt:  316: Inference (test):avg data time: 3.40e-05, avg batch time: 0.3102, average loss: 0.6803
+[12/09 20:24:55][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 62.95	rocauc: 67.50	
+[12/09 20:24:55][INFO] visual_prompt:  165: Training 40 / 100 epoch, with learning rate 0.07649596321166025
+[12/09 20:26:37][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3495,	0.8384 s / batch. (data: 3.02e-04). ETA=7:49:57, max mem: 20.9 GB 
+[12/09 20:28:13][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3658,	0.8398 s / batch. (data: 6.87e-03). ETA=7:49:22, max mem: 20.9 GB 
+[12/09 20:29:48][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5759,	0.8232 s / batch. (data: 2.80e-04). ETA=7:38:41, max mem: 20.9 GB 
+[12/09 20:31:24][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.9073,	0.8388 s / batch. (data: 2.93e-04). ETA=7:45:58, max mem: 20.9 GB 
+[12/09 20:33:00][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6805,	0.8200 s / batch. (data: 2.85e-04). ETA=7:34:11, max mem: 20.9 GB 
+[12/09 20:33:51][INFO] visual_prompt:  217: Epoch 40 / 100: avg data time: 1.36e-01, avg batch time: 0.9690, average train loss: 0.5491
+[12/09 20:34:46][INFO] visual_prompt:  316: Inference (val):avg data time: 3.13e-05, avg batch time: 0.3120, average loss: 0.6979
+[12/09 20:34:46][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 62.20	rocauc: 73.05	
+[12/09 20:36:15][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.608, 0.3247 s / batch. (data: 3.24e-05)max mem: 20.92594 GB 
+[12/09 20:37:06][INFO] visual_prompt:  316: Inference (test):avg data time: 3.66e-05, avg batch time: 0.3114, average loss: 0.7760
+[12/09 20:37:06][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.84	rocauc: 70.40	
+[12/09 20:37:06][INFO] visual_prompt:  165: Training 41 / 100 epoch, with learning rate 0.07500000000000001
+[12/09 20:38:46][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4505,	1.7546 s / batch. (data: 9.27e-01). ETA=16:07:22, max mem: 20.9 GB 
+[12/09 20:40:23][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.1506,	0.8720 s / batch. (data: 3.13e-04). ETA=7:59:18, max mem: 20.9 GB 
+[12/09 20:42:00][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2641,	0.8200 s / batch. (data: 3.00e-04). ETA=7:29:22, max mem: 20.9 GB 
+[12/09 20:43:37][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.6411,	0.8549 s / batch. (data: 3.26e-04). ETA=7:47:04, max mem: 20.9 GB 
+[12/09 20:45:15][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5161,	0.8400 s / batch. (data: 3.11e-04). ETA=7:37:31, max mem: 20.9 GB 
+[12/09 20:46:03][INFO] visual_prompt:  217: Epoch 41 / 100: avg data time: 1.36e-01, avg batch time: 0.9695, average train loss: 0.5411
+[12/09 20:46:57][INFO] visual_prompt:  316: Inference (val):avg data time: 3.15e-05, avg batch time: 0.3109, average loss: 0.6392
+[12/09 20:46:57][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 67.07	rocauc: 74.45	
+[12/09 20:48:27][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.890, 0.3047 s / batch. (data: 3.48e-05)max mem: 20.92594 GB 
+[12/09 20:49:18][INFO] visual_prompt:  316: Inference (test):avg data time: 3.42e-05, avg batch time: 0.3092, average loss: 0.7098
+[12/09 20:49:18][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 65.58	rocauc: 68.11	
+[12/09 20:49:18][INFO] visual_prompt:  165: Training 42 / 100 epoch, with learning rate 0.07347357813929455
+[12/09 20:50:58][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3634,	0.8274 s / batch. (data: 3.02e-04). ETA=7:28:31, max mem: 20.9 GB 
+[12/09 20:52:34][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5279,	0.8433 s / batch. (data: 1.05e-02). ETA=7:35:45, max mem: 20.9 GB 
+[12/09 20:54:10][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3818,	0.8593 s / batch. (data: 2.64e-02). ETA=7:42:59, max mem: 20.9 GB 
+[12/09 20:55:47][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5988,	0.8302 s / batch. (data: 5.40e-03). ETA=7:25:54, max mem: 20.9 GB 
+[12/09 20:57:24][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2388,	0.8410 s / batch. (data: 7.51e-04). ETA=7:30:18, max mem: 20.9 GB 
+[12/09 20:58:13][INFO] visual_prompt:  217: Epoch 42 / 100: avg data time: 1.34e-01, avg batch time: 0.9686, average train loss: 0.5384
+[12/09 20:59:08][INFO] visual_prompt:  316: Inference (val):avg data time: 2.96e-05, avg batch time: 0.3099, average loss: 0.7675
+[12/09 20:59:08][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 62.60	rocauc: 73.06	
+[12/09 21:00:38][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.791, 0.3189 s / batch. (data: 3.29e-05)max mem: 20.92594 GB 
+[12/09 21:01:29][INFO] visual_prompt:  316: Inference (test):avg data time: 3.35e-05, avg batch time: 0.3117, average loss: 0.9242
+[12/09 21:01:29][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 55.97	rocauc: 70.34	
+[12/09 21:01:29][INFO] visual_prompt:  165: Training 43 / 100 epoch, with learning rate 0.07191855733945388
+[12/09 21:03:09][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.6203,	0.8205 s / batch. (data: 2.99e-04). ETA=7:17:16, max mem: 20.9 GB 
+[12/09 21:04:45][INFO] visual_prompt:  204: 	Training 200/553. train loss: 1.1825,	0.8435 s / batch. (data: 5.43e-03). ETA=7:28:05, max mem: 20.9 GB 
+[12/09 21:06:23][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2104,	1.7643 s / batch. (data: 9.18e-01). ETA=15:34:18, max mem: 20.9 GB 
+[12/09 21:07:58][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5276,	0.8356 s / batch. (data: 3.38e-04). ETA=7:21:08, max mem: 20.9 GB 
+[12/09 21:09:34][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.1947,	0.8322 s / batch. (data: 2.86e-04). ETA=7:17:55, max mem: 20.9 GB 
+[12/09 21:10:22][INFO] visual_prompt:  217: Epoch 43 / 100: avg data time: 1.31e-01, avg batch time: 0.9642, average train loss: 0.5295
+[12/09 21:11:17][INFO] visual_prompt:  316: Inference (val):avg data time: 3.07e-05, avg batch time: 0.3115, average loss: 0.7419
+[12/09 21:11:17][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 60.98	rocauc: 68.95	
+[12/09 21:12:46][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.591, 0.3046 s / batch. (data: 3.46e-05)max mem: 20.92594 GB 
+[12/09 21:13:37][INFO] visual_prompt:  316: Inference (test):avg data time: 3.47e-05, avg batch time: 0.3103, average loss: 0.8241
+[12/09 21:13:37][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 56.74	rocauc: 66.25	
+[12/09 21:13:37][INFO] visual_prompt:  165: Training 44 / 100 epoch, with learning rate 0.07033683215379002
+[12/09 21:15:20][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4025,	0.8167 s / batch. (data: 2.93e-04). ETA=7:07:41, max mem: 20.9 GB 
+[12/09 21:16:56][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5752,	2.2912 s / batch. (data: 1.47e+00). ETA=19:56:03, max mem: 20.9 GB 
+[12/09 21:18:30][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5701,	1.0203 s / batch. (data: 1.90e-01). ETA=8:50:53, max mem: 20.9 GB 
+[12/09 21:20:05][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5853,	0.8560 s / batch. (data: 7.95e-03). ETA=7:23:59, max mem: 20.9 GB 
+[12/09 21:21:42][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.7880,	0.8215 s / batch. (data: 2.75e-04). ETA=7:04:42, max mem: 20.9 GB 
+[12/09 21:22:33][INFO] visual_prompt:  217: Epoch 44 / 100: avg data time: 1.34e-01, avg batch time: 0.9681, average train loss: 0.5278
+[12/09 21:23:28][INFO] visual_prompt:  316: Inference (val):avg data time: 3.38e-05, avg batch time: 0.3107, average loss: 0.8098
+[12/09 21:23:28][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 62.20	rocauc: 72.78	
+[12/09 21:24:58][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.703, 0.3068 s / batch. (data: 6.01e-05)max mem: 20.92594 GB 
+[12/09 21:25:48][INFO] visual_prompt:  316: Inference (test):avg data time: 3.45e-05, avg batch time: 0.3105, average loss: 0.9270
+[12/09 21:25:48][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 56.12	rocauc: 68.63	
+[12/09 21:25:48][INFO] visual_prompt:  165: Training 45 / 100 epoch, with learning rate 0.0687303296707956
+[12/09 21:27:30][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.9022,	1.4160 s / batch. (data: 5.87e-01). ETA=12:08:28, max mem: 20.9 GB 
+[12/09 21:29:07][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5003,	0.8311 s / batch. (data: 2.74e-04). ETA=7:06:11, max mem: 20.9 GB 
+[12/09 21:30:44][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5896,	0.8202 s / batch. (data: 3.13e-04). ETA=6:59:14, max mem: 20.9 GB 
+[12/09 21:32:19][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3141,	1.0040 s / batch. (data: 1.70e-01). ETA=8:31:30, max mem: 20.9 GB 
+[12/09 21:33:55][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.5721,	0.8440 s / batch. (data: 2.82e-04). ETA=7:08:34, max mem: 20.9 GB 
+[12/09 21:34:43][INFO] visual_prompt:  217: Epoch 45 / 100: avg data time: 1.33e-01, avg batch time: 0.9674, average train loss: 0.5232
+[12/09 21:35:38][INFO] visual_prompt:  316: Inference (val):avg data time: 3.16e-05, avg batch time: 0.3102, average loss: 0.5812
+[12/09 21:35:38][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 69.51	rocauc: 75.66	
+[12/09 21:37:08][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.529, 0.3140 s / batch. (data: 3.53e-05)max mem: 20.92594 GB 
+[12/09 21:37:58][INFO] visual_prompt:  316: Inference (test):avg data time: 3.40e-05, avg batch time: 0.3099, average loss: 0.6326
+[12/09 21:37:58][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 65.27	rocauc: 69.35	
+[12/09 21:37:58][INFO] visual_prompt:   36: Best epoch 45: best metric: -0.581
+[12/09 21:37:58][INFO] visual_prompt:  165: Training 46 / 100 epoch, with learning rate 0.06710100716628345
+[12/09 21:39:38][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.2437,	0.8424 s / batch. (data: 1.05e-02). ETA=7:05:36, max mem: 20.9 GB 
+[12/09 21:41:17][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0947,	0.8242 s / batch. (data: 2.18e-04). ETA=6:55:03, max mem: 20.9 GB 
+[12/09 21:42:50][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1553,	1.3313 s / batch. (data: 4.93e-01). ETA=11:08:10, max mem: 20.9 GB 
+[12/09 21:44:28][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3112,	0.8450 s / batch. (data: 2.48e-04). ETA=7:02:42, max mem: 20.9 GB 
+[12/09 21:46:04][INFO] visual_prompt:  204: 	Training 500/553. train loss: 1.7850,	0.8360 s / batch. (data: 2.46e-04). ETA=6:56:49, max mem: 20.9 GB 
+[12/09 21:46:53][INFO] visual_prompt:  217: Epoch 46 / 100: avg data time: 1.33e-01, avg batch time: 0.9668, average train loss: 0.5087
+[12/09 21:47:47][INFO] visual_prompt:  316: Inference (val):avg data time: 2.13e-04, avg batch time: 0.3089, average loss: 0.6765
+[12/09 21:47:47][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 63.41	rocauc: 72.51	
+[12/09 21:49:17][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.366, 0.3070 s / batch. (data: 3.36e-05)max mem: 20.92594 GB 
+[12/09 21:50:06][INFO] visual_prompt:  316: Inference (test):avg data time: 1.39e-04, avg batch time: 0.3108, average loss: 0.7424
+[12/09 21:50:06][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 61.09	rocauc: 70.75	
+[12/09 21:50:06][INFO] visual_prompt:  165: Training 47 / 100 epoch, with learning rate 0.06545084971874737
+[12/09 21:51:47][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.2988,	0.8163 s / batch. (data: 2.77e-04). ETA=6:44:54, max mem: 20.9 GB 
+[12/09 21:53:24][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5621,	2.2839 s / batch. (data: 1.47e+00). ETA=18:49:06, max mem: 20.9 GB 
+[12/09 21:55:00][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2529,	0.8320 s / batch. (data: 3.41e-04). ETA=6:49:54, max mem: 20.9 GB 
+[12/09 21:56:33][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3411,	0.8403 s / batch. (data: 8.22e-03). ETA=6:52:35, max mem: 20.9 GB 
+[12/09 21:58:08][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.1516,	0.8308 s / batch. (data: 1.20e-02). ETA=6:46:32, max mem: 20.9 GB 
+[12/09 21:58:56][INFO] visual_prompt:  217: Epoch 47 / 100: avg data time: 1.24e-01, avg batch time: 0.9583, average train loss: 0.5297
+[12/09 21:59:50][INFO] visual_prompt:  316: Inference (val):avg data time: 3.41e-05, avg batch time: 0.3093, average loss: 0.9370
+[12/09 21:59:50][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 52.85	rocauc: 68.59	
+[12/09 22:01:20][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.748, 0.3100 s / batch. (data: 3.41e-05)max mem: 20.92594 GB 
+[12/09 22:02:09][INFO] visual_prompt:  316: Inference (test):avg data time: 3.56e-05, avg batch time: 0.3109, average loss: 1.0128
+[12/09 22:02:09][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 45.74	rocauc: 68.11	
+[12/09 22:02:09][INFO] visual_prompt:  165: Training 48 / 100 epoch, with learning rate 0.06378186779084996
+[12/09 22:03:48][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3146,	0.8400 s / batch. (data: 2.83e-04). ETA=6:48:55, max mem: 20.9 GB 
+[12/09 22:05:23][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0542,	0.8554 s / batch. (data: 1.14e-02). ETA=6:55:01, max mem: 20.9 GB 
+[12/09 22:07:01][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2614,	0.8364 s / batch. (data: 1.05e-02). ETA=6:44:23, max mem: 20.9 GB 
+[12/09 22:08:36][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2281,	0.8247 s / batch. (data: 3.09e-04). ETA=6:37:22, max mem: 20.9 GB 
+[12/09 22:10:10][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2636,	0.8411 s / batch. (data: 2.82e-04). ETA=6:43:50, max mem: 20.9 GB 
+[12/09 22:10:59][INFO] visual_prompt:  217: Epoch 48 / 100: avg data time: 1.26e-01, avg batch time: 0.9584, average train loss: 0.5125
+[12/09 22:11:54][INFO] visual_prompt:  316: Inference (val):avg data time: 3.11e-05, avg batch time: 0.3104, average loss: 0.7250
+[12/09 22:11:54][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 61.79	rocauc: 70.68	
+[12/09 22:13:23][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.850, 0.3090 s / batch. (data: 3.10e-05)max mem: 20.92594 GB 
+[12/09 22:14:13][INFO] visual_prompt:  316: Inference (test):avg data time: 1.04e-04, avg batch time: 0.3112, average loss: 0.7041
+[12/09 22:14:13][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 66.05	rocauc: 69.77	
+[12/09 22:14:13][INFO] visual_prompt:  165: Training 49 / 100 epoch, with learning rate 0.06209609477998338
+[12/09 22:15:53][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.5179,	1.3710 s / batch. (data: 5.48e-01). ETA=10:54:47, max mem: 20.9 GB 
+[12/09 22:17:29][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4604,	0.8440 s / batch. (data: 6.56e-03). ETA=6:41:40, max mem: 20.9 GB 
+[12/09 22:19:05][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.6525,	1.3680 s / batch. (data: 5.31e-01). ETA=10:48:48, max mem: 20.9 GB 
+[12/09 22:20:39][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.8354,	0.8188 s / batch. (data: 4.01e-04). ETA=6:26:58, max mem: 20.9 GB 
+[12/09 22:22:14][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.0587,	0.8440 s / batch. (data: 3.16e-04). ETA=6:37:27, max mem: 20.9 GB 
+[12/09 22:23:03][INFO] visual_prompt:  217: Epoch 49 / 100: avg data time: 1.24e-01, avg batch time: 0.9579, average train loss: 0.4728
+[12/09 22:24:00][INFO] visual_prompt:  316: Inference (val):avg data time: 3.17e-05, avg batch time: 0.3108, average loss: 0.7064
+[12/09 22:24:00][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 67.07	rocauc: 71.90	
+[12/09 22:25:30][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.567, 0.3112 s / batch. (data: 3.24e-05)max mem: 20.92594 GB 
+[12/09 22:26:20][INFO] visual_prompt:  316: Inference (test):avg data time: 3.14e-05, avg batch time: 0.3104, average loss: 0.7766
+[12/09 22:26:20][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.03	rocauc: 67.87	
+[12/09 22:26:20][INFO] visual_prompt:  165: Training 50 / 100 epoch, with learning rate 0.06039558454088796
+[12/09 22:27:59][INFO] visual_prompt:  204: 	Training 100/553. train loss: 1.7766,	0.8232 s / batch. (data: 3.04e-04). ETA=6:25:35, max mem: 20.9 GB 
+[12/09 22:29:35][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.5335,	0.8552 s / batch. (data: 5.44e-03). ETA=6:39:09, max mem: 20.9 GB 
+[12/09 22:31:17][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.7999,	0.8570 s / batch. (data: 5.42e-03). ETA=6:38:31, max mem: 20.9 GB 
+[12/09 22:32:56][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.4670,	1.6996 s / batch. (data: 8.76e-01). ETA=13:07:33, max mem: 20.9 GB 
+[12/09 22:34:32][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.4316,	0.8420 s / batch. (data: 1.05e-02). ETA=6:28:44, max mem: 20.9 GB 
+[12/09 22:35:22][INFO] visual_prompt:  217: Epoch 50 / 100: avg data time: 1.49e-01, avg batch time: 0.9797, average train loss: 0.4793
+[12/09 22:36:19][INFO] visual_prompt:  316: Inference (val):avg data time: 3.06e-05, avg batch time: 0.3099, average loss: 0.8016
+[12/09 22:36:19][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 60.16	rocauc: 66.72	
+[12/09 22:37:51][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.006, 0.3143 s / batch. (data: 3.31e-05)max mem: 20.92594 GB 
+[12/09 22:38:41][INFO] visual_prompt:  316: Inference (test):avg data time: 3.66e-05, avg batch time: 0.3100, average loss: 0.8224
+[12/09 22:38:41][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 62.02	rocauc: 67.68	
+[12/09 22:38:41][INFO] visual_prompt:  165: Training 51 / 100 epoch, with learning rate 0.058682408883346526
+[12/09 22:40:21][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3685,	0.8383 s / batch. (data: 8.61e-03). ETA=6:24:54, max mem: 20.9 GB 
+[12/09 22:41:57][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.2346,	1.2760 s / batch. (data: 4.42e-01). ETA=9:43:47, max mem: 20.9 GB 
+[12/09 22:43:32][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1172,	0.8480 s / batch. (data: 3.48e-04). ETA=6:26:31, max mem: 20.9 GB 
+[12/09 22:45:12][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.0357,	0.8599 s / batch. (data: 5.39e-03). ETA=6:30:33, max mem: 20.9 GB 
+[12/09 22:46:50][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.3815,	0.8439 s / batch. (data: 4.33e-04). ETA=6:21:52, max mem: 20.9 GB 
+[12/09 22:47:40][INFO] visual_prompt:  217: Epoch 51 / 100: avg data time: 1.40e-01, avg batch time: 0.9729, average train loss: 0.4559
+[12/09 22:48:35][INFO] visual_prompt:  316: Inference (val):avg data time: 3.15e-05, avg batch time: 0.3098, average loss: 0.9146
+[12/09 22:48:35][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.13	rocauc: 71.73	
+[12/09 22:50:04][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.549, 0.3249 s / batch. (data: 3.60e-05)max mem: 20.92594 GB 
+[12/09 22:50:58][INFO] visual_prompt:  316: Inference (test):avg data time: 3.31e-05, avg batch time: 0.3102, average loss: 1.0430
+[12/09 22:50:58][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 58.14	rocauc: 69.74	
+[12/09 22:50:58][INFO] visual_prompt:  165: Training 52 / 100 epoch, with learning rate 0.05695865504800327
+[12/09 22:52:39][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3315,	0.8344 s / batch. (data: 5.41e-03). ETA=6:15:27, max mem: 20.9 GB 
+[12/09 22:54:22][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4933,	0.8471 s / batch. (data: 7.95e-03). ETA=6:19:44, max mem: 20.9 GB 
+[12/09 22:55:58][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4899,	0.8630 s / batch. (data: 1.05e-02). ETA=6:25:25, max mem: 20.9 GB 
+[12/09 22:57:32][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3004,	2.0392 s / batch. (data: 1.22e+00). ETA=15:07:20, max mem: 20.9 GB 
+[12/09 22:59:08][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.7145,	0.8191 s / batch. (data: 2.80e-04). ETA=6:03:06, max mem: 20.9 GB 
+[12/09 22:59:58][INFO] visual_prompt:  217: Epoch 52 / 100: avg data time: 1.45e-01, avg batch time: 0.9767, average train loss: 0.4718
+[12/09 23:00:52][INFO] visual_prompt:  316: Inference (val):avg data time: 3.21e-05, avg batch time: 0.3102, average loss: 0.7606
+[12/09 23:00:52][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 62.60	rocauc: 70.39	
+[12/09 23:02:21][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.796, 0.3045 s / batch. (data: 3.29e-05)max mem: 20.92594 GB 
+[12/09 23:03:11][INFO] visual_prompt:  316: Inference (test):avg data time: 2.61e-04, avg batch time: 0.3102, average loss: 0.8148
+[12/09 23:03:11][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.31	rocauc: 68.16	
+[12/09 23:03:11][INFO] visual_prompt:  165: Training 53 / 100 epoch, with learning rate 0.05522642316338268
+[12/09 23:04:52][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.7647,	1.5307 s / batch. (data: 6.85e-01). ETA=11:14:38, max mem: 20.9 GB 
+[12/09 23:06:29][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.2790,	1.5400 s / batch. (data: 7.14e-01). ETA=11:16:09, max mem: 20.9 GB 
+[12/09 23:08:00][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2536,	0.8195 s / batch. (data: 3.11e-04). ETA=5:58:28, max mem: 20.9 GB 
+[12/09 23:09:36][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.1603,	1.5893 s / batch. (data: 7.35e-01). ETA=11:32:29, max mem: 20.9 GB 
+[12/09 23:11:12][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2734,	0.8440 s / batch. (data: 1.19e-02). ETA=6:06:20, max mem: 20.9 GB 
+[12/09 23:12:00][INFO] visual_prompt:  217: Epoch 53 / 100: avg data time: 1.24e-01, avg batch time: 0.9574, average train loss: 0.4465
+[12/09 23:12:55][INFO] visual_prompt:  316: Inference (val):avg data time: 3.04e-05, avg batch time: 0.3099, average loss: 0.7200
+[12/09 23:12:55][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 66.26	rocauc: 71.97	
+[12/09 23:14:24][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.498, 0.3051 s / batch. (data: 3.50e-05)max mem: 20.92594 GB 
+[12/09 23:15:14][INFO] visual_prompt:  316: Inference (test):avg data time: 1.30e-04, avg batch time: 0.3096, average loss: 0.7556
+[12/09 23:15:14][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.96	rocauc: 69.40	
+[12/09 23:15:14][INFO] visual_prompt:  165: Training 54 / 100 epoch, with learning rate 0.05348782368720626
+[12/09 23:16:55][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.1873,	0.8390 s / batch. (data: 1.06e-02). ETA=6:02:02, max mem: 20.9 GB 
+[12/09 23:18:30][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.9117,	1.9708 s / batch. (data: 1.15e+00). ETA=14:07:08, max mem: 20.9 GB 
+[12/09 23:20:03][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1432,	0.8473 s / batch. (data: 5.40e-03). ETA=6:02:47, max mem: 20.9 GB 
+[12/09 23:21:41][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3265,	1.8496 s / batch. (data: 1.03e+00). ETA=13:08:53, max mem: 20.9 GB 
+[12/09 23:23:15][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.8499,	0.8430 s / batch. (data: 7.97e-03). ETA=5:58:09, max mem: 20.9 GB 
+[12/09 23:24:08][INFO] visual_prompt:  217: Epoch 54 / 100: avg data time: 1.31e-01, avg batch time: 0.9652, average train loss: 0.4218
+[12/09 23:25:03][INFO] visual_prompt:  316: Inference (val):avg data time: 3.24e-05, avg batch time: 0.3120, average loss: 0.7058
+[12/09 23:25:03][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 66.26	rocauc: 70.26	
+[12/09 23:26:32][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.628, 0.3047 s / batch. (data: 3.60e-05)max mem: 20.92594 GB 
+[12/09 23:27:23][INFO] visual_prompt:  316: Inference (test):avg data time: 3.70e-05, avg batch time: 0.3105, average loss: 0.7073
+[12/09 23:27:23][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.50	rocauc: 69.03	
+[12/09 23:27:23][INFO] visual_prompt:  165: Training 55 / 100 epoch, with learning rate 0.05174497483512506
+[12/09 23:29:03][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.1522,	0.8433 s / batch. (data: 1.20e-02). ETA=5:56:06, max mem: 20.9 GB 
+[12/09 23:30:41][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0814,	0.8443 s / batch. (data: 1.09e-02). ETA=5:55:07, max mem: 20.9 GB 
+[12/09 23:32:15][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.3400,	0.8473 s / batch. (data: 1.13e-02). ETA=5:55:00, max mem: 20.9 GB 
+[12/09 23:33:49][INFO] visual_prompt:  204: 	Training 400/553. train loss: 1.0089,	0.8374 s / batch. (data: 2.93e-04). ETA=5:49:26, max mem: 20.9 GB 
+[12/09 23:35:27][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.9473,	0.8200 s / batch. (data: 3.00e-04). ETA=5:40:48, max mem: 20.9 GB 
+[12/09 23:36:18][INFO] visual_prompt:  217: Epoch 55 / 100: avg data time: 1.34e-01, avg batch time: 0.9673, average train loss: 0.4067
+[12/09 23:37:13][INFO] visual_prompt:  316: Inference (val):avg data time: 3.21e-05, avg batch time: 0.3097, average loss: 0.8127
+[12/09 23:37:13][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 64.23	rocauc: 69.82	
+[12/09 23:38:43][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.753, 0.3089 s / batch. (data: 5.15e-05)max mem: 20.92594 GB 
+[12/09 23:39:34][INFO] visual_prompt:  316: Inference (test):avg data time: 3.43e-05, avg batch time: 0.3109, average loss: 0.8164
+[12/09 23:39:34][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 63.10	rocauc: 69.31	
+[12/09 23:39:34][INFO] visual_prompt:  165: Training 56 / 100 epoch, with learning rate 0.05
+[12/09 23:41:15][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.8289,	0.8742 s / batch. (data: 2.57e-02). ETA=6:01:06, max mem: 20.9 GB 
+[12/09 23:42:54][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0431,	0.8476 s / batch. (data: 2.80e-04). ETA=5:48:43, max mem: 20.9 GB 
+[12/09 23:44:30][INFO] visual_prompt:  204: 	Training 300/553. train loss: 1.5148,	0.8461 s / batch. (data: 1.41e-02). ETA=5:46:42, max mem: 20.9 GB 
+[12/09 23:46:06][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.1532,	0.8331 s / batch. (data: 2.73e-04). ETA=5:39:58, max mem: 20.9 GB 
+[12/09 23:47:39][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.0657,	0.8320 s / batch. (data: 3.58e-04). ETA=5:38:07, max mem: 20.9 GB 
+[12/09 23:48:31][INFO] visual_prompt:  217: Epoch 56 / 100: avg data time: 1.37e-01, avg batch time: 0.9703, average train loss: 0.4121
+[12/09 23:49:25][INFO] visual_prompt:  316: Inference (val):avg data time: 3.07e-05, avg batch time: 0.3087, average loss: 0.8223
+[12/09 23:49:25][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 60.98	rocauc: 68.03	
+[12/09 23:50:56][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.384, 0.3402 s / batch. (data: 3.77e-05)max mem: 20.92594 GB 
+[12/09 23:51:46][INFO] visual_prompt:  316: Inference (test):avg data time: 3.36e-05, avg batch time: 0.3119, average loss: 0.8399
+[12/09 23:51:46][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 62.48	rocauc: 67.07	
+[12/09 23:51:46][INFO] visual_prompt:  165: Training 57 / 100 epoch, with learning rate 0.04825502516487497
+[12/09 23:53:28][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4771,	0.8273 s / batch. (data: 7.58e-04). ETA=5:34:06, max mem: 20.9 GB 
+[12/09 23:55:03][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0592,	0.8638 s / batch. (data: 5.41e-03). ETA=5:47:25, max mem: 20.9 GB 
+[12/09 23:56:40][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1760,	1.1200 s / batch. (data: 2.62e-01). ETA=7:28:35, max mem: 20.9 GB 
+[12/09 23:58:16][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2621,	1.3840 s / batch. (data: 5.48e-01). ETA=9:12:01, max mem: 20.9 GB 
+[12/09 23:59:53][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.3867,	0.8320 s / batch. (data: 3.08e-04). ETA=5:30:28, max mem: 20.9 GB 
+[12/10 00:00:42][INFO] visual_prompt:  217: Epoch 57 / 100: avg data time: 1.34e-01, avg batch time: 0.9683, average train loss: 0.3930
+[12/10 00:01:37][INFO] visual_prompt:  316: Inference (val):avg data time: 1.68e-04, avg batch time: 0.3099, average loss: 1.1137
+[12/10 00:01:37][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 57.72	rocauc: 70.63	
+[12/10 00:03:08][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.298, 0.3253 s / batch. (data: 2.98e-05)max mem: 20.92594 GB 
+[12/10 00:03:59][INFO] visual_prompt:  316: Inference (test):avg data time: 3.40e-05, avg batch time: 0.3102, average loss: 1.2633
+[12/10 00:03:59][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 49.92	rocauc: 67.62	
+[12/10 00:03:59][INFO] visual_prompt:  165: Training 58 / 100 epoch, with learning rate 0.04651217631279374
+[12/10 00:05:39][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.2711,	0.8213 s / batch. (data: 5.41e-03). ETA=5:24:08, max mem: 20.9 GB 
+[12/10 00:07:16][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.2095,	0.8252 s / batch. (data: 5.40e-03). ETA=5:24:16, max mem: 20.9 GB 
+[12/10 00:08:54][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3065,	0.8564 s / batch. (data: 2.42e-02). ETA=5:35:07, max mem: 20.9 GB 
+[12/10 00:10:29][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.0477,	0.8255 s / batch. (data: 3.16e-04). ETA=5:21:40, max mem: 20.9 GB 
+[12/10 00:12:04][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2915,	0.8471 s / batch. (data: 5.41e-03). ETA=5:28:40, max mem: 20.9 GB 
+[12/10 00:12:55][INFO] visual_prompt:  217: Epoch 58 / 100: avg data time: 1.36e-01, avg batch time: 0.9697, average train loss: 0.3793
+[12/10 00:13:52][INFO] visual_prompt:  316: Inference (val):avg data time: 3.23e-05, avg batch time: 0.3106, average loss: 0.7942
+[12/10 00:13:52][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.85	rocauc: 71.32	
+[12/10 00:15:24][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.765, 0.3162 s / batch. (data: 3.27e-05)max mem: 20.92594 GB 
+[12/10 00:16:14][INFO] visual_prompt:  316: Inference (test):avg data time: 8.23e-05, avg batch time: 0.3096, average loss: 0.8366
+[12/10 00:16:14][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 63.10	rocauc: 67.60	
+[12/10 00:16:14][INFO] visual_prompt:  165: Training 59 / 100 epoch, with learning rate 0.04477357683661734
+[12/10 00:17:54][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4832,	0.8423 s / batch. (data: 3.14e-04). ETA=5:24:38, max mem: 20.9 GB 
+[12/10 00:19:31][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.1522,	0.8315 s / batch. (data: 2.87e-04). ETA=5:19:05, max mem: 20.9 GB 
+[12/10 00:21:09][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1265,	0.8360 s / batch. (data: 2.75e-04). ETA=5:19:26, max mem: 20.9 GB 
+[12/10 00:22:44][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5938,	0.8263 s / batch. (data: 2.28e-04). ETA=5:14:21, max mem: 20.9 GB 
+[12/10 00:24:22][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.2491,	0.8236 s / batch. (data: 5.41e-03). ETA=5:11:58, max mem: 20.9 GB 
+[12/10 00:25:11][INFO] visual_prompt:  217: Epoch 59 / 100: avg data time: 1.37e-01, avg batch time: 0.9701, average train loss: 0.3487
+[12/10 00:26:06][INFO] visual_prompt:  316: Inference (val):avg data time: 3.28e-05, avg batch time: 0.3096, average loss: 0.8726
+[12/10 00:26:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 60.57	rocauc: 66.80	
+[12/10 00:27:35][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.897, 0.3045 s / batch. (data: 4.34e-05)max mem: 20.92594 GB 
+[12/10 00:28:26][INFO] visual_prompt:  316: Inference (test):avg data time: 8.37e-05, avg batch time: 0.3103, average loss: 0.8395
+[12/10 00:28:26][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.50	rocauc: 68.16	
+[12/10 00:28:26][INFO] visual_prompt:  165: Training 60 / 100 epoch, with learning rate 0.04304134495199674
+[12/10 00:30:05][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.1204,	0.8280 s / batch. (data: 3.20e-04). ETA=5:11:29, max mem: 20.9 GB 
+[12/10 00:31:42][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.2822,	0.8445 s / batch. (data: 3.20e-04). ETA=5:16:18, max mem: 20.9 GB 
+[12/10 00:33:21][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.1491,	0.8370 s / batch. (data: 3.21e-04). ETA=5:12:06, max mem: 20.9 GB 
+[12/10 00:34:57][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.0644,	0.8440 s / batch. (data: 1.19e-02). ETA=5:13:17, max mem: 20.9 GB 
+[12/10 00:36:32][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6079,	2.1502 s / batch. (data: 1.33e+00). ETA=13:14:37, max mem: 20.9 GB 
+[12/10 00:37:22][INFO] visual_prompt:  217: Epoch 60 / 100: avg data time: 1.35e-01, avg batch time: 0.9679, average train loss: 0.3450
+[12/10 00:38:16][INFO] visual_prompt:  316: Inference (val):avg data time: 3.11e-05, avg batch time: 0.3097, average loss: 0.8396
+[12/10 00:38:16][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 63.01	rocauc: 70.27	
+[12/10 00:39:46][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.521, 0.3049 s / batch. (data: 3.67e-05)max mem: 20.92594 GB 
+[12/10 00:40:39][INFO] visual_prompt:  316: Inference (test):avg data time: 3.50e-05, avg batch time: 0.3113, average loss: 0.8202
+[12/10 00:40:39][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 64.81	rocauc: 70.57	
+[12/10 00:40:39][INFO] visual_prompt:  165: Training 61 / 100 epoch, with learning rate 0.041317591116653486
+[12/10 00:42:20][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.1147,	0.8359 s / batch. (data: 5.03e-04). ETA=5:06:47, max mem: 20.9 GB 
+[12/10 00:43:56][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4142,	0.8404 s / batch. (data: 3.19e-04). ETA=5:07:01, max mem: 20.9 GB 
+[12/10 00:45:32][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.4340,	0.8788 s / batch. (data: 2.86e-02). ETA=5:19:36, max mem: 20.9 GB 
+[12/10 00:47:11][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.3350,	0.8324 s / batch. (data: 3.23e-04). ETA=5:01:20, max mem: 20.9 GB 
+[12/10 00:48:46][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.9160,	1.5374 s / batch. (data: 7.08e-01). ETA=9:13:58, max mem: 20.9 GB 
+[12/10 00:49:36][INFO] visual_prompt:  217: Epoch 61 / 100: avg data time: 1.38e-01, avg batch time: 0.9713, average train loss: 0.3399
+[12/10 00:50:30][INFO] visual_prompt:  316: Inference (val):avg data time: 3.29e-05, avg batch time: 0.3115, average loss: 1.0443
+[12/10 00:50:30][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.54	rocauc: 68.49	
+[12/10 00:52:00][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.707, 0.3183 s / batch. (data: 3.50e-05)max mem: 20.92594 GB 
+[12/10 00:52:51][INFO] visual_prompt:  316: Inference (test):avg data time: 3.45e-05, avg batch time: 0.3101, average loss: 1.1186
+[12/10 00:52:51][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 56.12	rocauc: 66.89	
+[12/10 00:52:51][INFO] visual_prompt:  165: Training 62 / 100 epoch, with learning rate 0.039604415459112044
+[12/10 00:54:29][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.3679,	0.8331 s / batch. (data: 5.42e-03). ETA=4:58:03, max mem: 20.9 GB 
+[12/10 00:56:06][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3539,	0.8680 s / batch. (data: 1.20e-02). ETA=5:09:06, max mem: 20.9 GB 
+[12/10 00:57:43][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.5671,	1.0960 s / batch. (data: 2.49e-01). ETA=6:28:29, max mem: 20.9 GB 
+[12/10 00:59:18][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.5987,	0.8360 s / batch. (data: 2.92e-04). ETA=4:54:55, max mem: 20.9 GB 
+[12/10 01:00:54][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.0760,	0.8417 s / batch. (data: 1.55e-02). ETA=4:55:32, max mem: 20.9 GB 
+[12/10 01:01:45][INFO] visual_prompt:  217: Epoch 62 / 100: avg data time: 1.33e-01, avg batch time: 0.9663, average train loss: 0.3282
+[12/10 01:02:40][INFO] visual_prompt:  316: Inference (val):avg data time: 4.71e-04, avg batch time: 0.3106, average loss: 0.7912
+[12/10 01:02:40][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 65.04	rocauc: 69.64	
+[12/10 01:04:10][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.491, 0.3041 s / batch. (data: 5.70e-05)max mem: 20.92594 GB 
+[12/10 01:05:01][INFO] visual_prompt:  316: Inference (test):avg data time: 3.44e-05, avg batch time: 0.3099, average loss: 0.8312
+[12/10 01:05:01][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.62	rocauc: 66.23	
+[12/10 01:05:01][INFO] visual_prompt:  165: Training 63 / 100 epoch, with learning rate 0.037903905220016625
+[12/10 01:06:42][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.2777,	1.1295 s / batch. (data: 3.12e-01). ETA=6:33:42, max mem: 20.9 GB 
+[12/10 01:08:16][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.4634,	1.1568 s / batch. (data: 3.27e-01). ETA=6:41:18, max mem: 20.9 GB 
+[12/10 01:09:56][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.0203,	0.8180 s / batch. (data: 3.06e-04). ETA=4:42:24, max mem: 20.9 GB 
+[12/10 01:11:33][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.1416,	0.8439 s / batch. (data: 7.39e-04). ETA=4:49:57, max mem: 20.9 GB 
+[12/10 01:13:09][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.6081,	0.8360 s / batch. (data: 3.08e-04). ETA=4:45:50, max mem: 20.9 GB 
+[12/10 01:13:57][INFO] visual_prompt:  217: Epoch 63 / 100: avg data time: 1.37e-01, avg batch time: 0.9699, average train loss: 0.2894
+[12/10 01:14:53][INFO] visual_prompt:  316: Inference (val):avg data time: 3.00e-05, avg batch time: 0.3108, average loss: 1.0983
+[12/10 01:14:53][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 62.20	rocauc: 68.38	
+[12/10 01:16:22][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.185, 0.3103 s / batch. (data: 3.53e-05)max mem: 20.92594 GB 
+[12/10 01:17:14][INFO] visual_prompt:  316: Inference (test):avg data time: 3.39e-05, avg batch time: 0.3097, average loss: 1.0564
+[12/10 01:17:14][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 60.78	rocauc: 67.45	
+[12/10 01:17:14][INFO] visual_prompt:  165: Training 64 / 100 epoch, with learning rate 0.036218132209150045
+[12/10 01:18:55][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.2603,	0.8370 s / batch. (data: 1.05e-02). ETA=4:44:01, max mem: 20.9 GB 
+[12/10 01:20:34][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0952,	0.8360 s / batch. (data: 2.86e-04). ETA=4:42:18, max mem: 20.9 GB 
+[12/10 01:22:09][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.2977,	0.8400 s / batch. (data: 2.95e-04). ETA=4:42:16, max mem: 20.9 GB 
+[12/10 01:23:44][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2792,	0.8329 s / batch. (data: 3.03e-04). ETA=4:38:29, max mem: 20.9 GB 
+[12/10 01:25:20][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.0809,	0.8183 s / batch. (data: 2.92e-04). ETA=4:32:13, max mem: 20.9 GB 
+[12/10 01:26:11][INFO] visual_prompt:  217: Epoch 64 / 100: avg data time: 1.38e-01, avg batch time: 0.9712, average train loss: 0.2974
+[12/10 01:27:06][INFO] visual_prompt:  316: Inference (val):avg data time: 2.13e-04, avg batch time: 0.3094, average loss: 1.1416
+[12/10 01:27:06][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 61.79	rocauc: 67.25	
+[12/10 01:28:35][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.393, 0.3047 s / batch. (data: 5.29e-05)max mem: 20.92594 GB 
+[12/10 01:29:26][INFO] visual_prompt:  316: Inference (test):avg data time: 1.03e-04, avg batch time: 0.3103, average loss: 1.1282
+[12/10 01:29:26][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 59.84	rocauc: 67.15	
+[12/10 01:29:26][INFO] visual_prompt:  165: Training 65 / 100 epoch, with learning rate 0.03454915028125263
+[12/10 01:31:08][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.1596,	0.8429 s / batch. (data: 2.92e-04). ETA=4:38:15, max mem: 20.9 GB 
+[12/10 01:32:46][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.0420,	0.8262 s / batch. (data: 2.48e-04). ETA=4:31:23, max mem: 20.9 GB 
+[12/10 01:34:20][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.3174,	0.8480 s / batch. (data: 7.95e-03). ETA=4:37:07, max mem: 20.9 GB 
+[12/10 01:36:00][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2740,	2.3344 s / batch. (data: 1.49e+00). ETA=12:39:00, max mem: 20.9 GB 
+[12/10 01:37:35][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.1306,	1.4128 s / batch. (data: 5.91e-01). ETA=7:36:59, max mem: 20.9 GB 
+[12/10 01:38:22][INFO] visual_prompt:  217: Epoch 65 / 100: avg data time: 1.36e-01, avg batch time: 0.9684, average train loss: 0.3162
+[12/10 01:39:16][INFO] visual_prompt:  316: Inference (val):avg data time: 3.09e-05, avg batch time: 0.3125, average loss: 1.1394
+[12/10 01:39:16][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.94	rocauc: 69.48	
+[12/10 01:40:46][INFO] visual_prompt:  303: 	Test 100/162. loss: 0.697, 0.3166 s / batch. (data: 3.48e-05)max mem: 20.92594 GB 
+[12/10 01:41:37][INFO] visual_prompt:  316: Inference (test):avg data time: 3.33e-05, avg batch time: 0.3103, average loss: 1.2795
+[12/10 01:41:37][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 56.43	rocauc: 65.78	
+[12/10 01:41:37][INFO] visual_prompt:  165: Training 66 / 100 epoch, with learning rate 0.03289899283371657
+[12/10 01:43:18][INFO] visual_prompt:  204: 	Training 100/553. train loss: 0.4858,	0.8404 s / batch. (data: 2.41e-02). ETA=4:29:41, max mem: 20.9 GB 
+[12/10 01:44:55][INFO] visual_prompt:  204: 	Training 200/553. train loss: 0.3145,	0.8637 s / batch. (data: 1.05e-02). ETA=4:35:44, max mem: 20.9 GB 
+[12/10 01:46:30][INFO] visual_prompt:  204: 	Training 300/553. train loss: 0.0799,	0.8244 s / batch. (data: 5.43e-04). ETA=4:21:49, max mem: 20.9 GB 
+[12/10 01:48:08][INFO] visual_prompt:  204: 	Training 400/553. train loss: 0.2123,	0.8360 s / batch. (data: 2.81e-04). ETA=4:24:06, max mem: 20.9 GB 
+[12/10 01:49:45][INFO] visual_prompt:  204: 	Training 500/553. train loss: 0.0472,	0.8405 s / batch. (data: 2.90e-04). ETA=4:24:07, max mem: 20.9 GB 
+[12/10 01:50:35][INFO] visual_prompt:  217: Epoch 66 / 100: avg data time: 1.40e-01, avg batch time: 0.9729, average train loss: 0.2828
+[12/10 01:51:30][INFO] visual_prompt:  316: Inference (val):avg data time: 3.18e-05, avg batch time: 0.3100, average loss: 1.0577
+[12/10 01:51:30][INFO] visual_prompt:  113: Classification results with val_mammo-cbis: top1: 58.54	rocauc: 67.84	
+[12/10 01:52:58][INFO] visual_prompt:  303: 	Test 100/162. loss: 1.668, 0.3196 s / batch. (data: 2.34e-05)max mem: 20.92594 GB 
+[12/10 01:53:49][INFO] visual_prompt:  316: Inference (test):avg data time: 3.23e-05, avg batch time: 0.3104, average loss: 1.2039
+[12/10 01:53:49][INFO] visual_prompt:  113: Classification results with test_mammo-cbis: top1: 56.90	rocauc: 62.98	
+[12/10 01:53:49][INFO] visual_prompt:   42: Stopping early.
