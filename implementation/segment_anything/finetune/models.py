@@ -16,7 +16,9 @@ def build_sam(cfg):
 
 def build_model(cfg) -> Sam:
     if cfg.model.name == 'sam':
-        return build_sam(cfg)
+        sam = build_sam(cfg)
+        sam.to('cuda')
+        return sam
     else:
         raise NotImplementedError()  # we only support sam for now
 
