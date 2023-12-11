@@ -63,8 +63,12 @@ def cross_entropy(pred,
 
         else:
             # the average factor should take the class weights into account
-            label_weights = torch.tensor([class_weight[cls] for cls in label],
-                                         device=class_weight.device)
+            label_weights = torch.zeros(label.shape, device=label.device)
+            for cls in range(len(class_weight)):
+                label_weights += class_weight[cls]*(label == cls)
+            # below line produced an error, so we replaced it with the above
+            # label_weights = torch.tensor([class_weight[cls] for cls in label],
+            #                              device=class_weight.device)
             if avg_non_ignore:
                 label_weights[label == ignore_index] = 0
             avg_factor = label_weights.sum()

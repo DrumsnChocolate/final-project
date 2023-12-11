@@ -13,7 +13,7 @@ test_pipeline = [
     dict(type='Resize', scale=(512, 512), keep_ratio=True),
     # add loading annotation after ``Resize`` because ground truth
     # does not need to do resize data transform
-    dict(type='LoadAnnotations'),
+    dict(type='LoadAnnotations', reduce_zero_label=False),
     dict(type='PackSegInputs'),
 ]
 val_pipeline = test_pipeline
