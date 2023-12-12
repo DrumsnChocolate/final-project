@@ -41,7 +41,7 @@ fi
 python tools/train.py $config \
   --cfg-options \
   train_dataloader.batch_size=4 \
-  train_dataloader.num_workers=8 \
+  train_dataloader.num_workers=4 \
   optimizer.lr=$lr \
   optimizer.weight_decay=$wd \
   optim_wrapper.optimizer.lr=$lr \
