@@ -17,7 +17,7 @@ def build_sam(cfg):
 def build_model(cfg) -> Sam:
     if cfg.model.name == 'sam':
         sam = build_sam(cfg)
-        sam.to('cuda')
+        sam.to(cfg.device)
         return sam
     else:
         raise NotImplementedError()  # we only support sam for now

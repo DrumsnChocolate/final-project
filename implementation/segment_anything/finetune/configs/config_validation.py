@@ -1,4 +1,5 @@
 
+supported_losses = ['Dice', 'Focal']
 def validate_cfg(cfg):
     # model
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
@@ -21,3 +22,14 @@ def validate_cfg(cfg):
     assert cfg.model.optimizer.get('lr') is not None, 'must specify learning rate'
     assert cfg.model.optimizer.get('wd') is not None, 'must specify weight decay'
     assert cfg.model.optimizer.get('momentum') is not None, 'must specify momentum'
+    # device
+    assert cfg.device in ['cpu', 'cuda'], "Only able to use cpu or cuda device"
+    # loss
+    assert cfg.model.get('loss') is not None, "model requires loss"
+    if type(cfg.model.loss) == list:
+        assert len(cfg.model.loss) > 0, "loss "
+        for loss_item in cfg.model.loss:
+            assert loss_item.name in supported_losses, f"loss should be one of {supported_losses}"
+            assert type(loss_item.get('weight')) in [float, int], f"loss weight should be int or float"
+    else:
+        assert cfg.model.loss.name in supported_losses, f"loss should be one of {supported_losses}"

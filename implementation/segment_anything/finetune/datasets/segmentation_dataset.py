@@ -71,8 +71,8 @@ class SegmentationDataset(Dataset):
         annotations = [read_image(annotation_path, mode=ImageReadMode.GRAY) for annotation_path in annotation_paths]
         images, annotations = self.preprocess_batch(images), self.preprocess_batch(annotations)
         # we still need to aggregate the images into a single tensor:
-        images = torch.stack(images)
-        annotations = torch.stack(annotations)
+        images = torch.stack(images).to(self.cfg.device)
+        annotations = torch.stack(annotations).to(self.cfg.device)
         return images, annotations
 
     def __getitem__(self, val):
