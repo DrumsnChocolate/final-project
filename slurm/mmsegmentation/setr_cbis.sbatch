@@ -33,6 +33,11 @@ if [ ${transfer} == "full" ]; then
   fi
 fi
 
+class_weights=1,1
+if [ ${task} == "cbis-binary" ]; then
+  class_weights=0.04,1.96
+fi
+
 python tools/train.py $config \
   --cfg-options \
   train_dataloader.batch_size=4 \
@@ -40,8 +45,7 @@ python tools/train.py $config \
   optimizer.weight_decay=$wd \
   optim_wrapper.optimizer.lr=$lr \
   optim_wrapper.optimizer.weight_decay=$wd \
-  record_gpu_snapshot=True
+  record_gpu_snapshot=True \
+  model.decode_head.loss_decode.class_weight=$class_weights
 
 conda deactivate
-
-command="echo bier"
