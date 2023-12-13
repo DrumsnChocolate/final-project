@@ -1,5 +1,6 @@
 
 supported_losses = ['Dice', 'Focal']
+supported_metrics = ['IoU', 'Dice', 'Focal']
 def validate_cfg(cfg):
     # model
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
@@ -33,3 +34,7 @@ def validate_cfg(cfg):
             assert type(loss_item.get('weight')) in [float, int], f"loss weight should be int or float"
     else:
         assert cfg.model.loss.name in supported_losses, f"loss should be one of {supported_losses}"
+    # metrics
+    assert type(cfg.model.metrics) == list, "metrics should be a list"
+    for metric in cfg.model.metrics:
+        assert metric.name in supported_metrics, f"metric should be one of {supported_metrics}"

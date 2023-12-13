@@ -6,8 +6,9 @@ from torch.optim import SGD
 from yaml import load, Loader
 from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
+from finetune.loss import build_loss_function, call_loss
 from logger import Logger
-from metrics import call_loss, call_metrics
+from metrics import call_metrics
 from models import build_model, call_model
 from datasets.loaders import build_dataloaders
 from segment_anything.modeling import Sam
@@ -55,6 +56,7 @@ def cfg_to_prodict(cfg):
     cfg.data.preprocess = [Prodict.from_dict(step) for step in cfg.data.preprocess]
     if type(cfg.model.loss) == list:
         cfg.model.loss = [Prodict.from_dict(loss_item) for loss_item in cfg.model.loss]
+    cfg.model.metrics = [Prodict.from_dict(metric) for metric in cfg.model.metrics]
     return cfg
 
 def get_cfg(args):
@@ -78,8 +80,6 @@ def build_optimizer(cfg, model):
         )
     raise NotImplementedError()
 
-def get_loss_function(cfg):
-    raise NotImplementedError()
 
 def train_epoch(cfg, model: Sam, loss_function, metric_functions, optimizer, dataloaders, epoch, logger):
     train_loader = dataloaders['train']
@@ -149,6 +149,7 @@ def test_epoch(cfg, model: Sam, loss_function, metric_functions, dataloaders, lo
         total_test_loss += loss
         test_metrics.append(metrics)
         total_test_samples += len(samples)
+        raise NotImplementedError()
     # todo: log metrics and store them somewhere, including loss
     logger.log(f'Test, average test loss {total_test_loss/total_test_samples}')
 
@@ -191,8 +192,8 @@ def train(cfg):
     model = build_model(cfg)
     optimizer = build_optimizer(cfg, model)
     # todo: optionally include background in loss computation (not for ade20k, yes for cbis)
-    loss_function = get_loss_function(cfg)  # todo: construct (20*focal + 1*dice)/21 as a sum over batch?
-    metric_functions = None  # todo: construct iou as a sum over batch?
+    loss_function = build_loss_function(cfg)  # todo: construct (20*focal + 1*dice)/21 as a sum over batch?
+    metric_functions = {}  # todo: construct iou as a sum over batch?
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:

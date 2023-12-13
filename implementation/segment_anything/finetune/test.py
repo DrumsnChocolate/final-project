@@ -5,6 +5,7 @@ from torch.optim import SGD
 from yaml import load, Loader
 from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
+from finetune.loss import build_loss_function
 from logger import Logger
 from models import build_model, call_model
 from datasets.loaders import build_dataloaders
@@ -16,9 +17,9 @@ def test(cfg):
     logger = get_logger(cfg)
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg)
-    loss_function = None
-    eval_function = None
-    test_epoch(cfg, model, loss_function, eval_function, dataloaders, logger)
+    loss_function = build_loss_function(cfg)
+    metric_functions = {}
+    test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
 
 
 def main():

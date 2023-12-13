@@ -51,7 +51,7 @@ class SamWrapper:
         self.logger = logger
         self.transform = ResizeLongestSide(self.model.image_encoder.img_size)
 
-    def __call__(self, samples, multimask_output: bool = False, return_logits: bool = True):
+    def __call__(self, samples, multimask_output: bool = True, return_logits: bool = True):
         original_img_size = tuple(samples.shape[-2:])
         transformed_samples = self.transform(samples)
         transformed_img_size = tuple(transformed_samples.shape[-2:])
@@ -74,8 +74,6 @@ class SamWrapper:
             # return_logits is True by default, because we want to be able to use the
             # logits for calculating and backpropagating loss.
             masks = masks > self.model.mask_threshold
-        self.log(masks.shape)
-        self.log(torch.min(masks), torch.max(masks))
         return masks, iou_predictions, low_res_masks
 
     def log(self, *args):
