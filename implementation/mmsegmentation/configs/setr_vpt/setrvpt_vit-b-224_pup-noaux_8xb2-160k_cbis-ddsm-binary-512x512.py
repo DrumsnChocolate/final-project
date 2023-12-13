@@ -3,6 +3,7 @@ _base_ = [
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
 ]
 num_layers = 1
+num_classes = 2
 crop_size = (200, 200)
 data_preprocessor = dict(size=crop_size)
 norm_cfg = dict(type='SyncBN', requires_grad=True)
@@ -25,7 +26,7 @@ model = dict(
             dropout=0.1,
         )
     ),
-    decode_head=dict(num_classes=150, in_index=0),
+    decode_head=dict(num_classes=num_classes, in_index=0),
     auxiliary_head=[],  # no auxiliary head
     test_cfg=dict(mode='whole'),
 )

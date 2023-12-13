@@ -25,7 +25,7 @@ model = dict(
             dropout=0.1,
         )
     ),
-    decode_head=dict(num_classes=150, in_index=0),
+    decode_head=dict(num_classes=5, in_index=0),
     auxiliary_head=[],  # no auxiliary head
     test_cfg=dict(mode='whole'),
 )
