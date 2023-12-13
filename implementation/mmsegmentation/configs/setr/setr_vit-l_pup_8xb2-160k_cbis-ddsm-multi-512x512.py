@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm-binary.py',
+    '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm-multi.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
 ]
 num_classes = 5  # 4 classes + 1 background
