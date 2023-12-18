@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, Any
 
+import numpy as np
 import torch
 import torchvision
 
@@ -82,3 +83,18 @@ def call_metrics(
     mask_batch, _, _ = output_batch
     target_batch = target_batch.repeat(1, mask_batch.shape[1], 1, 1)
     return {key: metric_function(mask_batch, target_batch) for key, metric_function in metric_functions.items()}
+
+
+
+def append_metrics(metrics: dict[str, list[Any]], new_metrics: dict[str, Any]):
+    if len(metrics.keys()) == 0:
+        for k, v in new_metrics.items():
+            metrics[k] = [v]
+        return
+    assert metrics.keys() == new_metrics.keys(), f'Expected metrics to have keys {metrics.keys()}, but got {new_metrics.keys()}'
+    for k, v in new_metrics.items():
+        metrics[k].append(v)
+
+def average_metrics(metrics: dict[str, list[Any]]):
+    for k, v in list(metrics.items()):
+        metrics[f'avg_{k}'] = np.mean(v, axis=0).tolist()

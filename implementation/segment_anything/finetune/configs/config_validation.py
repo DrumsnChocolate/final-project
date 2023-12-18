@@ -18,6 +18,12 @@ def validate_cfg(cfg):
     assert cfg.schedule.get('epochs') is not None or cfg.schedule.get('iterations') is not None, 'must specify either epochs or iterations'
     assert cfg.schedule.get('epochs') is None or cfg.schedule.get('iterations') is None, 'cannot specify both epochs and iterations'
     assert cfg.schedule.get('val_interval') is not None, 'must specify val_interval'
+    if cfg.schedule.get('epochs') is not None:
+        assert cfg.schedule.epochs > 0, 'epochs must be positive'
+        assert cfg.schedule.get('log_interval') is None, 'cannot specify log_interval with epochs'
+    if cfg.schedule.get('iterations') is not None:
+        assert cfg.schedule.iterations > 0, 'iterations must be positive'
+        assert cfg.schedule.get('log_interval') is not None, 'must specify log_interval with iterations'
     # optimizer
     assert cfg.model.optimizer.name == 'sgd', f'only able to train with sgd, not {cfg.model.optimizer.name}'
     assert cfg.model.optimizer.get('lr') is not None, 'must specify learning rate'

@@ -12,7 +12,7 @@ from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
 from finetune.loss import build_loss_function, call_loss
 from logger import Logger
-from metrics import call_metrics, build_metric_functions
+from metrics import call_metrics, build_metric_functions, append_metrics, average_metrics
 from models import build_model, SamWrapper
 from datasets.loaders import build_dataloaders
 import os.path as osp
@@ -107,20 +107,22 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
     total_epoch_train_samples = 0
     for i, batch in enumerate(train_loader):
         samples, targets = batch
+        raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
-        # todo: do some interval based logging here, idk
-        # logger.log(f'Epoch {epoch}, batch {i}, train loss {loss / len(samples)}')
-        total_epoch_train_loss += loss
+        assert metrics.get('loss') is None
+        metrics['loss'] = loss.tolist()
         append_metrics(epoch_train_metrics, metrics)
+        total_epoch_train_loss += loss
         total_epoch_train_samples += len(samples)
         loss.backward()
         optimizer.step()
-    # todo: also mention the epoch number in the dict log? And the loss?
+    average_metrics(epoch_train_metrics)
+    epoch_train_metrics['epoch'] = epoch
     logger.log_dict(epoch_train_metrics)
-    logger.log(f'Epoch {epoch}, average train loss {total_epoch_train_loss / total_epoch_train_samples}')
+    logger.log(f'Epoch {epoch}, average train loss {epoch_train_metrics["avg_loss"]}')
 
 
 def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_functions: dict[str, Callable], optimizer, dataloaders, iteration, logger):
@@ -128,13 +130,16 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     model.train()
     batch = next(infinite_train_loader)
     samples, targets = batch
+    raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
     foreground_points = get_foreground_points(targets)
     outputs = model(samples, foreground_points)
     loss = call_loss(loss_function, outputs, targets)
     metrics = call_metrics(metric_functions, outputs, targets)
-    # todo: also mention the iteration number in the dict log? And the loss?
+    assert metrics.get('loss') is None
+    metrics['loss'] = loss.tolist()
+    metrics['iteration'] = iteration
     logger.log_dict(metrics)
-    logger.log(f'Iteration {iteration}, train loss {loss / len(samples)}')
+    logger.log(f'Iteration {iteration}, train loss {metrics["loss"]}')
     loss.backward()
     optimizer.step()
 
@@ -151,22 +156,15 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
-        total_val_loss += loss
+        assert metrics.get('loss') is None
+        metrics['loss'] = loss.tolist()
         append_metrics(val_metrics, metrics)
+        total_val_loss += loss
         total_val_samples += len(samples)
-    # todo: also mention the epoch number in the dict log? And the loss?
+    average_metrics(val_metrics)
     logger.log_dict(val_metrics)
-    logger.log(f'Validation, average val loss {total_val_loss / total_val_samples}')
+    logger.log(f'Validation, average val loss {val_metrics["avg_loss"]}')
 
-
-def append_metrics(metrics: dict[str, list[Any]], new_metrics: dict[str, Any]):
-    if len(metrics.keys()) == 0:
-        for k, v in new_metrics.items():
-            metrics[k] = [v]
-        return
-    assert metrics.keys() == new_metrics.keys(), f'Expected metrics to have keys {metrics.keys()}, but got {new_metrics.keys()}'
-    for k, v in new_metrics.items():
-        metrics[k].append(v)
 
 def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger):
     test_loader = dataloaders['test']
@@ -180,11 +178,15 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
-        total_test_loss += loss
+        assert metrics.get('loss') is None
+        metrics['loss'] = loss.tolist()
         append_metrics(test_metrics, metrics)
+        total_test_loss += loss
         total_test_samples += len(samples)
+        break
+    average_metrics(test_metrics)
     logger.log_dict(test_metrics)
-    logger.log(f'Test, average test loss {total_test_loss/total_test_samples}')
+    logger.log(f'Test, average test loss {test_metrics["avg_loss"]}')
 
 
 def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger):
