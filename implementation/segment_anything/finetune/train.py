@@ -98,6 +98,17 @@ def get_foreground_points(targets):
         foreground_points.append(foreground_point)
     return torch.Tensor(foreground_points).to(targets.device).unsqueeze(0)
 
+def get_random_foreground_points(targets):
+    foreground_points = []
+    for target in targets:
+        # we assume there's only one target
+        assert target.shape[0] == 1
+        xs, ys = np.where(target[0].cpu() == 1.0)
+        index = np.random.choice(np.arange(len(xs)))
+        foreground_point = xs[index], ys[index]
+        foreground_points.append(foreground_point)
+    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(0)
+
 def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, epoch, logger):
     train_loader = dataloaders['train']
     model.train()
@@ -106,8 +117,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
     total_epoch_train_samples = 0
     for i, batch in enumerate(train_loader):
         samples, targets = batch
-        raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
-        foreground_points = get_foreground_points(targets)
+        foreground_points = get_random_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
         metrics = call_metrics(metric_functions, outputs, targets)
@@ -129,8 +139,7 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     model.train()
     batch = next(infinite_train_loader)
     samples, targets = batch
-    raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
-    foreground_points = get_foreground_points(targets)
+    foreground_points = get_random_foreground_points(targets)
     outputs = model(samples, foreground_points)
     loss = call_loss(loss_function, outputs, targets, cfg)
     metrics = call_metrics(metric_functions, outputs, targets)

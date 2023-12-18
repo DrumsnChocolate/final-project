@@ -64,14 +64,18 @@ class SamWrapper:
             masks = masks > self.model.mask_threshold
         return masks, iou_predictions, low_res_masks
 
+    def log(self, *args):
+        self.logger.log(*args)
+
     def train(self, *args, **kwargs):
         self.model.train(*args, **kwargs)
 
     def eval(self):
         self.model.eval()
 
-    def log(self, *args):
-        self.logger.log(*args)
+    def parameters(self):
+        return self.model.parameters()
+
 
 
 def build_sam(cfg):
