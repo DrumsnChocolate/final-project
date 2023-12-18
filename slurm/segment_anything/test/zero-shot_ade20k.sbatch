@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -c 2
-#SBATCH --mail-type=END, FAIL
+#SBATCH --mail-type=END,FAIL
 #SBATCH --gres=gpu:ampere:1
 
 cd implementation/segment_anything
