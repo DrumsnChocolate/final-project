@@ -5,22 +5,7 @@ from segment_anything import sam_model_registry
 from segment_anything.modeling import Sam
 from torchvision.transforms.functional import resize
 
-def build_sam(cfg):
-    if cfg.model.finetuning.name == 'full':
-        return sam_model_registry[cfg.model.backbone](checkpoint=cfg.model.checkpoint)
-    raise NotImplementedError
-    # todo: implement vpt, for this we will need to change some things about the model classes,
-    # and about the registry? I think.
-    # todo: use any other model properties from the config?
 
-
-def build_model(cfg) -> Sam:
-    if cfg.model.name == 'sam':
-        sam = build_sam(cfg)
-        sam.to(cfg.device)
-        return sam
-    else:
-        raise NotImplementedError()  # we only support sam for now
 
 class ResizeLongestSide:
     def __init__(self, target_length: int) -> None:
@@ -46,19 +31,22 @@ class ResizeLongestSide:
         return [new_height, new_width]
 
 class SamWrapper:
-    def __init__(self, model: Sam, logger: Logger):
+    def __init__(self, model: Sam, logger: Logger, cfg):
         self.model = model
         self.logger = logger
         self.transform = ResizeLongestSide(self.model.image_encoder.img_size)
+        self.cfg = cfg
 
-    def __call__(self, samples, multimask_output: bool = True, return_logits: bool = True):
+
+
+    def __call__(self, samples, foreground_points, multimask_output: bool = True, return_logits: bool = True):
         original_img_size = tuple(samples.shape[-2:])
         transformed_samples = self.transform(samples)
         transformed_img_size = tuple(transformed_samples.shape[-2:])
         preprocessed_samples = self.model.preprocess(transformed_samples)
         image_embeddings = self.model.image_encoder(preprocessed_samples)
         sparse_embeddings, dense_embeddings = self.model.prompt_encoder(
-            points=None,
+            points=(foreground_points, torch.ones(foreground_points.shape[:-1])),
             boxes=None,
             masks=None,
         )
@@ -76,10 +64,31 @@ class SamWrapper:
             masks = masks > self.model.mask_threshold
         return masks, iou_predictions, low_res_masks
 
+    def train(self, *args, **kwargs):
+        self.model.train(*args, **kwargs)
+
+    def eval(self):
+        self.model.eval()
+
     def log(self, *args):
         self.logger.log(*args)
 
 
-def call_model(model, samples, logger: Logger):
-    wrapper = SamWrapper(model, logger)
-    return wrapper(samples)
+def build_sam(cfg):
+    if cfg.model.finetuning.name == 'full':
+        return sam_model_registry[cfg.model.backbone](checkpoint=cfg.model.checkpoint)
+    raise NotImplementedError
+    # todo: implement vpt, for this we will need to change some things about the model classes,
+    # and about the registry? I think.
+    # todo: use any other model properties from the config?
+
+
+def build_model(cfg, logger) -> SamWrapper:
+    if cfg.model.name == 'sam':
+        sam = build_sam(cfg)
+        sam.to(cfg.device)
+        model = sam
+    else:
+        raise NotImplementedError()  # we only support sam for now
+    return SamWrapper(model, logger, cfg)
+

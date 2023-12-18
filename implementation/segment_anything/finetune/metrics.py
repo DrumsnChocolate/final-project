@@ -54,11 +54,22 @@ def mse(predicted_batch, target_batch):
 
 
 def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
-    metric_map = {'IoU': iou, 'Dice': dice, 'Focal': focal}
-    return metric_map[metric_definition.name]
+    metric = None
+    if metric_definition.name == 'IoU':
+        metric = iou
+    if metric_definition.name == 'Dice':
+        metric = dice
+    if metric_definition.name == 'Focal':
+        alpha = metric_definition.get('alpha', -1)
+        gamma = metric_definition.get('gamma', 2.0)
+        reduction = metric_definition.get('reduction', 'mean')
+        metric = lambda outputs, targets: focal(outputs, targets, alpha=alpha, gamma=gamma, reduction=reduction)
+    if metric is None:
+        raise NotImplementedError()
+    return lambda *args: metric(*args).tolist()
 
 def build_metric_functions(cfg):
-    return {key: build_metric_function(metric_definition) for key, metric_definition in cfg.model.metrics.items()}
+    return {metric.name: build_metric_function(metric) for metric in cfg.model.metrics}
 
 
 

@@ -1,6 +1,10 @@
 import argparse
-from typing import Callable
+import time
+from typing import Callable, Any
 
+import numpy as np
+import scipy
+import torch
 from prodict import Prodict
 from torch.optim import SGD
 from yaml import load, Loader
@@ -8,10 +12,10 @@ from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
 from finetune.loss import build_loss_function, call_loss
 from logger import Logger
-from metrics import call_metrics
-from models import build_model, call_model
+from metrics import call_metrics, build_metric_functions
+from models import build_model, SamWrapper
 from datasets.loaders import build_dataloaders
-from segment_anything.modeling import Sam
+import os.path as osp
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train the segment anything model')
@@ -49,6 +53,8 @@ def get_cfg_dict(args):
     cfg = load_cfg_from_file(args.config)
     if args.cfg_options is not None:
         cfg = override_cfg(cfg, args.cfg_options)
+    if cfg.get('out_dir') is None:
+        cfg['out_dir'] = 'outputs'
     return cfg
 
 def cfg_to_prodict(cfg):
@@ -66,7 +72,8 @@ def get_cfg(args):
 
 
 def get_logger(cfg):
-    logger = Logger(log=print)
+    timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+    logger = Logger(log_dir=osp.join(cfg.out_dir, timestamp))
     logger.log(cfg)
     return logger
 
@@ -80,81 +87,108 @@ def build_optimizer(cfg, model):
         )
     raise NotImplementedError()
 
+def get_foreground_points(targets):
+    foreground_points = []
 
-def train_epoch(cfg, model: Sam, loss_function, metric_functions, optimizer, dataloaders, epoch, logger):
+    for target in targets:
+        # we assume there's only one target
+        assert target.shape[0] == 1
+        distance_transform = scipy.ndimage.distance_transform_edt(target[0].cpu())
+        foreground_point = np.argmax(distance_transform)
+        foreground_point = np.unravel_index(foreground_point, distance_transform.shape)
+        foreground_points.append(foreground_point)
+    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(0)
+
+def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, epoch, logger):
     train_loader = dataloaders['train']
     model.train()
     total_epoch_train_loss = 0
-    epoch_train_metrics = []
+    epoch_train_metrics = {}
     total_epoch_train_samples = 0
     for i, batch in enumerate(train_loader):
         samples, targets = batch
-        outputs = call_model(model, samples, logger)
+        foreground_points = get_foreground_points(targets)
+        outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
-        # todo: log metrics and store them somewhere, including loss
-        logger.log(f'Epoch {epoch}, batch {i}, train loss {loss / len(samples)}')
+        # todo: do some interval based logging here, idk
+        # logger.log(f'Epoch {epoch}, batch {i}, train loss {loss / len(samples)}')
         total_epoch_train_loss += loss
-        epoch_train_metrics.append(metrics)
+        append_metrics(epoch_train_metrics, metrics)
         total_epoch_train_samples += len(samples)
         loss.backward()
         optimizer.step()
-    # todo: log metrics and store them somewhere, including loss
+    # todo: also mention the epoch number in the dict log? And the loss?
+    logger.log_dict(epoch_train_metrics)
     logger.log(f'Epoch {epoch}, average train loss {total_epoch_train_loss / total_epoch_train_samples}')
 
 
-def train_iteration(cfg, model: Sam, loss_function: Callable, metric_functions: dict[str, Callable], optimizer, dataloaders, iteration, logger):
+def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_functions: dict[str, Callable], optimizer, dataloaders, iteration, logger):
     infinite_train_loader = dataloaders['infinite_train']
     model.train()
     batch = next(infinite_train_loader)
     samples, targets = batch
-    outputs = call_model(model, samples, logger)
+    foreground_points = get_foreground_points(targets)
+    outputs = model(samples, foreground_points)
     loss = call_loss(loss_function, outputs, targets)
     metrics = call_metrics(metric_functions, outputs, targets)
-    # todo: log metrics and store them somewhere, including loss
+    # todo: also mention the iteration number in the dict log? And the loss?
+    logger.log_dict(metrics)
     logger.log(f'Iteration {iteration}, train loss {loss / len(samples)}')
     loss.backward()
     optimizer.step()
 
 
-def validate_epoch(cfg, model: Sam, loss_function, metric_functions, dataloaders, logger):
+def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger):
     val_loader = dataloaders['val']
     model.eval()
     total_val_loss = 0
-    val_metrics = []
+    val_metrics = {}
     total_val_samples = 0
     for i, batch in enumerate(val_loader):
         samples, targets = batch
-        outputs = call_model(model, samples, logger)
+        foreground_points = get_foreground_points(targets)
+        outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
         total_val_loss += loss
-        val_metrics.append(metrics)
+        append_metrics(val_metrics, metrics)
         total_val_samples += len(samples)
-    # todo: log metrics and store them somewhere, including loss
+    # todo: also mention the epoch number in the dict log? And the loss?
+    logger.log_dict(val_metrics)
     logger.log(f'Validation, average val loss {total_val_loss / total_val_samples}')
 
 
-def test_epoch(cfg, model: Sam, loss_function, metric_functions, dataloaders, logger):
+def append_metrics(metrics: dict[str, list[Any]], new_metrics: dict[str, Any]):
+    if len(metrics.keys()) == 0:
+        for k, v in new_metrics.items():
+            metrics[k] = [v]
+        return
+    assert metrics.keys() == new_metrics.keys(), f'Expected metrics to have keys {metrics.keys()}, but got {new_metrics.keys()}'
+    for k, v in new_metrics.items():
+        metrics[k].append(v)
+
+def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger):
     test_loader = dataloaders['test']
     model.eval()
     total_test_loss = 0
-    test_metrics = []
+    test_metrics = {}
     total_test_samples = 0
     for i, batch in enumerate(test_loader):
         samples, targets = batch
-        outputs = call_model(model, samples, logger)
+        foreground_points = get_foreground_points(targets)
+        outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets)
         metrics = call_metrics(metric_functions, outputs, targets)
         total_test_loss += loss
-        test_metrics.append(metrics)
+        append_metrics(test_metrics, metrics)
         total_test_samples += len(samples)
-        raise NotImplementedError()
-    # todo: log metrics and store them somewhere, including loss
+        break
+    logger.log_dict(test_metrics)
     logger.log(f'Test, average test loss {total_test_loss/total_test_samples}')
 
 
-def train_epochs(cfg, model: Sam, loss_function, metric_functions, optimizer, dataloaders, logger):
+def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger):
     for epoch in range(cfg.schedule.epochs):
         train_epoch(cfg, model, loss_function, metric_functions, optimizer, dataloaders, epoch, logger)
         if (epoch+1) % cfg.schedule.val_interval != 0:
@@ -176,7 +210,7 @@ class InfiniteIterator:
             return next(self.iterator)
 
 
-def train_iterations(cfg, model: Sam, loss_function, metric_functions, optimizer, dataloaders, logger):
+def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger):
     dataloaders['infinite_train'] = InfiniteIterator(dataloaders['train'])
     for iteration in range(cfg.schedule.iterations):
         train_iteration(cfg, model, loss_function, metric_functions, optimizer, dataloaders, iteration, logger)
@@ -187,13 +221,12 @@ def train_iterations(cfg, model: Sam, loss_function, metric_functions, optimizer
 
 
 def train(cfg):
-    logger = get_logger(cfg) # todo: construct something that can .log() to a file? and possibly make it efficient? idk man
+    logger = get_logger(cfg) # todo: possibly make logging more efficient? idk
     dataloaders = build_dataloaders(cfg)
-    model = build_model(cfg)
+    model = build_model(cfg, logger)
     optimizer = build_optimizer(cfg, model)
-    # todo: optionally include background in loss computation (not for ade20k, yes for cbis)
-    loss_function = build_loss_function(cfg)  # todo: construct (20*focal + 1*dice)/21 as a sum over batch?
-    metric_functions = {}  # todo: construct iou as a sum over batch?
+    loss_function = build_loss_function(cfg)
+    metric_functions = build_metric_functions(cfg)
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:
