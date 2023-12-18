@@ -16,13 +16,10 @@ def get_loss_function(loss_definition) -> Callable[[torch.Tensor, torch.Tensor],
     raise NotImplementedError()
 
 def build_loss_function(cfg):
-    if type(cfg.model.loss) == list:
-        loss_parts = [get_loss_function(loss_item) for loss_item in cfg.model.loss]
-        loss_weights = [loss_item.weight for loss_item in cfg.model.loss]
-        total_weight = sum(loss_weights)
-        return lambda outputs, targets: sum([weight * loss_part(outputs, targets) for weight, loss_part in zip(loss_weights, loss_parts)]) / total_weight
-    else:
-        return get_loss_function(cfg.model.loss)
+    loss_parts = [get_loss_function(loss_item) for loss_item in cfg.model.loss.parts]
+    loss_weights = [loss_item.weight for loss_item in cfg.model.loss.parts]
+    total_weight = sum(loss_weights)
+    return lambda outputs, targets: sum([weight * loss_part(outputs, targets) for weight, loss_part in zip(loss_weights, loss_parts)]) / total_weight
 
 
 def find_minimum_loss(zipped_losses):
@@ -37,7 +34,8 @@ def find_minimum_loss(zipped_losses):
 def call_loss(
         loss_function: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         outputs: torch.Tensor,
-        targets: torch.Tensor
+        targets: torch.Tensor,
+        cfg
         ) -> torch.Tensor:
     # we don't use the low_res_masks output, so we ignore it in the below line
     masks, iou_predictions, _ = outputs
@@ -54,6 +52,15 @@ def call_loss(
     # and now, take the minimum loss for each item in the batch:
     # zipped_losses has shape [batch_size, num_masks, 2]. We are looking for the tuple with the smallest first element.
     zipped_minimum_losses = find_minimum_loss(zipped_losses)
-    # now sum each tuple
+    # we end up with shape [batch_size, 2]. now sum each tuple:
     losses = torch.vmap(torch.sum)(zipped_minimum_losses)
-    return losses
+    # return losses
+    return reduce_losses(losses, cfg)
+
+def reduce_losses(loss, cfg):
+    reduction = cfg.model.loss.reduction
+    if reduction == 'mean':
+        return torch.mean(loss, dim=0)
+    if reduction == 'sum':
+        return torch.sum(loss, dim=0)
+

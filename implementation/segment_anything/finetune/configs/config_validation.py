@@ -1,5 +1,6 @@
 
 supported_losses = ['Dice', 'Focal']
+supported_loss_reductions = ['mean', 'sum']
 supported_metrics = ['IoU', 'Dice', 'Focal']
 def validate_cfg(cfg):
     # model
@@ -33,13 +34,13 @@ def validate_cfg(cfg):
     assert cfg.device in ['cpu', 'cuda'], "Only able to use cpu or cuda device"
     # loss
     assert cfg.model.get('loss') is not None, "model requires loss"
-    if type(cfg.model.loss) == list:
-        assert len(cfg.model.loss) > 0, "loss "
-        for loss_item in cfg.model.loss:
-            assert loss_item.name in supported_losses, f"loss should be one of {supported_losses}"
-            assert type(loss_item.get('weight')) in [float, int], f"loss weight should be int or float"
-    else:
-        assert cfg.model.loss.name in supported_losses, f"loss should be one of {supported_losses}"
+    assert cfg.model.loss.get('parts') is not None, "loss requires parts"
+    assert cfg.model.loss.get('reduction') in supported_loss_reductions, f"loss reduction should be one of {supported_loss_reductions}"
+    assert type(cfg.model.loss.parts) == list, "loss parts should be a list"
+    assert len(cfg.model.loss.parts) > 0, "loss parts should not be empty"
+    for loss_item in cfg.model.loss.parts:
+        assert loss_item.name in supported_losses, f"loss should be one of {supported_losses}"
+        assert type(loss_item.get('weight')) in [float, int], f"loss weight should be int or float"
     # metrics
     assert type(cfg.model.metrics) == list, "metrics should be a list"
     for metric in cfg.model.metrics:

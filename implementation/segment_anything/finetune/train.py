@@ -60,8 +60,7 @@ def get_cfg_dict(args):
 def cfg_to_prodict(cfg):
     cfg = Prodict.from_dict(cfg)
     cfg.data.preprocess = [Prodict.from_dict(step) for step in cfg.data.preprocess]
-    if type(cfg.model.loss) == list:
-        cfg.model.loss = [Prodict.from_dict(loss_item) for loss_item in cfg.model.loss]
+    cfg.model.loss.parts = [Prodict.from_dict(loss_item) for loss_item in cfg.model.loss.parts]
     cfg.model.metrics = [Prodict.from_dict(metric) for metric in cfg.model.metrics]
     return cfg
 
@@ -110,7 +109,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
         raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
-        loss = call_loss(loss_function, outputs, targets)
+        loss = call_loss(loss_function, outputs, targets, cfg)
         metrics = call_metrics(metric_functions, outputs, targets)
         assert metrics.get('loss') is None
         metrics['loss'] = loss.tolist()
@@ -133,15 +132,17 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     raise NotImplementedError('need to implement random foreground point selection and combine with boxes')
     foreground_points = get_foreground_points(targets)
     outputs = model(samples, foreground_points)
-    loss = call_loss(loss_function, outputs, targets)
+    loss = call_loss(loss_function, outputs, targets, cfg)
     metrics = call_metrics(metric_functions, outputs, targets)
     assert metrics.get('loss') is None
     metrics['loss'] = loss.tolist()
     metrics['iteration'] = iteration
     logger.log_dict(metrics)
-    logger.log(f'Iteration {iteration}, train loss {metrics["loss"]}')
     loss.backward()
     optimizer.step()
+    if (iteration+1) % cfg.schedule.log_interval != 0:
+        return
+    logger.log(f'Iteration {iteration}, train loss {metrics["loss"]}')
 
 
 def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger):
@@ -154,7 +155,7 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
         samples, targets = batch
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
-        loss = call_loss(loss_function, outputs, targets)
+        loss = call_loss(loss_function, outputs, targets, cfg)
         metrics = call_metrics(metric_functions, outputs, targets)
         assert metrics.get('loss') is None
         metrics['loss'] = loss.tolist()
@@ -176,7 +177,7 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
         samples, targets = batch
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
-        loss = call_loss(loss_function, outputs, targets)
+        loss = call_loss(loss_function, outputs, targets, cfg)
         metrics = call_metrics(metric_functions, outputs, targets)
         assert metrics.get('loss') is None
         metrics['loss'] = loss.tolist()
@@ -215,6 +216,7 @@ def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, op
     dataloaders['infinite_train'] = InfiniteIterator(dataloaders['train'])
     for iteration in range(cfg.schedule.iterations):
         train_iteration(cfg, model, loss_function, metric_functions, optimizer, dataloaders, iteration, logger)
+
         if (iteration+1) % cfg.schedule.val_interval != 0:
             continue
         validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
