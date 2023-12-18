@@ -184,7 +184,6 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
         append_metrics(test_metrics, metrics)
         total_test_loss += loss
         total_test_samples += len(samples)
-        break
     average_metrics(test_metrics)
     logger.log_dict(test_metrics)
     logger.log(f'Test, average test loss {test_metrics["avg_loss"]}')
