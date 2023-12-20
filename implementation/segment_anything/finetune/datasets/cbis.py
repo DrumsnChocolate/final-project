@@ -1,11 +1,9 @@
-from finetune.datasets.segmentation_dataset import SegmentationDataset, SegmentationMaskDataset
+from finetune.datasets.segmentation_dataset import SegmentationMaskDataset, SegmentationDataset
 
 cbis_binary_class_names = ('background', 'roi')
 cbis_multi_class_names = ('background', 'calcification benign', 'calcification malignant', 'mass benign', 'mass malignant')
 
 
-# the cbis binary dataset and the cbis binary mask dataset
-# are practically equivalent, but define both for convention
 class CBISBinaryDataset(SegmentationDataset):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

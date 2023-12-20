@@ -29,8 +29,8 @@ ade20k_class_names = ('wall', 'building', 'sky', 'floor', 'tree', 'ceiling', 'ro
                       'monitor', 'bulletin board', 'shower', 'radiator', 'glass',
                       'clock', 'flag')
 
-
 class ADE20KDataset(SegmentationDataset):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

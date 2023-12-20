@@ -1,9 +1,9 @@
-from finetune.datasets.ade import ADE20KMaskDataset
-from finetune.datasets.cbis import CBISMultiMaskDataset, CBISBinaryMaskDataset
-from finetune.datasets.segmentation_dataset import SegmentationDataset, SegmentationMaskDataset
+from finetune.datasets.ade import ADE20KMaskDataset, ADE20KDataset
+from finetune.datasets.cbis import CBISMultiMaskDataset, CBISBinaryMaskDataset, CBISBinaryDataset, CBISMultiDataset
+from finetune.datasets.segmentation_dataset import SegmentationMaskDataset, SegmentationDataset
 
 
-class SegmentationLoader:
+class SegmentationMaskLoader:
     def __init__(self, cfg, dataset: SegmentationDataset | SegmentationMaskDataset):
         self.cfg = cfg
         self.dataset = dataset
@@ -22,24 +22,40 @@ class SegmentationLoader:
 
 
 
-def build_dataloaders(cfg):
-    if cfg.data.name == 'ade20k':
-        train_dataset = ADE20KMaskDataset(cfg, 'train')
-        val_dataset = ADE20KMaskDataset(cfg, 'val')
-        test_dataset = ADE20KMaskDataset(cfg, 'test')
-    elif cfg.data.name == 'cbis-binary':
-        train_dataset = CBISBinaryMaskDataset(cfg, 'train')
-        val_dataset = CBISBinaryMaskDataset(cfg, 'val')
-        test_dataset = CBISBinaryMaskDataset(cfg, 'test')
-    elif cfg.data.name == 'cbis-multi':
-        train_dataset = CBISMultiMaskDataset(cfg, 'train')
-        val_dataset = CBISMultiMaskDataset(cfg, 'val')
-        test_dataset = CBISMultiMaskDataset(cfg, 'test')
+def build_dataloaders(cfg, mask=True):
+    if mask:
+        if cfg.data.name == 'ade20k':
+            train_dataset = ADE20KMaskDataset(cfg, 'train')
+            val_dataset = ADE20KMaskDataset(cfg, 'val')
+            test_dataset = ADE20KMaskDataset(cfg, 'test')
+        elif cfg.data.name == 'cbis-binary':
+            train_dataset = CBISBinaryMaskDataset(cfg, 'train')
+            val_dataset = CBISBinaryMaskDataset(cfg, 'val')
+            test_dataset = CBISBinaryMaskDataset(cfg, 'test')
+        elif cfg.data.name == 'cbis-multi':
+            train_dataset = CBISMultiMaskDataset(cfg, 'train')
+            val_dataset = CBISMultiMaskDataset(cfg, 'val')
+            test_dataset = CBISMultiMaskDataset(cfg, 'test')
+        else:
+            raise NotImplementedError()
     else:
-        raise NotImplementedError()
+        if cfg.data.name == 'ade20k':
+            train_dataset = ADE20KDataset(cfg, 'train')
+            val_dataset = ADE20KDataset(cfg, 'val')
+            test_dataset = ADE20KDataset(cfg, 'test')
+        elif cfg.data.name == 'cbis-binary':
+            train_dataset = CBISBinaryDataset(cfg, 'train')
+            val_dataset = CBISBinaryDataset(cfg, 'val')
+            test_dataset = CBISBinaryDataset(cfg, 'test')
+        elif cfg.data.name == 'cbis-multi':
+            train_dataset = CBISMultiDataset(cfg, 'train')
+            val_dataset = CBISMultiDataset(cfg, 'val')
+            test_dataset = CBISMultiDataset(cfg, 'test')
+        else:
+            raise NotImplementedError()
 
     return {
-        'train': SegmentationLoader(cfg, train_dataset),
-        'val': SegmentationLoader(cfg, val_dataset),
-        'test': SegmentationLoader(cfg, test_dataset),
+        'train': SegmentationMaskLoader(cfg, train_dataset),
+        'val': SegmentationMaskLoader(cfg, val_dataset),
+        'test': SegmentationMaskLoader(cfg, test_dataset),
     }

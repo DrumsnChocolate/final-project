@@ -136,7 +136,7 @@ class SegmentationMaskDataset(Dataset):
     def preprocess_batch(self, images):
         return [self.preprocess(image) for image in images]
 
-    def get_item_by_index(self, index):
+    def get_item_by_index(self, index) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         image_name = self.index_to_name[index]
         class_index = self.index_to_class[index]
         image_path = self.get_image_path(image_name)
@@ -145,10 +145,11 @@ class SegmentationMaskDataset(Dataset):
         # using ImageReadMode.GRAY to be sure, though this should be done automatically already
         annotation = read_image(annotation_path, mode=ImageReadMode.GRAY)
         annotation = (annotation == class_index) * 1
-        image, annotation = self.preprocess(image), self.preprocess(annotation)
+        class_index = torch.Tensor([class_index]).to(self.cfg.device)[0]
+        image, annotation = self.preprocess(image).to(self.cfg.device), self.preprocess(annotation).to(self.cfg.device)
         return image, annotation, class_index
 
-    def get_item_by_slice(self, _slice):
+    def get_item_by_slice(self, _slice) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Returns a tuple of a batch of images and a batch of annotations.
         The images are stacked into a single tensor, and so are the annotations.
@@ -169,11 +170,12 @@ class SegmentationMaskDataset(Dataset):
         annotations = [(annotation == class_index) * 1 for annotation, class_index in zip(annotations, class_indices)]
         images, annotations = self.preprocess_batch(images), self.preprocess_batch(annotations)
         # we still need to aggregate the images into a single tensor:
+        class_indices = torch.Tensor(class_indices).to(self.cfg.device)
         images = torch.stack(images).to(self.cfg.device)
         annotations = torch.stack(annotations).to(self.cfg.device)
-        return images, annotations
+        return images, annotations, class_indices
 
-    def __getitem__(self, val):
+    def __getitem__(self, val) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         if isinstance(val, int):
             return self.get_item_by_index(val)
         elif isinstance(val, slice):

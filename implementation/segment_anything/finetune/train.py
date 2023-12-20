@@ -116,7 +116,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
     epoch_train_metrics = {}
     total_epoch_train_samples = 0
     for i, batch in enumerate(train_loader):
-        samples, targets = batch
+        samples, targets, classes = batch
         foreground_points = get_random_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
@@ -138,7 +138,7 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     infinite_train_loader = dataloaders['infinite_train']
     model.train()
     batch = next(infinite_train_loader)
-    samples, targets = batch
+    samples, targets, classes = batch
     foreground_points = get_random_foreground_points(targets)
     outputs = model(samples, foreground_points)
     loss = call_loss(loss_function, outputs, targets, cfg)
@@ -161,7 +161,7 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
     val_metrics = {}
     total_val_samples = 0
     for i, batch in enumerate(val_loader):
-        samples, targets = batch
+        samples, targets, classes = batch
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
@@ -183,7 +183,7 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
     test_metrics = {}
     total_test_samples = 0
     for i, batch in enumerate(test_loader):
-        samples, targets = batch
+        samples, targets, classes = batch
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
@@ -194,6 +194,7 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
         total_test_loss += loss
         print(loss)
         total_test_samples += len(samples)
+        break
     average_metrics(test_metrics)
     logger.log_dict(test_metrics)
     logger.log(f'Test, average test loss {test_metrics["avg_loss"]}')
