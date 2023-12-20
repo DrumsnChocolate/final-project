@@ -1,10 +1,10 @@
-from finetune.datasets.ade import ADE20KDataset
-from finetune.datasets.cbis import CBISMultiDataset, CBISBinaryDataset
-from finetune.datasets.segmentation_dataset import SegmentationDataset
+from finetune.datasets.ade import ADE20KMaskDataset
+from finetune.datasets.cbis import CBISMultiMaskDataset, CBISBinaryMaskDataset
+from finetune.datasets.segmentation_dataset import SegmentationDataset, SegmentationMaskDataset
 
 
 class SegmentationLoader:
-    def __init__(self, cfg, dataset: SegmentationDataset):
+    def __init__(self, cfg, dataset: SegmentationDataset | SegmentationMaskDataset):
         self.cfg = cfg
         self.dataset = dataset
 
@@ -24,17 +24,17 @@ class SegmentationLoader:
 
 def build_dataloaders(cfg):
     if cfg.data.name == 'ade20k':
-        train_dataset = ADE20KDataset(cfg, 'train')
-        val_dataset = ADE20KDataset(cfg, 'val')
-        test_dataset = ADE20KDataset(cfg, 'test')
+        train_dataset = ADE20KMaskDataset(cfg, 'train')
+        val_dataset = ADE20KMaskDataset(cfg, 'val')
+        test_dataset = ADE20KMaskDataset(cfg, 'test')
     elif cfg.data.name == 'cbis-binary':
-        train_dataset = CBISBinaryDataset(cfg, 'train')
-        val_dataset = CBISBinaryDataset(cfg, 'val')
-        test_dataset = CBISBinaryDataset(cfg, 'test')
+        train_dataset = CBISBinaryMaskDataset(cfg, 'train')
+        val_dataset = CBISBinaryMaskDataset(cfg, 'val')
+        test_dataset = CBISBinaryMaskDataset(cfg, 'test')
     elif cfg.data.name == 'cbis-multi':
-        train_dataset = CBISMultiDataset(cfg, 'train')
-        val_dataset = CBISMultiDataset(cfg, 'val')
-        test_dataset = CBISMultiDataset(cfg, 'test')
+        train_dataset = CBISMultiMaskDataset(cfg, 'train')
+        val_dataset = CBISMultiMaskDataset(cfg, 'val')
+        test_dataset = CBISMultiMaskDataset(cfg, 'test')
     else:
         raise NotImplementedError()
 

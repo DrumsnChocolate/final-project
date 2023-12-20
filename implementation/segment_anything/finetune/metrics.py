@@ -23,12 +23,13 @@ def dice(output_batch, target_batch) -> torch.Tensor:
 
 
 def focal(output_batch, target_batch, alpha, gamma, reduction) -> torch.Tensor:
+    print(output_batch.shape, output_batch.min(), output_batch.max())
+    print(target_batch.shape, target_batch.min(), target_batch.max())
     def focal_single(output, target):
         return torchvision.ops.sigmoid_focal_loss(output, target, alpha=alpha, gamma=gamma, reduction=reduction)
 
     def focal_item(outputs, targets):
         return torch.vmap(focal_single)(outputs, targets)
-
     return torch.vmap(focal_item)(output_batch, target_batch)
 
 
