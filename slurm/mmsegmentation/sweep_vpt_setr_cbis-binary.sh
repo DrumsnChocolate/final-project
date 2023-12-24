@@ -8,9 +8,14 @@
 #    sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/setr_cbis.sbatch ${lr} ${wd} vpt "cbis-binary"
 #  done
 #done
-lr=0.1
+#lr=0.1
+#wd=0.001
+#sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/setr_cbis.sbatch ${lr} ${wd} vpt "cbis-binary"
+
 wd=0.001
-sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/setr_cbis.sbatch ${lr} ${wd} vpt "cbis-binary"
+for lr in 0.05 0.01 0.005 0.001 0.0005 0.0001; do
+  sbatch -J "vpt-setr-cbis-binary-lr${lr}_wd${wd}" slurm/mmsegmentation/setr_cbis.sbatch ${lr} ${wd} vpt "cbis-binary"
+done
 
 #for dataset_size in 3103 2500 2000 1500 1000 500; do
 #  for iterations in 160000 80000 40000; do
