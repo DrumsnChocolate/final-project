@@ -9,6 +9,7 @@ lr=$1
 wd=$2
 transfer=$3
 task=$4
+balanced=$5
 
 
 cd implementation/mmsegmentation
@@ -33,10 +34,28 @@ if [ ${transfer} == "full" ]; then
   fi
 fi
 
-class_weights=1,1
-if [ ${task} == "cbis-binary" ]; then
-  class_weights=0.04,1.96
+if [ ${balanced} == "true" ]; then
+  if [ ${task} == "cbis-binary" ]; then
+    class_weights=0.04,1.96 # two classes
+  fi
+
+  if [ ${task} == "cbis-multi" ]; then
+    # I haven't figured out what to do in this case yet. exit with an exception
+    echo "Error: balanced multi-class training not implemented yet"
+    conda deactivate
+    exit 1
+  fi
+else
+  if [ ${task} == "cbis-binary" ]; then
+    class_weights=1,1 # two classes
+  fi
+
+  if [ ${task} == "cbis-multi" ]; then
+    class_weights=1,1,1,1,1  # five classes
+  fi
 fi
+
+
 
 python tools/train.py $config \
   --cfg-options \
