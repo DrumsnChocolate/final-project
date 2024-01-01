@@ -66,6 +66,9 @@ python tools/train.py $config \
   optim_wrapper.optimizer.lr=$lr \
   optim_wrapper.optimizer.weight_decay=$wd \
   record_gpu_snapshot=True \
-  model.decode_head.loss_decode.class_weight=$class_weights
+  model.decode_head.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[0].loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[1].loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[2].loss_decode.class_weight=$class_weights
 
 conda deactivate
