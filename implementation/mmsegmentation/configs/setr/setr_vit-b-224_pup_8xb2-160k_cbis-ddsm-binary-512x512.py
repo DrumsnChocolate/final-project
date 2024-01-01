@@ -2,7 +2,6 @@ _base_ = [
     '../_base_/models/setr_pup.py', '../_base_/datasets/cbis-ddsm-binary.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
 ]
-num_layers = 12
 num_classes = 2
 crop_size = (200, 200)
 data_preprocessor = dict(size=crop_size)
@@ -13,9 +12,7 @@ model = dict(
     backbone=dict(
         img_size=crop_size,
         drop_rate=0.,
-        init_cfg=dict(type='Pretrained', checkpoint='pretrain/vit_base_p16_384.pth'),
-        num_layers=num_layers,
-    ),
+        init_cfg=dict(type='Pretrained', checkpoint='pretrain/vit_base_p16_384.pth')),
     decode_head=dict(num_classes=2, in_index=0),
     auxiliary_head=[
         dict(

@@ -5,11 +5,12 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --constraint=a40
 
-lr=$1
-wd=$2
-transfer=$3
-task=$4
-balanced=$5
+lr=$1  # learning rate, float
+wd=$2  # weight decay, float
+transfer=$3  # choice between vpt and full
+task=$4  # choice between cbis-binary and cbis-multi
+balanced=$5  # choice between true and false
+optimizer=$6  # choice between adamw and sgd
 
 
 cd implementation/mmsegmentation
@@ -56,8 +57,20 @@ else
 fi
 
 
-
-python tools/train.py $config \
+if [ ${optimizer} == "adamw" ]; then
+  python tools/train.py $config \
+  --cfg-options \
+  train_dataloader.batch_size=4 \
+  train_dataloader.num_workers=4 \
+  optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" \
+  optim_wrapper.optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" \
+  record_gpu_snapshot=True \
+  model.decode_head.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[0].loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[1].loss_decode.class_weight=$class_weights \
+  model.auxiliary_head[2].loss_decode.class_weight=$class_weights
+elif [ ${optimizer} == "sgd" ]; then
+  python tools/train.py $config \
   --cfg-options \
   train_dataloader.batch_size=4 \
   train_dataloader.num_workers=4 \
@@ -70,5 +83,10 @@ python tools/train.py $config \
   model.auxiliary_head[0].loss_decode.class_weight=$class_weights \
   model.auxiliary_head[1].loss_decode.class_weight=$class_weights \
   model.auxiliary_head[2].loss_decode.class_weight=$class_weights
+else
+  echo "Error: optimizer must be adamw or sgd"
+  conda deactivate
+  exit 1
+fi
 
 conda deactivate

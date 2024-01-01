@@ -1320,7 +1320,7 @@ class Config:
                 if len(b) <= k:
                     raise KeyError(f'Index {k} exceeds the length of list {b}')
                 b[k] = Config._merge_a_into_b(v, b[k], allow_list_keys)
-            elif isinstance(v, dict):
+            elif isinstance(v, dict) and not isinstance(v, OverrideDict):
                 if k in b and not v.pop(DELETE_KEY, False):
                     allowed_types: Union[Tuple, type] = (
                         dict, list) if allow_list_keys else dict
@@ -1334,6 +1334,8 @@ class Config:
                     b[k] = Config._merge_a_into_b(v, b[k], allow_list_keys)
                 else:
                     b[k] = ConfigDict(v)
+            elif isinstance(v, OverrideDict):
+                b[k] = ConfigDict(v)
             else:
                 b[k] = v
         return b
@@ -1719,6 +1721,8 @@ class Config:
             }
         return cfg_dict
 
+class OverrideDict(dict):
+    pass
 
 class DictAction(Action):
     """
@@ -1803,7 +1807,7 @@ class DictAction(Action):
         values = []
         while len(val) > 0:
             comma_idx = find_next_comma(val)
-            element = DictAction._parse_iterable(val[:comma_idx])
+            element = DictAction._parse_value(val[:comma_idx])
             values.append(element)
             val = val[comma_idx + 1:]
 
@@ -1811,6 +1815,23 @@ class DictAction(Action):
             return tuple(values)
 
         return values
+
+    @staticmethod
+    def _parse_dict(val: str):
+        val = val[5:-1]
+        arg_items = val.split(',')
+        dict_args = {}
+        for arg_item in arg_items:
+            key, val = arg_item.split('=')
+            val = DictAction._parse_value(val)
+            dict_args[key] = val
+        return OverrideDict(**dict_args)
+
+    @staticmethod
+    def _parse_value(val: str):
+        if val.startswith('dict(') and val.endswith(')'):
+            return DictAction._parse_dict(val)
+        return DictAction._parse_iterable(val)
 
     def __call__(self,
                  parser: ArgumentParser,
@@ -1831,7 +1852,7 @@ class DictAction(Action):
         if values is not None:
             for kv in values:
                 key, val = kv.split('=', maxsplit=1)
-                options[key] = self._parse_iterable(val)
+                options[key] = self._parse_value(val)
         setattr(namespace, self.dest, options)
 
 
