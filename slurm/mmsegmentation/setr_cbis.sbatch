@@ -11,6 +11,7 @@ transfer=$3  # choice between vpt and full
 task=$4  # choice between cbis-binary and cbis-multi
 balanced=$5  # choice between true and false
 optimizer=$6  # choice between adamw and sgd
+auxiliary_head=$7  # choice between true and false
 
 
 cd implementation/mmsegmentation
@@ -58,35 +59,32 @@ fi
 
 
 if [ ${optimizer} == "adamw" ]; then
-  python tools/train.py $config \
-  --cfg-options \
-  train_dataloader.batch_size=4 \
-  train_dataloader.num_workers=4 \
-  optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" \
-  optim_wrapper.optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" \
-  record_gpu_snapshot=True \
-  model.decode_head.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.0.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.1.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.2.loss_decode.class_weight=$class_weights
+  optim_options="optimizer=\"dict(type='AdamW',lr=$lr,weight_decay=$wd)\" optim_wrapper.optimizer=\"dict(type='AdamW',lr=$lr,weight_decay=$wd)\""
 elif [ ${optimizer} == "sgd" ]; then
-  python tools/train.py $config \
-  --cfg-options \
-  train_dataloader.batch_size=4 \
-  train_dataloader.num_workers=4 \
-  optimizer.lr=$lr \
-  optimizer.weight_decay=$wd \
-  optim_wrapper.optimizer.lr=$lr \
-  optim_wrapper.optimizer.weight_decay=$wd \
-  record_gpu_snapshot=True \
-  model.decode_head.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.0.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.1.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head.2.loss_decode.class_weight=$class_weights
+  optim_options="optimizer.lr=$lr optimizer.weight_decay=$wd optim_wrapper.optimizer.lr=$lr optim_wrapper.optimizer.weight_decay=$wd"
 else
   echo "Error: optimizer must be adamw or sgd"
   conda deactivate
   exit 1
 fi
+
+if [ ${auxiliary_head} == "true" ]; then
+  auxiliary_head_options="model.auxiliary_head.0.loss_decode.class_weight=$class_weights model.auxiliary_head.1.loss_decode.class_weight=$class_weights model.auxiliary_head.2.loss_decode.class_weight=$class_weights"
+elif [ ${auxiliary_head} == "false" ]; then
+  auxiliary_head_options="model.auxiliary_head=[]"
+else
+  echo "Error: auxiliary_head must be true or false"
+  conda deactivate
+  exit 1
+fi
+
+python tools/train.py $config \
+  --cfg-options \
+  train_dataloader.batch_size=4 \
+  train_dataloader.num_workers=4 \
+  $optim_options \
+  record_gpu_snapshot=True \
+  model.decode_head.loss_decode.class_weight=$class_weights \
+  $auxiliary_head_options
 
 conda deactivate
