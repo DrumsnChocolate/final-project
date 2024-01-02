@@ -77,7 +77,7 @@ fi
 if [ ${auxiliary_head} == "true" ]; then
   auxiliary_head_options="model.auxiliary_head.0.loss_decode.class_weight=$class_weights model.auxiliary_head.1.loss_decode.class_weight=$class_weights model.auxiliary_head.2.loss_decode.class_weight=$class_weights"
 elif [ ${auxiliary_head} == "false" ]; then
-  auxiliary_head_options="model.auxiliary_head=[]"
+  auxiliary_head_options="model.auxiliary_head=\"[]\""
 else
   echo "Error: auxiliary_head must be true or false"
   conda deactivate
