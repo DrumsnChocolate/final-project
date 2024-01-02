@@ -20,10 +20,6 @@ optimizer=$6  # choice between adamw and sgd
 auxiliary_head=$7  # choice between true and false
 
 
-cd implementation/mmsegmentation
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate openmmlab
-
 if [ ${transfer} == "vpt" ]; then
   if [ ${task} == "cbis-binary" ]; then
     config="configs/setr_vpt/setrvpt_vit-l_pup_8xb2-160k_cbis-ddsm-binary-512x512.py"
@@ -50,7 +46,6 @@ if [ ${balanced} == "true" ]; then
   if [ ${task} == "cbis-multi" ]; then
     # I haven't figured out what to do in this case yet. exit with an exception
     echo "Error: balanced multi-class training not implemented yet"
-    conda deactivate
     exit 1
   fi
 else
@@ -70,7 +65,6 @@ elif [ ${optimizer} == "sgd" ]; then
   optim_options="optimizer.lr=$lr optimizer.weight_decay=$wd optim_wrapper.optimizer.lr=$lr optim_wrapper.optimizer.weight_decay=$wd"
 else
   echo "Error: optimizer must be adamw or sgd"
-  conda deactivate
   exit 1
 fi
 
@@ -80,9 +74,13 @@ elif [ ${auxiliary_head} == "false" ]; then
   auxiliary_head_options="model.auxiliary_head=\"[]\""
 else
   echo "Error: auxiliary_head must be true or false"
-  conda deactivate
   exit 1
 fi
+
+
+cd implementation/mmsegmentation
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate openmmlab
 
 python tools/train.py $config \
   --cfg-options \
