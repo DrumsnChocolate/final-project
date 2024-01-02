@@ -5,6 +5,12 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --constraint=a40
 
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ]; then
+    echo "Error: Missing or empty command-line arguments."
+    exit 1
+fi
+
+
 lr=$1  # learning rate, float
 wd=$2  # weight decay, float
 transfer=$3  # choice between vpt and full
