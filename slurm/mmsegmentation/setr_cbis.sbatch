@@ -66,9 +66,9 @@ if [ ${optimizer} == "adamw" ]; then
   optim_wrapper.optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" \
   record_gpu_snapshot=True \
   model.decode_head.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[0].loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[1].loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[2].loss_decode.class_weight=$class_weights
+  model.auxiliary_head.0.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head.1.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head.2.loss_decode.class_weight=$class_weights
 elif [ ${optimizer} == "sgd" ]; then
   python tools/train.py $config \
   --cfg-options \
@@ -80,9 +80,9 @@ elif [ ${optimizer} == "sgd" ]; then
   optim_wrapper.optimizer.weight_decay=$wd \
   record_gpu_snapshot=True \
   model.decode_head.loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[0].loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[1].loss_decode.class_weight=$class_weights \
-  model.auxiliary_head[2].loss_decode.class_weight=$class_weights
+  model.auxiliary_head.0.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head.1.loss_decode.class_weight=$class_weights \
+  model.auxiliary_head.2.loss_decode.class_weight=$class_weights
 else
   echo "Error: optimizer must be adamw or sgd"
   conda deactivate
