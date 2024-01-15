@@ -302,4 +302,4 @@ visualizer = dict(
         dict(type='LocalVisBackend'),
     ])
 work_dir = './work_dirs/setr_vit-l_pup_8xb2-160k_cbis-ddsm-binary-512x512'
-'
+
