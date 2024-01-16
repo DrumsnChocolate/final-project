@@ -19,10 +19,10 @@ def parse_args():
     parser.add_argument(
         '--show', action='store_true', help='show prediction results')
     parser.add_argument(
-        '--show-dir',
+        '--save-dir',
         help='directory where painted images will be saved. '
         'If specified, it will be automatically saved '
-        'to the work_dir/timestamp/show_dir')
+        'to the work_dir/timestamp/save_dir')
     parser.add_argument(
         '--wait-time', type=float, default=2, help='the interval of show (s)')
     parser.add_argument(
@@ -62,9 +62,9 @@ def trigger_visualization_hook(cfg, args):
         if args.show:
             visualization_hook['show'] = True
             visualization_hook['wait_time'] = args.wait_time
-        if args.show_dir:
+        if args.save_dir:
             visualizer = cfg.visualizer
-            visualizer['save_dir'] = args.show_dir
+            visualizer['save_dir'] = args.save_dir
     else:
         raise RuntimeError(
             'VisualizationHook must be included in default_hooks.'
@@ -88,7 +88,7 @@ def main():
     cfg.work_dir = osp.join(args.train_log_dir, 'test')
     cfg.load_from = find_latest_checkpoint(cfg.train_log_dir)
 
-    if args.show or args.show_dir:
+    if args.show or args.save_dir:
         cfg = trigger_visualization_hook(cfg, args)
 
     if args.tta:
