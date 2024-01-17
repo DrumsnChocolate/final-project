@@ -4,7 +4,7 @@ import math
 from typing import Iterator, Optional, Sized
 
 import torch
-from torch.utils.data import Sampler
+from torch.utils.data import Sampler, RandomSampler as TorchRandomSampler
 
 from mmengine.dist import get_dist_info, sync_random_seed
 from mmengine.registry import DATA_SAMPLERS
@@ -159,6 +159,31 @@ class InfiniteSampler(Sampler):
     def __len__(self) -> int:
         """Length of base dataset."""
         return self.size
+
+    def set_epoch(self, epoch: int) -> None:
+        """Not supported in iteration-based runner."""
+        pass
+
+@DATA_SAMPLERS.register_module()
+class RandomSampler(TorchRandomSampler):
+    """Sampler that samples elements randomly."""
+
+    def __init__(self,
+                 dataset: Sized,
+                 replacement: bool = False,
+                 num_samples: Optional[int] = None,
+                 seed: Optional[int] = None) -> None:
+        rank, world_size = get_dist_info()
+        self.rank = rank
+        self.world_size = world_size
+
+        self.dataset = dataset
+        self.seed = seed
+        generator = None
+        if seed is not None:
+            generator = torch.Generator()
+            generator.manual_seed(seed)
+        super().__init__(dataset, replacement=replacement, num_samples=num_samples, generator=generator)
 
     def set_epoch(self, epoch: int) -> None:
         """Not supported in iteration-based runner."""

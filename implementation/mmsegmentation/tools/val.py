@@ -42,7 +42,6 @@ def parse_args():
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
 
-    args.show = True
     return args
 
 
@@ -68,6 +67,7 @@ def trigger_visualization_hook(cfg, args):
 
 def main():
     args = parse_args()
+    print(args)
 
     # load config
     args.config = osp.join(args.train_log_dir, 'config.py')
