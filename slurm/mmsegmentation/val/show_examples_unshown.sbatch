@@ -13,5 +13,10 @@ conda activate openmmlab
 for i in $(find work_dirs/*/202* -name last_checkpoint); do
   # obtain directory name from path
   dir=$(dirname $i)
-  python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True
+  # run the validation script only when there is not yet a folder that looks like $dir/val/202*/vis_data/vis_image
+  shopt -s nullglob  # simply return nothing when glob is not matched
+  vis_folders=( $dir/val/202*/vis_data/vis_image )  # get a list of matching folders
+  if ! (( ${#vis_folders[@]} )); then  # if there not a single in vis_folders, then
+    python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True
+  fi
 done
