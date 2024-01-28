@@ -17,6 +17,6 @@ for i in $(find work_dirs/*/202* -name last_checkpoint); do
   shopt -s nullglob  # simply return nothing when glob is not matched
   vis_folders=( $dir/val/202*/vis_data/vis_image )  # get a list of matching folders
   if ! (( ${#vis_folders[@]} )); then  # if there not a single in vis_folders, then
-    python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True
+    python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True visualizer.alpha=0.5
   fi
 done

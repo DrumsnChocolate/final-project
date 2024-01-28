@@ -13,5 +13,5 @@ conda activate openmmlab
 for i in $(find work_dirs/*/202* -name last_checkpoint); do
   # obtain directory name from path
   dir=$(dirname $i)
-  python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True
+  python tools/val.py $dir --cfg-options val_dataloader.sampler='dict(type="RandomSampler",replacement=False,num_samples=20,seed=218)' default_hooks.visualization.interval=1 default_hooks.visualization.draw=True visualizer.alpha=0.5
 done
