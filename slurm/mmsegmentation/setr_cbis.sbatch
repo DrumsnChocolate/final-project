@@ -92,7 +92,7 @@ python tools/train.py $config \
   record_gpu_snapshot=True \
   model.decode_head.loss_decode.class_weight=$class_weights \
   $auxiliary_head_options \
-  $normalization_options \
+  $normalization_options
 
 
 conda deactivate
