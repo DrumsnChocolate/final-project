@@ -25,6 +25,7 @@ model = dict(
         norm_cfg=backbone_norm_cfg,
         with_cls_token=True,
         interpolate_mode='bilinear',
+        patch_bias=True,
     ),
     decode_head=dict(
         type='SETRUPHead',
