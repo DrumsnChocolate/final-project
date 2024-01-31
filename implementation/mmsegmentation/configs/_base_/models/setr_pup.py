@@ -23,6 +23,7 @@ model = dict(
         out_indices=(9, 14, 19, 23),
         drop_rate=0.1,
         norm_cfg=backbone_norm_cfg,
+        final_norm=True,
         with_cls_token=True,
         interpolate_mode='bilinear',
         patch_bias=True,
