@@ -1,0 +1,867 @@
+2024/02/06 11:32:49 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0]
+    CUDA available: True
+    numpy_random_seed: 263488867
+    GPU 0: NVIDIA GeForce RTX 4050 Laptop GPU
+    CUDA_HOME: /opt/cuda
+    NVCC: Cuda compilation tools, release 12.3, V12.3.103
+    GCC: gcc (GCC) 13.2.1 20230801
+    PyTorch: 2.0.0
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2023.1-Product Build 20230303 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.7.3 (Git Hash 6dbeffbae1f23cbbeae17adb7b5b13f1f37c080e)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wunused-local-typedefs -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.0.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.15.0
+    OpenCV: 4.8.1
+    MMEngine: 0.9.1
+
+Runtime environment:
+    cudnn_benchmark: True
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: 263488867
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+2024/02/06 11:32:49 - mmengine - INFO - Config:
+crop_size = (
+    512,
+    1024,
+)
+data_preprocessor = dict(
+    bgr_to_rgb=True,
+    mean=[
+        68.882,
+        68.882,
+        68.882,
+    ],
+    pad_val=0,
+    seg_pad_val=255,
+    size=(
+        512,
+        1024,
+    ),
+    std=[
+        66.631,
+        66.631,
+        66.631,
+    ],
+    test_cfg=dict(size=(
+        512,
+        1024,
+    )),
+    type='SegDataPreProcessor')
+data_root = 'data/cbis/cbis-linked'
+dataset_type = 'CBISMonoDataset'
+default_hooks = dict(
+    checkpoint=dict(
+        by_epoch=False,
+        interval=10000,
+        max_keep_ckpts=2,
+        type='CheckpointHook'),
+    logger=dict(interval=50, log_metric_by_epoch=False, type='LoggerHook'),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    timer=dict(type='IterTimerHook'),
+    visualization=dict(type='SegVisualizationHook'))
+default_scope = 'mmseg'
+env_cfg = dict(
+    cudnn_benchmark=True,
+    dist_cfg=dict(backend='nccl'),
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0))
+launcher = 'none'
+load_from = None
+log_level = 'INFO'
+log_processor = dict(by_epoch=False)
+model = dict(
+    auxiliary_head=dict(
+        align_corners=False,
+        channels=64,
+        concat_input=False,
+        dropout_ratio=0.1,
+        in_channels=128,
+        in_index=3,
+        loss_decode=dict(loss_weight=0.4, type='DiceLoss'),
+        norm_cfg=dict(requires_grad=True, type='SyncBN'),
+        num_classes=1,
+        num_convs=1,
+        type='FCNHead'),
+    backbone=dict(
+        act_cfg=dict(type='ReLU'),
+        base_channels=64,
+        conv_cfg=None,
+        dec_dilations=(
+            1,
+            1,
+            1,
+            1,
+        ),
+        dec_num_convs=(
+            2,
+            2,
+            2,
+            2,
+        ),
+        downsamples=(
+            True,
+            True,
+            True,
+            True,
+        ),
+        enc_dilations=(
+            1,
+            1,
+            1,
+            1,
+            1,
+        ),
+        enc_num_convs=(
+            2,
+            2,
+            2,
+            2,
+            2,
+        ),
+        in_channels=3,
+        init_cfg=None,
+        norm_cfg=dict(requires_grad=True, type='SyncBN'),
+        norm_eval=False,
+        num_stages=5,
+        strides=(
+            1,
+            1,
+            1,
+            1,
+            1,
+        ),
+        type='UNet',
+        upsample_cfg=dict(type='InterpConv'),
+        with_cp=False),
+    data_preprocessor=dict(
+        bgr_to_rgb=True,
+        mean=[
+            68.882,
+            68.882,
+            68.882,
+        ],
+        pad_val=0,
+        seg_pad_val=255,
+        size=(
+            512,
+            1024,
+        ),
+        std=[
+            66.631,
+            66.631,
+            66.631,
+        ],
+        test_cfg=dict(size=(
+            512,
+            1024,
+        )),
+        type='SegDataPreProcessor'),
+    decode_head=dict(
+        align_corners=False,
+        channels=64,
+        concat_input=False,
+        dropout_ratio=0.1,
+        in_channels=64,
+        in_index=4,
+        loss_decode=dict(loss_weight=1, type='DiceLoss'),
+        norm_cfg=dict(requires_grad=True, type='SyncBN'),
+        num_classes=1,
+        num_convs=1,
+        type='FCNHead'),
+    pretrained=None,
+    test_cfg=dict(crop_size=256, mode='whole', stride=170),
+    train_cfg=dict(),
+    type='EncoderDecoder')
+norm_cfg = dict(requires_grad=True, type='SyncBN')
+optim_wrapper = dict(
+    clip_grad=None,
+    optimizer=dict(lr=0.0001, momentum=0.9, type='SGD', weight_decay=0.0005),
+    type='OptimWrapper')
+optimizer = dict(lr=0.0001, momentum=0.9, type='SGD', weight_decay=0.0005)
+param_scheduler = [
+    dict(
+        begin=0,
+        by_epoch=False,
+        end=160000,
+        eta_min=0.0001,
+        power=0.9,
+        type='PolyLR'),
+]
+record_gpu_snapshot = False
+resume = False
+test_cfg = dict(type='TestLoop')
+test_dataloader = dict(
+    batch_size=1,
+    dataset=dict(
+        data_prefix=dict(
+            img_path='images/test', seg_map_path='annotations_binary/test'),
+        data_root='data/cbis/cbis-linked',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                512,
+                512,
+            ), type='Resize'),
+            dict(reduce_zero_label=True, type='LoadAnnotations'),
+            dict(type='PackSegInputs'),
+        ],
+        type='CBISMonoDataset'),
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+test_evaluator = dict(
+    iou_metrics=[
+        'mIoU',
+    ], type='IoUMetric')
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        512,
+        512,
+    ), type='Resize'),
+    dict(reduce_zero_label=True, type='LoadAnnotations'),
+    dict(type='PackSegInputs'),
+]
+train_cfg = dict(
+    max_iters=10000, type='IterBasedTrainLoop', val_interval=10000)
+train_dataloader = dict(
+    batch_size=1,
+    dataset=dict(
+        data_prefix=dict(
+            img_path='images/train', seg_map_path='annotations_binary/train'),
+        data_root='data/cbis/cbis-linked',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(reduce_zero_label=True, type='LoadAnnotations'),
+            dict(keep_ratio=True, scale=(
+                512,
+                512,
+            ), type='Resize'),
+            dict(prob=0.5, type='RandomFlip'),
+            dict(type='PackSegInputs'),
+        ],
+        type='CBISMonoDataset'),
+    num_workers=1,
+    persistent_workers=True,
+    sampler=dict(shuffle=True, type='InfiniteSampler'))
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(reduce_zero_label=True, type='LoadAnnotations'),
+    dict(keep_ratio=True, scale=(
+        512,
+        512,
+    ), type='Resize'),
+    dict(prob=0.5, type='RandomFlip'),
+    dict(type='PackSegInputs'),
+]
+tta_model = dict(type='SegTTAModel')
+tta_pipeline = None
+val_cfg = dict(type='ValLoop')
+val_dataloader = dict(
+    batch_size=1,
+    dataset=dict(
+        data_prefix=dict(
+            img_path='images/val', seg_map_path='annotations_binary/val'),
+        data_root='data/cbis/cbis-linked',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                512,
+                512,
+            ), type='Resize'),
+            dict(reduce_zero_label=True, type='LoadAnnotations'),
+            dict(type='PackSegInputs'),
+        ],
+        type='CBISMonoDataset'),
+    num_workers=4,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+val_evaluator = dict(
+    iou_metrics=[
+        'mIoU',
+    ], type='IoUMetric')
+val_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        512,
+        512,
+    ), type='Resize'),
+    dict(reduce_zero_label=True, type='LoadAnnotations'),
+    dict(type='PackSegInputs'),
+]
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    name='visualizer',
+    type='SegLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ])
+work_dir = './work_dirs/unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024'
+
+2024/02/06 11:32:51 - mmengine - INFO - Total parameters: 29060546
+2024/02/06 11:32:51 - mmengine - INFO - Trainable parameters: 29060546
+2024/02/06 11:32:51 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+2024/02/06 11:32:51 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) SegVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) SegVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) SegVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+2024/02/06 11:32:51 - mmengine - WARNING - The prefix is not set in metric class IoUMetric.
+Name of parameter - Initialization information
+
+backbone.encoder.0.0.convs.0.conv.weight - torch.Size([64, 3, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.0.0.convs.0.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.0.0.convs.0.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.0.0.convs.1.conv.weight - torch.Size([64, 64, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.0.0.convs.1.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.0.0.convs.1.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.1.1.convs.0.conv.weight - torch.Size([128, 64, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.1.1.convs.0.bn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.1.1.convs.0.bn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.1.1.convs.1.conv.weight - torch.Size([128, 128, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.1.1.convs.1.bn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.1.1.convs.1.bn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.2.1.convs.0.conv.weight - torch.Size([256, 128, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.2.1.convs.0.bn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.2.1.convs.0.bn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.2.1.convs.1.conv.weight - torch.Size([256, 256, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.2.1.convs.1.bn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.2.1.convs.1.bn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.3.1.convs.0.conv.weight - torch.Size([512, 256, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.3.1.convs.0.bn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.3.1.convs.0.bn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.3.1.convs.1.conv.weight - torch.Size([512, 512, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.3.1.convs.1.bn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.3.1.convs.1.bn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.4.1.convs.0.conv.weight - torch.Size([1024, 512, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.4.1.convs.0.bn.weight - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.4.1.convs.0.bn.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.4.1.convs.1.conv.weight - torch.Size([1024, 1024, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.encoder.4.1.convs.1.bn.weight - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.encoder.4.1.convs.1.bn.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.conv_block.convs.0.conv.weight - torch.Size([64, 128, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.0.conv_block.convs.0.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.conv_block.convs.0.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.conv_block.convs.1.conv.weight - torch.Size([64, 64, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.0.conv_block.convs.1.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.conv_block.convs.1.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.upsample.interp_upsample.1.conv.weight - torch.Size([64, 128, 1, 1]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.0.upsample.interp_upsample.1.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.0.upsample.interp_upsample.1.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.conv_block.convs.0.conv.weight - torch.Size([128, 256, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.1.conv_block.convs.0.bn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.conv_block.convs.0.bn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.conv_block.convs.1.conv.weight - torch.Size([128, 128, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.1.conv_block.convs.1.bn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.conv_block.convs.1.bn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.upsample.interp_upsample.1.conv.weight - torch.Size([128, 256, 1, 1]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.1.upsample.interp_upsample.1.bn.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.1.upsample.interp_upsample.1.bn.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.conv_block.convs.0.conv.weight - torch.Size([256, 512, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.2.conv_block.convs.0.bn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.conv_block.convs.0.bn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.conv_block.convs.1.conv.weight - torch.Size([256, 256, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.2.conv_block.convs.1.bn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.conv_block.convs.1.bn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.upsample.interp_upsample.1.conv.weight - torch.Size([256, 512, 1, 1]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.2.upsample.interp_upsample.1.bn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.2.upsample.interp_upsample.1.bn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.conv_block.convs.0.conv.weight - torch.Size([512, 1024, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.3.conv_block.convs.0.bn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.conv_block.convs.0.bn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.conv_block.convs.1.conv.weight - torch.Size([512, 512, 3, 3]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.3.conv_block.convs.1.bn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.conv_block.convs.1.bn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.upsample.interp_upsample.1.conv.weight - torch.Size([512, 1024, 1, 1]): 
+KaimingInit: a=0, mode=fan_out, nonlinearity=relu, distribution =normal, bias=0 
+
+backbone.decoder.3.upsample.interp_upsample.1.bn.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+backbone.decoder.3.upsample.interp_upsample.1.bn.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+decode_head.conv_seg.weight - torch.Size([1, 64, 1, 1]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+decode_head.conv_seg.bias - torch.Size([1]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+decode_head.convs.0.conv.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+decode_head.convs.0.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+decode_head.convs.0.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+auxiliary_head.conv_seg.weight - torch.Size([1, 64, 1, 1]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+auxiliary_head.conv_seg.bias - torch.Size([1]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+auxiliary_head.convs.0.conv.weight - torch.Size([64, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+auxiliary_head.convs.0.bn.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+
+auxiliary_head.convs.0.bn.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of EncoderDecoder  
+2024/02/06 11:32:52 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+2024/02/06 11:32:52 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+2024/02/06 11:32:52 - mmengine - INFO - Checkpoints will be saved to /home/drumsnchocolate/Documents/Studie/Master/2022-2023/Thesis/Final Project/implementation/mmsegmentation/work_dirs/unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024/20240206_113249.
+2024/02/06 11:33:19 - mmengine - INFO - Iter(train) [   50/10000]  lr: 1.0000e-04  eta: 1:32:16  time: 0.4448  data_time: 0.0023  memory: 4664  loss: 1.3680  decode.loss_dice: 0.9775  decode.acc_seg: 100.0000  aux.loss_dice: 0.3905  aux.acc_seg: 100.0000
+2024/02/06 11:33:41 - mmengine - INFO - Iter(train) [  100/10000]  lr: 1.0000e-04  eta: 1:22:14  time: 0.4405  data_time: 0.0018  memory: 4513  loss: 1.3882  decode.loss_dice: 0.9916  decode.acc_seg: 100.0000  aux.loss_dice: 0.3965  aux.acc_seg: 100.0000
+2024/02/06 11:34:04 - mmengine - INFO - Iter(train) [  150/10000]  lr: 1.0000e-04  eta: 1:18:50  time: 0.4436  data_time: 0.0018  memory: 4513  loss: 1.3867  decode.loss_dice: 0.9907  decode.acc_seg: 100.0000  aux.loss_dice: 0.3960  aux.acc_seg: 100.0000
+2024/02/06 11:34:26 - mmengine - INFO - Iter(train) [  200/10000]  lr: 1.0000e-04  eta: 1:16:52  time: 0.4387  data_time: 0.0017  memory: 4513  loss: 1.3786  decode.loss_dice: 0.9848  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 11:34:48 - mmengine - INFO - Iter(train) [  250/10000]  lr: 1.0000e-04  eta: 1:15:32  time: 0.4401  data_time: 0.0019  memory: 4513  loss: 1.3814  decode.loss_dice: 0.9867  decode.acc_seg: 100.0000  aux.loss_dice: 0.3947  aux.acc_seg: 100.0000
+2024/02/06 11:35:10 - mmengine - INFO - Iter(train) [  300/10000]  lr: 1.0000e-04  eta: 1:14:28  time: 0.4334  data_time: 0.0013  memory: 4513  loss: 1.3869  decode.loss_dice: 0.9906  decode.acc_seg: 100.0000  aux.loss_dice: 0.3963  aux.acc_seg: 100.0000
+2024/02/06 11:35:31 - mmengine - INFO - Iter(train) [  350/10000]  lr: 1.0000e-04  eta: 1:13:26  time: 0.4332  data_time: 0.0013  memory: 4513  loss: 1.3805  decode.loss_dice: 0.9859  decode.acc_seg: 100.0000  aux.loss_dice: 0.3945  aux.acc_seg: 100.0000
+2024/02/06 11:35:53 - mmengine - INFO - Iter(train) [  400/10000]  lr: 1.0000e-04  eta: 1:12:33  time: 0.4303  data_time: 0.0012  memory: 4513  loss: 1.3802  decode.loss_dice: 0.9857  decode.acc_seg: 100.0000  aux.loss_dice: 0.3945  aux.acc_seg: 100.0000
+2024/02/06 11:36:15 - mmengine - INFO - Iter(train) [  450/10000]  lr: 1.0000e-04  eta: 1:11:51  time: 0.4374  data_time: 0.0014  memory: 4513  loss: 1.3886  decode.loss_dice: 0.9918  decode.acc_seg: 100.0000  aux.loss_dice: 0.3968  aux.acc_seg: 100.0000
+2024/02/06 11:36:36 - mmengine - INFO - Iter(train) [  500/10000]  lr: 1.0000e-04  eta: 1:11:10  time: 0.4298  data_time: 0.0013  memory: 4513  loss: 1.3921  decode.loss_dice: 0.9943  decode.acc_seg: 100.0000  aux.loss_dice: 0.3979  aux.acc_seg: 100.0000
+2024/02/06 11:36:58 - mmengine - INFO - Iter(train) [  550/10000]  lr: 1.0000e-04  eta: 1:10:33  time: 0.4311  data_time: 0.0013  memory: 4513  loss: 1.3589  decode.loss_dice: 0.9699  decode.acc_seg: 100.0000  aux.loss_dice: 0.3889  aux.acc_seg: 100.0000
+2024/02/06 11:37:20 - mmengine - INFO - Iter(train) [  600/10000]  lr: 1.0000e-04  eta: 1:09:58  time: 0.4319  data_time: 0.0013  memory: 4513  loss: 1.3741  decode.loss_dice: 0.9813  decode.acc_seg: 100.0000  aux.loss_dice: 0.3928  aux.acc_seg: 100.0000
+2024/02/06 11:37:41 - mmengine - INFO - Iter(train) [  650/10000]  lr: 1.0000e-04  eta: 1:09:28  time: 0.4357  data_time: 0.0014  memory: 4513  loss: 1.3601  decode.loss_dice: 0.9711  decode.acc_seg: 100.0000  aux.loss_dice: 0.3889  aux.acc_seg: 100.0000
+2024/02/06 11:38:03 - mmengine - INFO - Iter(train) [  700/10000]  lr: 1.0000e-04  eta: 1:09:01  time: 0.4377  data_time: 0.0015  memory: 4513  loss: 1.3861  decode.loss_dice: 0.9898  decode.acc_seg: 100.0000  aux.loss_dice: 0.3963  aux.acc_seg: 100.0000
+2024/02/06 11:38:25 - mmengine - INFO - Iter(train) [  750/10000]  lr: 1.0000e-04  eta: 1:08:37  time: 0.4369  data_time: 0.0013  memory: 4513  loss: 1.3918  decode.loss_dice: 0.9940  decode.acc_seg: 100.0000  aux.loss_dice: 0.3978  aux.acc_seg: 100.0000
+2024/02/06 11:38:47 - mmengine - INFO - Iter(train) [  800/10000]  lr: 1.0000e-04  eta: 1:08:09  time: 0.4299  data_time: 0.0013  memory: 4513  loss: 1.3612  decode.loss_dice: 0.9718  decode.acc_seg: 100.0000  aux.loss_dice: 0.3894  aux.acc_seg: 100.0000
+2024/02/06 11:39:09 - mmengine - INFO - Iter(train) [  850/10000]  lr: 1.0000e-04  eta: 1:07:46  time: 0.4376  data_time: 0.0018  memory: 4513  loss: 1.3617  decode.loss_dice: 0.9724  decode.acc_seg: 100.0000  aux.loss_dice: 0.3893  aux.acc_seg: 100.0000
+2024/02/06 11:39:31 - mmengine - INFO - Iter(train) [  900/10000]  lr: 1.0000e-04  eta: 1:07:20  time: 0.4363  data_time: 0.0016  memory: 4513  loss: 1.3796  decode.loss_dice: 0.9852  decode.acc_seg: 100.0000  aux.loss_dice: 0.3945  aux.acc_seg: 100.0000
+2024/02/06 11:39:53 - mmengine - INFO - Iter(train) [  950/10000]  lr: 1.0000e-04  eta: 1:06:56  time: 0.4403  data_time: 0.0018  memory: 4513  loss: 1.3881  decode.loss_dice: 0.9913  decode.acc_seg: 100.0000  aux.loss_dice: 0.3969  aux.acc_seg: 100.0000
+2024/02/06 11:40:15 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 11:40:15 - mmengine - INFO - Iter(train) [ 1000/10000]  lr: 1.0000e-04  eta: 1:06:30  time: 0.4316  data_time: 0.0017  memory: 4513  loss: 1.3534  decode.loss_dice: 0.9658  decode.acc_seg: 100.0000  aux.loss_dice: 0.3876  aux.acc_seg: 100.0000
+2024/02/06 11:40:37 - mmengine - INFO - Iter(train) [ 1050/10000]  lr: 1.0000e-04  eta: 1:06:06  time: 0.4398  data_time: 0.0014  memory: 4513  loss: 1.3752  decode.loss_dice: 0.9817  decode.acc_seg: 100.0000  aux.loss_dice: 0.3935  aux.acc_seg: 100.0000
+2024/02/06 11:40:59 - mmengine - INFO - Iter(train) [ 1100/10000]  lr: 1.0000e-04  eta: 1:05:43  time: 0.4408  data_time: 0.0014  memory: 4513  loss: 1.3834  decode.loss_dice: 0.9881  decode.acc_seg: 100.0000  aux.loss_dice: 0.3954  aux.acc_seg: 100.0000
+2024/02/06 11:41:21 - mmengine - INFO - Iter(train) [ 1150/10000]  lr: 1.0000e-04  eta: 1:05:18  time: 0.4362  data_time: 0.0014  memory: 4513  loss: 1.3624  decode.loss_dice: 0.9725  decode.acc_seg: 100.0000  aux.loss_dice: 0.3899  aux.acc_seg: 100.0000
+2024/02/06 11:41:42 - mmengine - INFO - Iter(train) [ 1200/10000]  lr: 1.0000e-04  eta: 1:04:52  time: 0.4300  data_time: 0.0013  memory: 4513  loss: 1.3783  decode.loss_dice: 0.9842  decode.acc_seg: 100.0000  aux.loss_dice: 0.3941  aux.acc_seg: 100.0000
+2024/02/06 11:42:04 - mmengine - INFO - Iter(train) [ 1250/10000]  lr: 1.0000e-04  eta: 1:04:26  time: 0.4299  data_time: 0.0013  memory: 4513  loss: 1.3834  decode.loss_dice: 0.9876  decode.acc_seg: 100.0000  aux.loss_dice: 0.3959  aux.acc_seg: 100.0000
+2024/02/06 11:42:25 - mmengine - INFO - Iter(train) [ 1300/10000]  lr: 1.0000e-04  eta: 1:04:00  time: 0.4300  data_time: 0.0013  memory: 4513  loss: 1.3780  decode.loss_dice: 0.9839  decode.acc_seg: 100.0000  aux.loss_dice: 0.3942  aux.acc_seg: 100.0000
+2024/02/06 11:42:47 - mmengine - INFO - Iter(train) [ 1350/10000]  lr: 1.0000e-04  eta: 1:03:35  time: 0.4331  data_time: 0.0013  memory: 4513  loss: 1.3864  decode.loss_dice: 0.9900  decode.acc_seg: 100.0000  aux.loss_dice: 0.3964  aux.acc_seg: 100.0000
+2024/02/06 11:43:09 - mmengine - INFO - Iter(train) [ 1400/10000]  lr: 1.0000e-04  eta: 1:03:12  time: 0.4371  data_time: 0.0013  memory: 4513  loss: 1.3869  decode.loss_dice: 0.9905  decode.acc_seg: 100.0000  aux.loss_dice: 0.3964  aux.acc_seg: 100.0000
+2024/02/06 11:43:31 - mmengine - INFO - Iter(train) [ 1450/10000]  lr: 1.0000e-04  eta: 1:02:48  time: 0.4349  data_time: 0.0013  memory: 4513  loss: 1.3614  decode.loss_dice: 0.9717  decode.acc_seg: 100.0000  aux.loss_dice: 0.3897  aux.acc_seg: 100.0000
+2024/02/06 11:43:53 - mmengine - INFO - Iter(train) [ 1500/10000]  lr: 1.0000e-04  eta: 1:02:25  time: 0.4467  data_time: 0.0014  memory: 4513  loss: 1.3913  decode.loss_dice: 0.9936  decode.acc_seg: 100.0000  aux.loss_dice: 0.3976  aux.acc_seg: 100.0000
+2024/02/06 11:44:15 - mmengine - INFO - Iter(train) [ 1550/10000]  lr: 1.0000e-04  eta: 1:02:03  time: 0.4425  data_time: 0.0014  memory: 4513  loss: 1.3280  decode.loss_dice: 0.9468  decode.acc_seg: 100.0000  aux.loss_dice: 0.3813  aux.acc_seg: 100.0000
+2024/02/06 11:44:36 - mmengine - INFO - Iter(train) [ 1600/10000]  lr: 1.0000e-04  eta: 1:01:40  time: 0.4387  data_time: 0.0017  memory: 4513  loss: 1.3681  decode.loss_dice: 0.9762  decode.acc_seg: 100.0000  aux.loss_dice: 0.3919  aux.acc_seg: 100.0000
+2024/02/06 11:44:58 - mmengine - INFO - Iter(train) [ 1650/10000]  lr: 1.0000e-04  eta: 1:01:18  time: 0.4394  data_time: 0.0018  memory: 4513  loss: 1.3766  decode.loss_dice: 0.9826  decode.acc_seg: 100.0000  aux.loss_dice: 0.3939  aux.acc_seg: 100.0000
+2024/02/06 11:45:20 - mmengine - INFO - Iter(train) [ 1700/10000]  lr: 1.0000e-04  eta: 1:00:55  time: 0.4390  data_time: 0.0014  memory: 4513  loss: 1.3903  decode.loss_dice: 0.9927  decode.acc_seg: 100.0000  aux.loss_dice: 0.3975  aux.acc_seg: 100.0000
+2024/02/06 11:45:42 - mmengine - INFO - Iter(train) [ 1750/10000]  lr: 1.0000e-04  eta: 1:00:31  time: 0.4364  data_time: 0.0014  memory: 4513  loss: 1.3722  decode.loss_dice: 0.9788  decode.acc_seg: 100.0000  aux.loss_dice: 0.3934  aux.acc_seg: 100.0000
+2024/02/06 11:46:04 - mmengine - INFO - Iter(train) [ 1800/10000]  lr: 1.0000e-04  eta: 1:00:09  time: 0.4372  data_time: 0.0013  memory: 4513  loss: 1.3753  decode.loss_dice: 0.9814  decode.acc_seg: 100.0000  aux.loss_dice: 0.3939  aux.acc_seg: 100.0000
+2024/02/06 11:46:26 - mmengine - INFO - Iter(train) [ 1850/10000]  lr: 1.0000e-04  eta: 0:59:46  time: 0.4440  data_time: 0.0014  memory: 4513  loss: 1.3831  decode.loss_dice: 0.9876  decode.acc_seg: 100.0000  aux.loss_dice: 0.3956  aux.acc_seg: 100.0000
+2024/02/06 11:46:48 - mmengine - INFO - Iter(train) [ 1900/10000]  lr: 1.0000e-04  eta: 0:59:25  time: 0.4493  data_time: 0.0019  memory: 4513  loss: 1.3823  decode.loss_dice: 0.9870  decode.acc_seg: 100.0000  aux.loss_dice: 0.3954  aux.acc_seg: 100.0000
+2024/02/06 11:47:10 - mmengine - INFO - Iter(train) [ 1950/10000]  lr: 1.0000e-04  eta: 0:59:03  time: 0.4417  data_time: 0.0018  memory: 4513  loss: 1.3666  decode.loss_dice: 0.9752  decode.acc_seg: 100.0000  aux.loss_dice: 0.3913  aux.acc_seg: 100.0000
+2024/02/06 11:47:32 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 11:47:32 - mmengine - INFO - Iter(train) [ 2000/10000]  lr: 1.0000e-04  eta: 0:58:40  time: 0.4384  data_time: 0.0018  memory: 4513  loss: 1.3863  decode.loss_dice: 0.9898  decode.acc_seg: 100.0000  aux.loss_dice: 0.3964  aux.acc_seg: 100.0000
+2024/02/06 11:47:53 - mmengine - INFO - Iter(train) [ 2050/10000]  lr: 1.0000e-04  eta: 0:58:17  time: 0.4333  data_time: 0.0017  memory: 4513  loss: 1.3617  decode.loss_dice: 0.9717  decode.acc_seg: 100.0000  aux.loss_dice: 0.3899  aux.acc_seg: 100.0000
+2024/02/06 11:48:15 - mmengine - INFO - Iter(train) [ 2100/10000]  lr: 1.0000e-04  eta: 0:57:54  time: 0.4358  data_time: 0.0018  memory: 4513  loss: 1.3710  decode.loss_dice: 0.9785  decode.acc_seg: 100.0000  aux.loss_dice: 0.3925  aux.acc_seg: 100.0000
+2024/02/06 11:48:37 - mmengine - INFO - Iter(train) [ 2150/10000]  lr: 1.0000e-04  eta: 0:57:32  time: 0.4415  data_time: 0.0018  memory: 4513  loss: 1.3863  decode.loss_dice: 0.9899  decode.acc_seg: 100.0000  aux.loss_dice: 0.3964  aux.acc_seg: 100.0000
+2024/02/06 11:48:59 - mmengine - INFO - Iter(train) [ 2200/10000]  lr: 1.0000e-04  eta: 0:57:10  time: 0.4348  data_time: 0.0017  memory: 4513  loss: 1.3605  decode.loss_dice: 0.9702  decode.acc_seg: 100.0000  aux.loss_dice: 0.3903  aux.acc_seg: 100.0000
+2024/02/06 11:49:04 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 11:49:21 - mmengine - INFO - Iter(train) [ 2250/10000]  lr: 1.0000e-04  eta: 0:56:47  time: 0.4356  data_time: 0.0016  memory: 4513  loss: 1.3792  decode.loss_dice: 0.9844  decode.acc_seg: 100.0000  aux.loss_dice: 0.3948  aux.acc_seg: 100.0000
+2024/02/06 11:49:43 - mmengine - INFO - Iter(train) [ 2300/10000]  lr: 1.0000e-04  eta: 0:56:24  time: 0.4328  data_time: 0.0016  memory: 4513  loss: 1.3734  decode.loss_dice: 0.9800  decode.acc_seg: 100.0000  aux.loss_dice: 0.3934  aux.acc_seg: 100.0000
+2024/02/06 11:50:05 - mmengine - INFO - Iter(train) [ 2350/10000]  lr: 1.0000e-04  eta: 0:56:02  time: 0.4403  data_time: 0.0019  memory: 4513  loss: 1.3594  decode.loss_dice: 0.9694  decode.acc_seg: 100.0000  aux.loss_dice: 0.3900  aux.acc_seg: 100.0000
+2024/02/06 11:50:27 - mmengine - INFO - Iter(train) [ 2400/10000]  lr: 1.0000e-04  eta: 0:55:40  time: 0.4388  data_time: 0.0014  memory: 4513  loss: 1.3716  decode.loss_dice: 0.9787  decode.acc_seg: 100.0000  aux.loss_dice: 0.3929  aux.acc_seg: 100.0000
+2024/02/06 11:50:48 - mmengine - INFO - Iter(train) [ 2450/10000]  lr: 1.0000e-04  eta: 0:55:18  time: 0.4379  data_time: 0.0019  memory: 4513  loss: 1.3762  decode.loss_dice: 0.9824  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 11:51:10 - mmengine - INFO - Iter(train) [ 2500/10000]  lr: 1.0000e-04  eta: 0:54:56  time: 0.4407  data_time: 0.0019  memory: 4513  loss: 1.3662  decode.loss_dice: 0.9747  decode.acc_seg: 100.0000  aux.loss_dice: 0.3915  aux.acc_seg: 100.0000
+2024/02/06 11:51:32 - mmengine - INFO - Iter(train) [ 2550/10000]  lr: 1.0000e-04  eta: 0:54:33  time: 0.4335  data_time: 0.0018  memory: 4513  loss: 1.3757  decode.loss_dice: 0.9819  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 11:51:54 - mmengine - INFO - Iter(train) [ 2600/10000]  lr: 1.0000e-04  eta: 0:54:10  time: 0.4328  data_time: 0.0017  memory: 4513  loss: 1.3568  decode.loss_dice: 0.9679  decode.acc_seg: 100.0000  aux.loss_dice: 0.3890  aux.acc_seg: 100.0000
+2024/02/06 11:52:16 - mmengine - INFO - Iter(train) [ 2650/10000]  lr: 1.0000e-04  eta: 0:53:48  time: 0.4430  data_time: 0.0020  memory: 4513  loss: 1.3810  decode.loss_dice: 0.9858  decode.acc_seg: 100.0000  aux.loss_dice: 0.3952  aux.acc_seg: 100.0000
+2024/02/06 11:52:37 - mmengine - INFO - Iter(train) [ 2700/10000]  lr: 1.0000e-04  eta: 0:53:26  time: 0.4395  data_time: 0.0015  memory: 4513  loss: 1.3888  decode.loss_dice: 0.9916  decode.acc_seg: 100.0000  aux.loss_dice: 0.3972  aux.acc_seg: 100.0000
+2024/02/06 11:52:59 - mmengine - INFO - Iter(train) [ 2750/10000]  lr: 1.0000e-04  eta: 0:53:04  time: 0.4343  data_time: 0.0014  memory: 4513  loss: 1.3568  decode.loss_dice: 0.9682  decode.acc_seg: 100.0000  aux.loss_dice: 0.3886  aux.acc_seg: 100.0000
+2024/02/06 11:53:21 - mmengine - INFO - Iter(train) [ 2800/10000]  lr: 1.0000e-04  eta: 0:52:41  time: 0.4340  data_time: 0.0014  memory: 4513  loss: 1.3873  decode.loss_dice: 0.9906  decode.acc_seg: 100.0000  aux.loss_dice: 0.3968  aux.acc_seg: 100.0000
+2024/02/06 11:53:43 - mmengine - INFO - Iter(train) [ 2850/10000]  lr: 1.0000e-04  eta: 0:52:19  time: 0.4433  data_time: 0.0015  memory: 4513  loss: 1.3852  decode.loss_dice: 0.9891  decode.acc_seg: 100.0000  aux.loss_dice: 0.3962  aux.acc_seg: 100.0000
+2024/02/06 11:54:05 - mmengine - INFO - Iter(train) [ 2900/10000]  lr: 1.0000e-04  eta: 0:51:57  time: 0.4372  data_time: 0.0014  memory: 4513  loss: 1.3855  decode.loss_dice: 0.9891  decode.acc_seg: 100.0000  aux.loss_dice: 0.3965  aux.acc_seg: 100.0000
+2024/02/06 11:54:27 - mmengine - INFO - Iter(train) [ 2950/10000]  lr: 1.0000e-04  eta: 0:51:35  time: 0.4335  data_time: 0.0024  memory: 4513  loss: 1.3577  decode.loss_dice: 0.9687  decode.acc_seg: 100.0000  aux.loss_dice: 0.3891  aux.acc_seg: 100.0000
+2024/02/06 11:54:49 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 11:54:49 - mmengine - INFO - Iter(train) [ 3000/10000]  lr: 1.0000e-04  eta: 0:51:13  time: 0.4392  data_time: 0.0022  memory: 4513  loss: 1.3776  decode.loss_dice: 0.9832  decode.acc_seg: 100.0000  aux.loss_dice: 0.3944  aux.acc_seg: 100.0000
+2024/02/06 11:55:11 - mmengine - INFO - Iter(train) [ 3050/10000]  lr: 1.0000e-04  eta: 0:50:51  time: 0.4380  data_time: 0.0024  memory: 4513  loss: 1.3869  decode.loss_dice: 0.9902  decode.acc_seg: 100.0000  aux.loss_dice: 0.3967  aux.acc_seg: 100.0000
+2024/02/06 11:55:33 - mmengine - INFO - Iter(train) [ 3100/10000]  lr: 1.0000e-04  eta: 0:50:29  time: 0.4336  data_time: 0.0024  memory: 4513  loss: 1.3624  decode.loss_dice: 0.9719  decode.acc_seg: 100.0000  aux.loss_dice: 0.3904  aux.acc_seg: 100.0000
+2024/02/06 11:55:55 - mmengine - INFO - Iter(train) [ 3150/10000]  lr: 1.0000e-04  eta: 0:50:07  time: 0.4358  data_time: 0.0024  memory: 4513  loss: 1.3613  decode.loss_dice: 0.9709  decode.acc_seg: 100.0000  aux.loss_dice: 0.3904  aux.acc_seg: 100.0000
+2024/02/06 11:56:16 - mmengine - INFO - Iter(train) [ 3200/10000]  lr: 1.0000e-04  eta: 0:49:45  time: 0.4347  data_time: 0.0023  memory: 4513  loss: 1.3901  decode.loss_dice: 0.9925  decode.acc_seg: 100.0000  aux.loss_dice: 0.3976  aux.acc_seg: 100.0000
+2024/02/06 11:56:38 - mmengine - INFO - Iter(train) [ 3250/10000]  lr: 1.0000e-04  eta: 0:49:23  time: 0.4344  data_time: 0.0023  memory: 4513  loss: 1.3887  decode.loss_dice: 0.9916  decode.acc_seg: 100.0000  aux.loss_dice: 0.3971  aux.acc_seg: 100.0000
+2024/02/06 11:57:00 - mmengine - INFO - Iter(train) [ 3300/10000]  lr: 1.0000e-04  eta: 0:49:00  time: 0.4356  data_time: 0.0024  memory: 4513  loss: 1.3795  decode.loss_dice: 0.9846  decode.acc_seg: 100.0000  aux.loss_dice: 0.3949  aux.acc_seg: 100.0000
+2024/02/06 11:57:22 - mmengine - INFO - Iter(train) [ 3350/10000]  lr: 1.0000e-04  eta: 0:48:38  time: 0.4342  data_time: 0.0024  memory: 4513  loss: 1.3901  decode.loss_dice: 0.9926  decode.acc_seg: 100.0000  aux.loss_dice: 0.3975  aux.acc_seg: 100.0000
+2024/02/06 11:57:44 - mmengine - INFO - Iter(train) [ 3400/10000]  lr: 1.0000e-04  eta: 0:48:16  time: 0.4373  data_time: 0.0021  memory: 4513  loss: 1.3755  decode.loss_dice: 0.9817  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 11:58:06 - mmengine - INFO - Iter(train) [ 3450/10000]  lr: 1.0000e-04  eta: 0:47:54  time: 0.4333  data_time: 0.0016  memory: 4513  loss: 1.3501  decode.loss_dice: 0.9628  decode.acc_seg: 100.0000  aux.loss_dice: 0.3873  aux.acc_seg: 100.0000
+2024/02/06 11:58:27 - mmengine - INFO - Iter(train) [ 3500/10000]  lr: 1.0000e-04  eta: 0:47:31  time: 0.4335  data_time: 0.0019  memory: 4513  loss: 1.3835  decode.loss_dice: 0.9876  decode.acc_seg: 100.0000  aux.loss_dice: 0.3959  aux.acc_seg: 100.0000
+2024/02/06 11:58:49 - mmengine - INFO - Iter(train) [ 3550/10000]  lr: 1.0000e-04  eta: 0:47:09  time: 0.4306  data_time: 0.0018  memory: 4513  loss: 1.3484  decode.loss_dice: 0.9610  decode.acc_seg: 100.0000  aux.loss_dice: 0.3873  aux.acc_seg: 100.0000
+2024/02/06 11:59:11 - mmengine - INFO - Iter(train) [ 3600/10000]  lr: 1.0000e-04  eta: 0:46:47  time: 0.4401  data_time: 0.0026  memory: 4513  loss: 1.3774  decode.loss_dice: 0.9830  decode.acc_seg: 100.0000  aux.loss_dice: 0.3944  aux.acc_seg: 100.0000
+2024/02/06 11:59:33 - mmengine - INFO - Iter(train) [ 3650/10000]  lr: 1.0000e-04  eta: 0:46:25  time: 0.4362  data_time: 0.0023  memory: 4513  loss: 1.3876  decode.loss_dice: 0.9907  decode.acc_seg: 100.0000  aux.loss_dice: 0.3969  aux.acc_seg: 100.0000
+2024/02/06 11:59:54 - mmengine - INFO - Iter(train) [ 3700/10000]  lr: 1.0000e-04  eta: 0:46:02  time: 0.4359  data_time: 0.0022  memory: 4513  loss: 1.3840  decode.loss_dice: 0.9880  decode.acc_seg: 100.0000  aux.loss_dice: 0.3961  aux.acc_seg: 100.0000
+2024/02/06 12:00:16 - mmengine - INFO - Iter(train) [ 3750/10000]  lr: 1.0000e-04  eta: 0:45:40  time: 0.4343  data_time: 0.0023  memory: 4513  loss: 1.3871  decode.loss_dice: 0.9903  decode.acc_seg: 100.0000  aux.loss_dice: 0.3968  aux.acc_seg: 100.0000
+2024/02/06 12:00:38 - mmengine - INFO - Iter(train) [ 3800/10000]  lr: 1.0000e-04  eta: 0:45:18  time: 0.4381  data_time: 0.0023  memory: 4513  loss: 1.3782  decode.loss_dice: 0.9836  decode.acc_seg: 100.0000  aux.loss_dice: 0.3947  aux.acc_seg: 100.0000
+2024/02/06 12:00:59 - mmengine - INFO - Iter(train) [ 3850/10000]  lr: 1.0000e-04  eta: 0:44:56  time: 0.4321  data_time: 0.0023  memory: 4513  loss: 1.3863  decode.loss_dice: 0.9900  decode.acc_seg: 100.0000  aux.loss_dice: 0.3963  aux.acc_seg: 100.0000
+2024/02/06 12:01:21 - mmengine - INFO - Iter(train) [ 3900/10000]  lr: 1.0000e-04  eta: 0:44:33  time: 0.4382  data_time: 0.0024  memory: 4513  loss: 1.3827  decode.loss_dice: 0.9869  decode.acc_seg: 100.0000  aux.loss_dice: 0.3958  aux.acc_seg: 100.0000
+2024/02/06 12:01:43 - mmengine - INFO - Iter(train) [ 3950/10000]  lr: 1.0000e-04  eta: 0:44:11  time: 0.4343  data_time: 0.0024  memory: 4513  loss: 1.3826  decode.loss_dice: 0.9868  decode.acc_seg: 100.0000  aux.loss_dice: 0.3958  aux.acc_seg: 100.0000
+2024/02/06 12:02:05 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:02:05 - mmengine - INFO - Iter(train) [ 4000/10000]  lr: 1.0000e-04  eta: 0:43:49  time: 0.4385  data_time: 0.0023  memory: 4513  loss: 1.3819  decode.loss_dice: 0.9864  decode.acc_seg: 100.0000  aux.loss_dice: 0.3955  aux.acc_seg: 100.0000
+2024/02/06 12:02:27 - mmengine - INFO - Iter(train) [ 4050/10000]  lr: 1.0000e-04  eta: 0:43:27  time: 0.4337  data_time: 0.0022  memory: 4513  loss: 1.3798  decode.loss_dice: 0.9848  decode.acc_seg: 100.0000  aux.loss_dice: 0.3950  aux.acc_seg: 100.0000
+2024/02/06 12:02:48 - mmengine - INFO - Iter(train) [ 4100/10000]  lr: 1.0000e-04  eta: 0:43:05  time: 0.4323  data_time: 0.0019  memory: 4513  loss: 1.3229  decode.loss_dice: 0.9424  decode.acc_seg: 100.0000  aux.loss_dice: 0.3804  aux.acc_seg: 100.0000
+2024/02/06 12:03:10 - mmengine - INFO - Iter(train) [ 4150/10000]  lr: 1.0000e-04  eta: 0:42:43  time: 0.4522  data_time: 0.0023  memory: 4513  loss: 1.3611  decode.loss_dice: 0.9708  decode.acc_seg: 100.0000  aux.loss_dice: 0.3903  aux.acc_seg: 100.0000
+2024/02/06 12:03:32 - mmengine - INFO - Iter(train) [ 4200/10000]  lr: 1.0000e-04  eta: 0:42:21  time: 0.4377  data_time: 0.0024  memory: 4513  loss: 1.3644  decode.loss_dice: 0.9730  decode.acc_seg: 100.0000  aux.loss_dice: 0.3914  aux.acc_seg: 100.0000
+2024/02/06 12:03:54 - mmengine - INFO - Iter(train) [ 4250/10000]  lr: 1.0000e-04  eta: 0:41:59  time: 0.4347  data_time: 0.0024  memory: 4513  loss: 1.3935  decode.loss_dice: 0.9951  decode.acc_seg: 100.0000  aux.loss_dice: 0.3984  aux.acc_seg: 100.0000
+2024/02/06 12:04:16 - mmengine - INFO - Iter(train) [ 4300/10000]  lr: 1.0000e-04  eta: 0:41:37  time: 0.4333  data_time: 0.0022  memory: 4513  loss: 1.3591  decode.loss_dice: 0.9696  decode.acc_seg: 100.0000  aux.loss_dice: 0.3895  aux.acc_seg: 100.0000
+2024/02/06 12:04:38 - mmengine - INFO - Iter(train) [ 4350/10000]  lr: 1.0000e-04  eta: 0:41:15  time: 0.4388  data_time: 0.0020  memory: 4513  loss: 1.3533  decode.loss_dice: 0.9648  decode.acc_seg: 100.0000  aux.loss_dice: 0.3885  aux.acc_seg: 100.0000
+2024/02/06 12:05:00 - mmengine - INFO - Iter(train) [ 4400/10000]  lr: 1.0000e-04  eta: 0:40:54  time: 0.4451  data_time: 0.0018  memory: 4513  loss: 1.3529  decode.loss_dice: 0.9644  decode.acc_seg: 100.0000  aux.loss_dice: 0.3885  aux.acc_seg: 100.0000
+2024/02/06 12:05:22 - mmengine - INFO - Iter(train) [ 4450/10000]  lr: 1.0000e-04  eta: 0:40:32  time: 0.4423  data_time: 0.0025  memory: 4513  loss: 1.3658  decode.loss_dice: 0.9741  decode.acc_seg: 100.0000  aux.loss_dice: 0.3917  aux.acc_seg: 100.0000
+2024/02/06 12:05:43 - mmengine - INFO - Iter(train) [ 4500/10000]  lr: 1.0000e-04  eta: 0:40:10  time: 0.4315  data_time: 0.0024  memory: 4513  loss: 1.3404  decode.loss_dice: 0.9550  decode.acc_seg: 100.0000  aux.loss_dice: 0.3855  aux.acc_seg: 100.0000
+2024/02/06 12:06:05 - mmengine - INFO - Iter(train) [ 4550/10000]  lr: 1.0000e-04  eta: 0:39:47  time: 0.4391  data_time: 0.0024  memory: 4513  loss: 1.3847  decode.loss_dice: 0.9885  decode.acc_seg: 100.0000  aux.loss_dice: 0.3962  aux.acc_seg: 100.0000
+2024/02/06 12:06:27 - mmengine - INFO - Iter(train) [ 4600/10000]  lr: 1.0000e-04  eta: 0:39:25  time: 0.4333  data_time: 0.0023  memory: 4513  loss: 1.3785  decode.loss_dice: 0.9837  decode.acc_seg: 100.0000  aux.loss_dice: 0.3948  aux.acc_seg: 100.0000
+2024/02/06 12:06:49 - mmengine - INFO - Iter(train) [ 4650/10000]  lr: 1.0000e-04  eta: 0:39:03  time: 0.4384  data_time: 0.0024  memory: 4513  loss: 1.3874  decode.loss_dice: 0.9906  decode.acc_seg: 100.0000  aux.loss_dice: 0.3968  aux.acc_seg: 100.0000
+2024/02/06 12:07:11 - mmengine - INFO - Iter(train) [ 4700/10000]  lr: 1.0000e-04  eta: 0:38:42  time: 0.4448  data_time: 0.0024  memory: 4513  loss: 1.3801  decode.loss_dice: 0.9850  decode.acc_seg: 100.0000  aux.loss_dice: 0.3952  aux.acc_seg: 100.0000
+2024/02/06 12:07:33 - mmengine - INFO - Iter(train) [ 4750/10000]  lr: 1.0000e-04  eta: 0:38:20  time: 0.4367  data_time: 0.0023  memory: 4513  loss: 1.3705  decode.loss_dice: 0.9778  decode.acc_seg: 100.0000  aux.loss_dice: 0.3927  aux.acc_seg: 100.0000
+2024/02/06 12:07:55 - mmengine - INFO - Iter(train) [ 4800/10000]  lr: 1.0000e-04  eta: 0:37:58  time: 0.4321  data_time: 0.0024  memory: 4513  loss: 1.3897  decode.loss_dice: 0.9923  decode.acc_seg: 100.0000  aux.loss_dice: 0.3974  aux.acc_seg: 100.0000
+2024/02/06 12:08:17 - mmengine - INFO - Iter(train) [ 4850/10000]  lr: 1.0000e-04  eta: 0:37:36  time: 0.4429  data_time: 0.0024  memory: 4513  loss: 1.3495  decode.loss_dice: 0.9622  decode.acc_seg: 100.0000  aux.loss_dice: 0.3873  aux.acc_seg: 100.0000
+2024/02/06 12:08:38 - mmengine - INFO - Iter(train) [ 4900/10000]  lr: 1.0000e-04  eta: 0:37:14  time: 0.4303  data_time: 0.0017  memory: 4513  loss: 1.3781  decode.loss_dice: 0.9834  decode.acc_seg: 100.0000  aux.loss_dice: 0.3947  aux.acc_seg: 100.0000
+2024/02/06 12:09:00 - mmengine - INFO - Iter(train) [ 4950/10000]  lr: 1.0000e-04  eta: 0:36:52  time: 0.4430  data_time: 0.0020  memory: 4513  loss: 1.3779  decode.loss_dice: 0.9834  decode.acc_seg: 100.0000  aux.loss_dice: 0.3945  aux.acc_seg: 100.0000
+2024/02/06 12:09:22 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:09:22 - mmengine - INFO - Iter(train) [ 5000/10000]  lr: 1.0000e-04  eta: 0:36:30  time: 0.4378  data_time: 0.0018  memory: 4513  loss: 1.3290  decode.loss_dice: 0.9469  decode.acc_seg: 100.0000  aux.loss_dice: 0.3821  aux.acc_seg: 100.0000
+2024/02/06 12:09:44 - mmengine - INFO - Iter(train) [ 5050/10000]  lr: 1.0000e-04  eta: 0:36:08  time: 0.4324  data_time: 0.0019  memory: 4513  loss: 1.3762  decode.loss_dice: 0.9820  decode.acc_seg: 100.0000  aux.loss_dice: 0.3942  aux.acc_seg: 100.0000
+2024/02/06 12:10:06 - mmengine - INFO - Iter(train) [ 5100/10000]  lr: 1.0000e-04  eta: 0:35:46  time: 0.4349  data_time: 0.0013  memory: 4513  loss: 1.3811  decode.loss_dice: 0.9859  decode.acc_seg: 100.0000  aux.loss_dice: 0.3952  aux.acc_seg: 100.0000
+2024/02/06 12:10:27 - mmengine - INFO - Iter(train) [ 5150/10000]  lr: 1.0000e-04  eta: 0:35:24  time: 0.4289  data_time: 0.0013  memory: 4513  loss: 1.3507  decode.loss_dice: 0.9631  decode.acc_seg: 100.0000  aux.loss_dice: 0.3876  aux.acc_seg: 100.0000
+2024/02/06 12:10:49 - mmengine - INFO - Iter(train) [ 5200/10000]  lr: 1.0000e-04  eta: 0:35:02  time: 0.4439  data_time: 0.0018  memory: 4513  loss: 1.3510  decode.loss_dice: 0.9631  decode.acc_seg: 100.0000  aux.loss_dice: 0.3879  aux.acc_seg: 100.0000
+2024/02/06 12:11:11 - mmengine - INFO - Iter(train) [ 5250/10000]  lr: 1.0000e-04  eta: 0:34:40  time: 0.4310  data_time: 0.0017  memory: 4513  loss: 1.3610  decode.loss_dice: 0.9705  decode.acc_seg: 100.0000  aux.loss_dice: 0.3905  aux.acc_seg: 100.0000
+2024/02/06 12:11:32 - mmengine - INFO - Iter(train) [ 5300/10000]  lr: 1.0000e-04  eta: 0:34:18  time: 0.4378  data_time: 0.0017  memory: 4513  loss: 1.3801  decode.loss_dice: 0.9851  decode.acc_seg: 100.0000  aux.loss_dice: 0.3950  aux.acc_seg: 100.0000
+2024/02/06 12:11:54 - mmengine - INFO - Iter(train) [ 5350/10000]  lr: 1.0000e-04  eta: 0:33:55  time: 0.4358  data_time: 0.0014  memory: 4513  loss: 1.3906  decode.loss_dice: 0.9929  decode.acc_seg: 100.0000  aux.loss_dice: 0.3977  aux.acc_seg: 100.0000
+2024/02/06 12:12:16 - mmengine - INFO - Iter(train) [ 5400/10000]  lr: 1.0000e-04  eta: 0:33:34  time: 0.4393  data_time: 0.0015  memory: 4513  loss: 1.3915  decode.loss_dice: 0.9937  decode.acc_seg: 100.0000  aux.loss_dice: 0.3978  aux.acc_seg: 100.0000
+2024/02/06 12:12:38 - mmengine - INFO - Iter(train) [ 5450/10000]  lr: 1.0000e-04  eta: 0:33:12  time: 0.4388  data_time: 0.0013  memory: 4513  loss: 1.3912  decode.loss_dice: 0.9933  decode.acc_seg: 100.0000  aux.loss_dice: 0.3978  aux.acc_seg: 100.0000
+2024/02/06 12:13:00 - mmengine - INFO - Iter(train) [ 5500/10000]  lr: 1.0000e-04  eta: 0:32:50  time: 0.4334  data_time: 0.0017  memory: 4513  loss: 1.3727  decode.loss_dice: 0.9794  decode.acc_seg: 100.0000  aux.loss_dice: 0.3933  aux.acc_seg: 100.0000
+2024/02/06 12:13:22 - mmengine - INFO - Iter(train) [ 5550/10000]  lr: 1.0000e-04  eta: 0:32:28  time: 0.4303  data_time: 0.0017  memory: 4513  loss: 1.3865  decode.loss_dice: 0.9900  decode.acc_seg: 100.0000  aux.loss_dice: 0.3966  aux.acc_seg: 100.0000
+2024/02/06 12:13:43 - mmengine - INFO - Iter(train) [ 5600/10000]  lr: 1.0000e-04  eta: 0:32:06  time: 0.4400  data_time: 0.0016  memory: 4513  loss: 1.3843  decode.loss_dice: 0.9882  decode.acc_seg: 100.0000  aux.loss_dice: 0.3961  aux.acc_seg: 100.0000
+2024/02/06 12:14:05 - mmengine - INFO - Iter(train) [ 5650/10000]  lr: 1.0000e-04  eta: 0:31:44  time: 0.4385  data_time: 0.0018  memory: 4513  loss: 1.3759  decode.loss_dice: 0.9820  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 12:14:27 - mmengine - INFO - Iter(train) [ 5700/10000]  lr: 1.0000e-04  eta: 0:31:22  time: 0.4404  data_time: 0.0017  memory: 4513  loss: 1.3759  decode.loss_dice: 0.9820  decode.acc_seg: 100.0000  aux.loss_dice: 0.3939  aux.acc_seg: 100.0000
+2024/02/06 12:14:49 - mmengine - INFO - Iter(train) [ 5750/10000]  lr: 1.0000e-04  eta: 0:31:00  time: 0.4325  data_time: 0.0016  memory: 4513  loss: 1.3422  decode.loss_dice: 0.9562  decode.acc_seg: 100.0000  aux.loss_dice: 0.3860  aux.acc_seg: 100.0000
+2024/02/06 12:15:11 - mmengine - INFO - Iter(train) [ 5800/10000]  lr: 1.0000e-04  eta: 0:30:38  time: 0.4449  data_time: 0.0018  memory: 4513  loss: 1.3517  decode.loss_dice: 0.9634  decode.acc_seg: 100.0000  aux.loss_dice: 0.3883  aux.acc_seg: 100.0000
+2024/02/06 12:15:33 - mmengine - INFO - Iter(train) [ 5850/10000]  lr: 1.0000e-04  eta: 0:30:16  time: 0.4337  data_time: 0.0018  memory: 4513  loss: 1.3929  decode.loss_dice: 0.9947  decode.acc_seg: 100.0000  aux.loss_dice: 0.3982  aux.acc_seg: 100.0000
+2024/02/06 12:15:55 - mmengine - INFO - Iter(train) [ 5900/10000]  lr: 1.0000e-04  eta: 0:29:54  time: 0.4379  data_time: 0.0018  memory: 4513  loss: 1.3637  decode.loss_dice: 0.9725  decode.acc_seg: 100.0000  aux.loss_dice: 0.3912  aux.acc_seg: 100.0000
+2024/02/06 12:16:16 - mmengine - INFO - Iter(train) [ 5950/10000]  lr: 1.0000e-04  eta: 0:29:32  time: 0.4322  data_time: 0.0018  memory: 4513  loss: 1.3468  decode.loss_dice: 0.9596  decode.acc_seg: 100.0000  aux.loss_dice: 0.3871  aux.acc_seg: 100.0000
+2024/02/06 12:16:38 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:16:38 - mmengine - INFO - Iter(train) [ 6000/10000]  lr: 1.0000e-04  eta: 0:29:11  time: 0.4439  data_time: 0.0020  memory: 4513  loss: 1.3743  decode.loss_dice: 0.9805  decode.acc_seg: 100.0000  aux.loss_dice: 0.3937  aux.acc_seg: 100.0000
+2024/02/06 12:17:00 - mmengine - INFO - Iter(train) [ 6050/10000]  lr: 1.0000e-04  eta: 0:28:49  time: 0.4315  data_time: 0.0014  memory: 4513  loss: 1.3640  decode.loss_dice: 0.9726  decode.acc_seg: 100.0000  aux.loss_dice: 0.3915  aux.acc_seg: 100.0000
+2024/02/06 12:17:22 - mmengine - INFO - Iter(train) [ 6100/10000]  lr: 1.0000e-04  eta: 0:28:27  time: 0.4394  data_time: 0.0014  memory: 4513  loss: 1.3802  decode.loss_dice: 0.9850  decode.acc_seg: 100.0000  aux.loss_dice: 0.3952  aux.acc_seg: 100.0000
+2024/02/06 12:17:44 - mmengine - INFO - Iter(train) [ 6150/10000]  lr: 1.0000e-04  eta: 0:28:05  time: 0.4379  data_time: 0.0014  memory: 4513  loss: 1.3798  decode.loss_dice: 0.9846  decode.acc_seg: 100.0000  aux.loss_dice: 0.3951  aux.acc_seg: 100.0000
+2024/02/06 12:18:06 - mmengine - INFO - Iter(train) [ 6200/10000]  lr: 1.0000e-04  eta: 0:27:43  time: 0.4347  data_time: 0.0014  memory: 4513  loss: 1.2643  decode.loss_dice: 0.8992  decode.acc_seg: 100.0000  aux.loss_dice: 0.3651  aux.acc_seg: 100.0000
+2024/02/06 12:18:28 - mmengine - INFO - Iter(train) [ 6250/10000]  lr: 1.0000e-04  eta: 0:27:21  time: 0.4385  data_time: 0.0014  memory: 4513  loss: 1.3734  decode.loss_dice: 0.9797  decode.acc_seg: 100.0000  aux.loss_dice: 0.3937  aux.acc_seg: 100.0000
+2024/02/06 12:18:49 - mmengine - INFO - Iter(train) [ 6300/10000]  lr: 1.0000e-04  eta: 0:26:59  time: 0.4305  data_time: 0.0013  memory: 4513  loss: 1.3831  decode.loss_dice: 0.9873  decode.acc_seg: 100.0000  aux.loss_dice: 0.3959  aux.acc_seg: 100.0000
+2024/02/06 12:19:11 - mmengine - INFO - Iter(train) [ 6350/10000]  lr: 1.0000e-04  eta: 0:26:37  time: 0.4306  data_time: 0.0014  memory: 4513  loss: 1.3663  decode.loss_dice: 0.9745  decode.acc_seg: 100.0000  aux.loss_dice: 0.3918  aux.acc_seg: 100.0000
+2024/02/06 12:19:33 - mmengine - INFO - Iter(train) [ 6400/10000]  lr: 1.0000e-04  eta: 0:26:15  time: 0.4385  data_time: 0.0014  memory: 4513  loss: 1.3530  decode.loss_dice: 0.9644  decode.acc_seg: 100.0000  aux.loss_dice: 0.3886  aux.acc_seg: 100.0000
+2024/02/06 12:19:55 - mmengine - INFO - Iter(train) [ 6450/10000]  lr: 1.0000e-04  eta: 0:25:53  time: 0.4331  data_time: 0.0018  memory: 4513  loss: 1.3777  decode.loss_dice: 0.9833  decode.acc_seg: 100.0000  aux.loss_dice: 0.3944  aux.acc_seg: 100.0000
+2024/02/06 12:20:16 - mmengine - INFO - Iter(train) [ 6500/10000]  lr: 1.0000e-04  eta: 0:25:31  time: 0.4414  data_time: 0.0019  memory: 4513  loss: 1.3588  decode.loss_dice: 0.9689  decode.acc_seg: 100.0000  aux.loss_dice: 0.3899  aux.acc_seg: 100.0000
+2024/02/06 12:20:38 - mmengine - INFO - Iter(train) [ 6550/10000]  lr: 1.0000e-04  eta: 0:25:09  time: 0.4382  data_time: 0.0018  memory: 4513  loss: 1.3736  decode.loss_dice: 0.9802  decode.acc_seg: 100.0000  aux.loss_dice: 0.3934  aux.acc_seg: 100.0000
+2024/02/06 12:21:00 - mmengine - INFO - Iter(train) [ 6600/10000]  lr: 1.0000e-04  eta: 0:24:47  time: 0.4405  data_time: 0.0018  memory: 4513  loss: 1.3600  decode.loss_dice: 0.9699  decode.acc_seg: 100.0000  aux.loss_dice: 0.3900  aux.acc_seg: 100.0000
+2024/02/06 12:21:22 - mmengine - INFO - Iter(train) [ 6650/10000]  lr: 1.0000e-04  eta: 0:24:26  time: 0.4351  data_time: 0.0014  memory: 4513  loss: 1.3333  decode.loss_dice: 0.9498  decode.acc_seg: 100.0000  aux.loss_dice: 0.3835  aux.acc_seg: 100.0000
+2024/02/06 12:21:43 - mmengine - INFO - Iter(train) [ 6700/10000]  lr: 1.0000e-04  eta: 0:24:03  time: 0.4310  data_time: 0.0013  memory: 4513  loss: 1.3391  decode.loss_dice: 0.9537  decode.acc_seg: 100.0000  aux.loss_dice: 0.3854  aux.acc_seg: 100.0000
+2024/02/06 12:22:05 - mmengine - INFO - Iter(train) [ 6750/10000]  lr: 1.0000e-04  eta: 0:23:41  time: 0.4314  data_time: 0.0014  memory: 4513  loss: 1.3727  decode.loss_dice: 0.9793  decode.acc_seg: 100.0000  aux.loss_dice: 0.3934  aux.acc_seg: 100.0000
+2024/02/06 12:22:26 - mmengine - INFO - Iter(train) [ 6800/10000]  lr: 1.0000e-04  eta: 0:23:19  time: 0.4308  data_time: 0.0013  memory: 4513  loss: 1.3812  decode.loss_dice: 0.9857  decode.acc_seg: 100.0000  aux.loss_dice: 0.3955  aux.acc_seg: 100.0000
+2024/02/06 12:22:48 - mmengine - INFO - Iter(train) [ 6850/10000]  lr: 1.0000e-04  eta: 0:22:57  time: 0.4308  data_time: 0.0013  memory: 4513  loss: 1.3460  decode.loss_dice: 0.9589  decode.acc_seg: 100.0000  aux.loss_dice: 0.3871  aux.acc_seg: 100.0000
+2024/02/06 12:23:10 - mmengine - INFO - Iter(train) [ 6900/10000]  lr: 1.0000e-04  eta: 0:22:35  time: 0.4311  data_time: 0.0014  memory: 4513  loss: 1.3731  decode.loss_dice: 0.9795  decode.acc_seg: 100.0000  aux.loss_dice: 0.3936  aux.acc_seg: 100.0000
+2024/02/06 12:23:31 - mmengine - INFO - Iter(train) [ 6950/10000]  lr: 1.0000e-04  eta: 0:22:13  time: 0.4312  data_time: 0.0014  memory: 4513  loss: 1.3727  decode.loss_dice: 0.9794  decode.acc_seg: 100.0000  aux.loss_dice: 0.3933  aux.acc_seg: 100.0000
+2024/02/06 12:23:53 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:23:53 - mmengine - INFO - Iter(train) [ 7000/10000]  lr: 1.0000e-04  eta: 0:21:51  time: 0.4312  data_time: 0.0014  memory: 4513  loss: 1.3853  decode.loss_dice: 0.9887  decode.acc_seg: 100.0000  aux.loss_dice: 0.3966  aux.acc_seg: 100.0000
+2024/02/06 12:24:14 - mmengine - INFO - Iter(train) [ 7050/10000]  lr: 1.0000e-04  eta: 0:21:29  time: 0.4309  data_time: 0.0013  memory: 4513  loss: 1.3734  decode.loss_dice: 0.9796  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 12:24:36 - mmengine - INFO - Iter(train) [ 7100/10000]  lr: 1.0000e-04  eta: 0:21:07  time: 0.4309  data_time: 0.0013  memory: 4513  loss: 1.3295  decode.loss_dice: 0.9461  decode.acc_seg: 100.0000  aux.loss_dice: 0.3834  aux.acc_seg: 100.0000
+2024/02/06 12:24:57 - mmengine - INFO - Iter(train) [ 7150/10000]  lr: 1.0000e-04  eta: 0:20:45  time: 0.4311  data_time: 0.0013  memory: 4513  loss: 1.3707  decode.loss_dice: 0.9777  decode.acc_seg: 100.0000  aux.loss_dice: 0.3930  aux.acc_seg: 100.0000
+2024/02/06 12:25:19 - mmengine - INFO - Iter(train) [ 7200/10000]  lr: 1.0000e-04  eta: 0:20:23  time: 0.4311  data_time: 0.0013  memory: 4513  loss: 1.3884  decode.loss_dice: 0.9912  decode.acc_seg: 100.0000  aux.loss_dice: 0.3972  aux.acc_seg: 100.0000
+2024/02/06 12:25:41 - mmengine - INFO - Iter(train) [ 7250/10000]  lr: 1.0000e-04  eta: 0:20:02  time: 0.4311  data_time: 0.0017  memory: 4513  loss: 1.3465  decode.loss_dice: 0.9598  decode.acc_seg: 100.0000  aux.loss_dice: 0.3866  aux.acc_seg: 100.0000
+2024/02/06 12:26:02 - mmengine - INFO - Iter(train) [ 7300/10000]  lr: 1.0000e-04  eta: 0:19:40  time: 0.4314  data_time: 0.0017  memory: 4513  loss: 1.3756  decode.loss_dice: 0.9815  decode.acc_seg: 100.0000  aux.loss_dice: 0.3942  aux.acc_seg: 100.0000
+2024/02/06 12:26:24 - mmengine - INFO - Iter(train) [ 7350/10000]  lr: 1.0000e-04  eta: 0:19:18  time: 0.4297  data_time: 0.0016  memory: 4513  loss: 1.3064  decode.loss_dice: 0.9289  decode.acc_seg: 100.0000  aux.loss_dice: 0.3775  aux.acc_seg: 100.0000
+2024/02/06 12:26:45 - mmengine - INFO - Iter(train) [ 7400/10000]  lr: 1.0000e-04  eta: 0:18:56  time: 0.4298  data_time: 0.0016  memory: 4513  loss: 1.3833  decode.loss_dice: 0.9872  decode.acc_seg: 100.0000  aux.loss_dice: 0.3961  aux.acc_seg: 100.0000
+2024/02/06 12:27:07 - mmengine - INFO - Iter(train) [ 7450/10000]  lr: 1.0000e-04  eta: 0:18:34  time: 0.4299  data_time: 0.0018  memory: 4513  loss: 1.3785  decode.loss_dice: 0.9835  decode.acc_seg: 100.0000  aux.loss_dice: 0.3950  aux.acc_seg: 100.0000
+2024/02/06 12:27:29 - mmengine - INFO - Iter(train) [ 7500/10000]  lr: 1.0000e-04  eta: 0:18:12  time: 0.4311  data_time: 0.0018  memory: 4513  loss: 1.3767  decode.loss_dice: 0.9823  decode.acc_seg: 100.0000  aux.loss_dice: 0.3945  aux.acc_seg: 100.0000
+2024/02/06 12:27:50 - mmengine - INFO - Iter(train) [ 7550/10000]  lr: 1.0000e-04  eta: 0:17:50  time: 0.4338  data_time: 0.0017  memory: 4513  loss: 1.3469  decode.loss_dice: 0.9597  decode.acc_seg: 100.0000  aux.loss_dice: 0.3872  aux.acc_seg: 100.0000
+2024/02/06 12:28:12 - mmengine - INFO - Iter(train) [ 7600/10000]  lr: 1.0000e-04  eta: 0:17:28  time: 0.4311  data_time: 0.0017  memory: 4513  loss: 1.3687  decode.loss_dice: 0.9760  decode.acc_seg: 100.0000  aux.loss_dice: 0.3927  aux.acc_seg: 100.0000
+2024/02/06 12:28:34 - mmengine - INFO - Iter(train) [ 7650/10000]  lr: 1.0000e-04  eta: 0:17:06  time: 0.4312  data_time: 0.0018  memory: 4513  loss: 1.3790  decode.loss_dice: 0.9839  decode.acc_seg: 100.0000  aux.loss_dice: 0.3951  aux.acc_seg: 100.0000
+2024/02/06 12:28:55 - mmengine - INFO - Iter(train) [ 7700/10000]  lr: 1.0000e-04  eta: 0:16:44  time: 0.4314  data_time: 0.0017  memory: 4513  loss: 1.3787  decode.loss_dice: 0.9836  decode.acc_seg: 100.0000  aux.loss_dice: 0.3951  aux.acc_seg: 100.0000
+2024/02/06 12:29:17 - mmengine - INFO - Iter(train) [ 7750/10000]  lr: 1.0000e-04  eta: 0:16:22  time: 0.4315  data_time: 0.0016  memory: 4513  loss: 1.3794  decode.loss_dice: 0.9842  decode.acc_seg: 100.0000  aux.loss_dice: 0.3951  aux.acc_seg: 100.0000
+2024/02/06 12:29:38 - mmengine - INFO - Iter(train) [ 7800/10000]  lr: 1.0000e-04  eta: 0:16:00  time: 0.4417  data_time: 0.0017  memory: 4513  loss: 1.3839  decode.loss_dice: 0.9875  decode.acc_seg: 100.0000  aux.loss_dice: 0.3963  aux.acc_seg: 100.0000
+2024/02/06 12:30:00 - mmengine - INFO - Iter(train) [ 7850/10000]  lr: 1.0000e-04  eta: 0:15:39  time: 0.4381  data_time: 0.0020  memory: 4513  loss: 1.3733  decode.loss_dice: 0.9796  decode.acc_seg: 100.0000  aux.loss_dice: 0.3938  aux.acc_seg: 100.0000
+2024/02/06 12:30:22 - mmengine - INFO - Iter(train) [ 7900/10000]  lr: 1.0000e-04  eta: 0:15:17  time: 0.4333  data_time: 0.0017  memory: 4513  loss: 1.3770  decode.loss_dice: 0.9824  decode.acc_seg: 100.0000  aux.loss_dice: 0.3946  aux.acc_seg: 100.0000
+2024/02/06 12:30:44 - mmengine - INFO - Iter(train) [ 7950/10000]  lr: 1.0000e-04  eta: 0:14:55  time: 0.4326  data_time: 0.0018  memory: 4513  loss: 1.3721  decode.loss_dice: 0.9788  decode.acc_seg: 100.0000  aux.loss_dice: 0.3933  aux.acc_seg: 100.0000
+2024/02/06 12:31:05 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:31:05 - mmengine - INFO - Iter(train) [ 8000/10000]  lr: 1.0000e-04  eta: 0:14:33  time: 0.4317  data_time: 0.0017  memory: 4513  loss: 1.3506  decode.loss_dice: 0.9619  decode.acc_seg: 100.0000  aux.loss_dice: 0.3887  aux.acc_seg: 100.0000
+2024/02/06 12:31:27 - mmengine - INFO - Iter(train) [ 8050/10000]  lr: 1.0000e-04  eta: 0:14:11  time: 0.4316  data_time: 0.0017  memory: 4513  loss: 1.3843  decode.loss_dice: 0.9879  decode.acc_seg: 100.0000  aux.loss_dice: 0.3964  aux.acc_seg: 100.0000
+2024/02/06 12:31:49 - mmengine - INFO - Iter(train) [ 8100/10000]  lr: 1.0000e-04  eta: 0:13:49  time: 0.4342  data_time: 0.0017  memory: 4513  loss: 1.3725  decode.loss_dice: 0.9789  decode.acc_seg: 100.0000  aux.loss_dice: 0.3936  aux.acc_seg: 100.0000
+2024/02/06 12:32:10 - mmengine - INFO - Iter(train) [ 8150/10000]  lr: 1.0000e-04  eta: 0:13:27  time: 0.4314  data_time: 0.0017  memory: 4513  loss: 1.3769  decode.loss_dice: 0.9822  decode.acc_seg: 100.0000  aux.loss_dice: 0.3947  aux.acc_seg: 100.0000
+2024/02/06 12:32:32 - mmengine - INFO - Iter(train) [ 8200/10000]  lr: 1.0000e-04  eta: 0:13:05  time: 0.4315  data_time: 0.0017  memory: 4513  loss: 1.3714  decode.loss_dice: 0.9779  decode.acc_seg: 100.0000  aux.loss_dice: 0.3935  aux.acc_seg: 100.0000
+2024/02/06 12:32:54 - mmengine - INFO - Iter(train) [ 8250/10000]  lr: 1.0000e-04  eta: 0:12:44  time: 0.4424  data_time: 0.0018  memory: 4513  loss: 1.3821  decode.loss_dice: 0.9862  decode.acc_seg: 100.0000  aux.loss_dice: 0.3959  aux.acc_seg: 100.0000
+2024/02/06 12:33:16 - mmengine - INFO - Iter(train) [ 8300/10000]  lr: 1.0000e-04  eta: 0:12:22  time: 0.4499  data_time: 0.0019  memory: 4513  loss: 1.3882  decode.loss_dice: 0.9909  decode.acc_seg: 100.0000  aux.loss_dice: 0.3973  aux.acc_seg: 100.0000
+2024/02/06 12:33:39 - mmengine - INFO - Iter(train) [ 8350/10000]  lr: 1.0000e-04  eta: 0:12:00  time: 0.4500  data_time: 0.0016  memory: 4513  loss: 1.3839  decode.loss_dice: 0.9876  decode.acc_seg: 100.0000  aux.loss_dice: 0.3963  aux.acc_seg: 100.0000
+2024/02/06 12:34:01 - mmengine - INFO - Iter(train) [ 8400/10000]  lr: 1.0000e-04  eta: 0:11:39  time: 0.4500  data_time: 0.0018  memory: 4513  loss: 1.2766  decode.loss_dice: 0.9054  decode.acc_seg: 100.0000  aux.loss_dice: 0.3712  aux.acc_seg: 100.0000
+2024/02/06 12:34:24 - mmengine - INFO - Iter(train) [ 8450/10000]  lr: 1.0000e-04  eta: 0:11:17  time: 0.4476  data_time: 0.0017  memory: 4513  loss: 1.3811  decode.loss_dice: 0.9854  decode.acc_seg: 100.0000  aux.loss_dice: 0.3957  aux.acc_seg: 100.0000
+2024/02/06 12:34:46 - mmengine - INFO - Iter(train) [ 8500/10000]  lr: 1.0000e-04  eta: 0:10:55  time: 0.4331  data_time: 0.0017  memory: 4513  loss: 1.3438  decode.loss_dice: 0.9570  decode.acc_seg: 100.0000  aux.loss_dice: 0.3868  aux.acc_seg: 100.0000
+2024/02/06 12:35:08 - mmengine - INFO - Iter(train) [ 8550/10000]  lr: 1.0000e-04  eta: 0:10:33  time: 0.4335  data_time: 0.0018  memory: 4513  loss: 1.3785  decode.loss_dice: 0.9833  decode.acc_seg: 100.0000  aux.loss_dice: 0.3952  aux.acc_seg: 100.0000
+2024/02/06 12:35:29 - mmengine - INFO - Iter(train) [ 8600/10000]  lr: 1.0000e-04  eta: 0:10:11  time: 0.4355  data_time: 0.0014  memory: 4513  loss: 1.3171  decode.loss_dice: 0.9378  decode.acc_seg: 100.0000  aux.loss_dice: 0.3793  aux.acc_seg: 100.0000
+2024/02/06 12:35:51 - mmengine - INFO - Iter(train) [ 8650/10000]  lr: 1.0000e-04  eta: 0:09:49  time: 0.4373  data_time: 0.0014  memory: 4513  loss: 1.3843  decode.loss_dice: 0.9878  decode.acc_seg: 100.0000  aux.loss_dice: 0.3965  aux.acc_seg: 100.0000
+2024/02/06 12:36:13 - mmengine - INFO - Iter(train) [ 8700/10000]  lr: 1.0000e-04  eta: 0:09:28  time: 0.4415  data_time: 0.0014  memory: 4513  loss: 1.3422  decode.loss_dice: 0.9556  decode.acc_seg: 100.0000  aux.loss_dice: 0.3866  aux.acc_seg: 100.0000
+2024/02/06 12:36:36 - mmengine - INFO - Iter(train) [ 8750/10000]  lr: 1.0000e-04  eta: 0:09:06  time: 0.4501  data_time: 0.0016  memory: 4513  loss: 1.3736  decode.loss_dice: 0.9794  decode.acc_seg: 100.0000  aux.loss_dice: 0.3942  aux.acc_seg: 100.0000
+2024/02/06 12:36:58 - mmengine - INFO - Iter(train) [ 8800/10000]  lr: 1.0000e-04  eta: 0:08:44  time: 0.4359  data_time: 0.0017  memory: 4513  loss: 1.3779  decode.loss_dice: 0.9830  decode.acc_seg: 100.0000  aux.loss_dice: 0.3949  aux.acc_seg: 100.0000
+2024/02/06 12:37:20 - mmengine - INFO - Iter(train) [ 8850/10000]  lr: 1.0000e-04  eta: 0:08:22  time: 0.4497  data_time: 0.0016  memory: 4513  loss: 1.3886  decode.loss_dice: 0.9912  decode.acc_seg: 100.0000  aux.loss_dice: 0.3975  aux.acc_seg: 100.0000
+2024/02/06 12:37:42 - mmengine - INFO - Iter(train) [ 8900/10000]  lr: 1.0000e-04  eta: 0:08:00  time: 0.4504  data_time: 0.0018  memory: 4513  loss: 1.3241  decode.loss_dice: 0.9415  decode.acc_seg: 100.0000  aux.loss_dice: 0.3826  aux.acc_seg: 100.0000
+2024/02/06 12:38:05 - mmengine - INFO - Iter(train) [ 8950/10000]  lr: 1.0000e-04  eta: 0:07:39  time: 0.4501  data_time: 0.0019  memory: 4513  loss: 1.3381  decode.loss_dice: 0.9522  decode.acc_seg: 100.0000  aux.loss_dice: 0.3859  aux.acc_seg: 100.0000
+2024/02/06 12:38:27 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:38:27 - mmengine - INFO - Iter(train) [ 9000/10000]  lr: 1.0000e-04  eta: 0:07:17  time: 0.4497  data_time: 0.0016  memory: 4513  loss: 1.3368  decode.loss_dice: 0.9515  decode.acc_seg: 100.0000  aux.loss_dice: 0.3852  aux.acc_seg: 100.0000
+2024/02/06 12:38:49 - mmengine - INFO - Iter(train) [ 9050/10000]  lr: 1.0000e-04  eta: 0:06:55  time: 0.4389  data_time: 0.0018  memory: 4513  loss: 1.3459  decode.loss_dice: 0.9586  decode.acc_seg: 100.0000  aux.loss_dice: 0.3872  aux.acc_seg: 100.0000
+2024/02/06 12:39:12 - mmengine - INFO - Iter(train) [ 9100/10000]  lr: 1.0000e-04  eta: 0:06:33  time: 0.4499  data_time: 0.0020  memory: 4513  loss: 1.3590  decode.loss_dice: 0.9681  decode.acc_seg: 100.0000  aux.loss_dice: 0.3909  aux.acc_seg: 100.0000
+2024/02/06 12:39:34 - mmengine - INFO - Iter(train) [ 9150/10000]  lr: 1.0000e-04  eta: 0:06:11  time: 0.4309  data_time: 0.0019  memory: 4513  loss: 1.3787  decode.loss_dice: 0.9833  decode.acc_seg: 100.0000  aux.loss_dice: 0.3954  aux.acc_seg: 100.0000
+2024/02/06 12:39:56 - mmengine - INFO - Iter(train) [ 9200/10000]  lr: 1.0000e-04  eta: 0:05:49  time: 0.4493  data_time: 0.0018  memory: 4513  loss: 1.3412  decode.loss_dice: 0.9542  decode.acc_seg: 100.0000  aux.loss_dice: 0.3870  aux.acc_seg: 100.0000
+2024/02/06 12:40:18 - mmengine - INFO - Iter(train) [ 9250/10000]  lr: 1.0000e-04  eta: 0:05:28  time: 0.4331  data_time: 0.0017  memory: 4513  loss: 1.3863  decode.loss_dice: 0.9893  decode.acc_seg: 100.0000  aux.loss_dice: 0.3970  aux.acc_seg: 100.0000
+2024/02/06 12:40:39 - mmengine - INFO - Iter(train) [ 9300/10000]  lr: 1.0000e-04  eta: 0:05:06  time: 0.4320  data_time: 0.0019  memory: 4513  loss: 1.3415  decode.loss_dice: 0.9546  decode.acc_seg: 100.0000  aux.loss_dice: 0.3869  aux.acc_seg: 100.0000
+2024/02/06 12:41:01 - mmengine - INFO - Iter(train) [ 9350/10000]  lr: 1.0000e-04  eta: 0:04:44  time: 0.4303  data_time: 0.0018  memory: 4513  loss: 1.3725  decode.loss_dice: 0.9785  decode.acc_seg: 100.0000  aux.loss_dice: 0.3940  aux.acc_seg: 100.0000
+2024/02/06 12:41:23 - mmengine - INFO - Iter(train) [ 9400/10000]  lr: 1.0000e-04  eta: 0:04:22  time: 0.4510  data_time: 0.0019  memory: 4513  loss: 1.3584  decode.loss_dice: 0.9676  decode.acc_seg: 100.0000  aux.loss_dice: 0.3908  aux.acc_seg: 100.0000
+2024/02/06 12:41:45 - mmengine - INFO - Iter(train) [ 9450/10000]  lr: 1.0000e-04  eta: 0:04:00  time: 0.4501  data_time: 0.0018  memory: 4513  loss: 1.3494  decode.loss_dice: 0.9605  decode.acc_seg: 100.0000  aux.loss_dice: 0.3889  aux.acc_seg: 100.0000
+2024/02/06 12:42:07 - mmengine - INFO - Iter(train) [ 9500/10000]  lr: 1.0000e-04  eta: 0:03:38  time: 0.4341  data_time: 0.0020  memory: 4513  loss: 1.3894  decode.loss_dice: 0.9918  decode.acc_seg: 100.0000  aux.loss_dice: 0.3977  aux.acc_seg: 100.0000
+2024/02/06 12:42:29 - mmengine - INFO - Iter(train) [ 9550/10000]  lr: 1.0000e-04  eta: 0:03:16  time: 0.4314  data_time: 0.0021  memory: 4513  loss: 1.3609  decode.loss_dice: 0.9693  decode.acc_seg: 100.0000  aux.loss_dice: 0.3915  aux.acc_seg: 100.0000
+2024/02/06 12:42:50 - mmengine - INFO - Iter(train) [ 9600/10000]  lr: 1.0000e-04  eta: 0:02:54  time: 0.4324  data_time: 0.0018  memory: 4513  loss: 1.3676  decode.loss_dice: 0.9747  decode.acc_seg: 100.0000  aux.loss_dice: 0.3929  aux.acc_seg: 100.0000
+2024/02/06 12:43:12 - mmengine - INFO - Iter(train) [ 9650/10000]  lr: 1.0000e-04  eta: 0:02:33  time: 0.4299  data_time: 0.0016  memory: 4513  loss: 1.3660  decode.loss_dice: 0.9734  decode.acc_seg: 100.0000  aux.loss_dice: 0.3926  aux.acc_seg: 100.0000
+2024/02/06 12:43:34 - mmengine - INFO - Iter(train) [ 9700/10000]  lr: 1.0000e-04  eta: 0:02:11  time: 0.4295  data_time: 0.0017  memory: 4513  loss: 1.3611  decode.loss_dice: 0.9698  decode.acc_seg: 100.0000  aux.loss_dice: 0.3913  aux.acc_seg: 100.0000
+2024/02/06 12:43:55 - mmengine - INFO - Iter(train) [ 9750/10000]  lr: 1.0000e-04  eta: 0:01:49  time: 0.4297  data_time: 0.0017  memory: 4513  loss: 1.3854  decode.loss_dice: 0.9886  decode.acc_seg: 100.0000  aux.loss_dice: 0.3967  aux.acc_seg: 100.0000
+2024/02/06 12:44:17 - mmengine - INFO - Iter(train) [ 9800/10000]  lr: 1.0000e-04  eta: 0:01:27  time: 0.4298  data_time: 0.0017  memory: 4513  loss: 1.3371  decode.loss_dice: 0.9513  decode.acc_seg: 100.0000  aux.loss_dice: 0.3858  aux.acc_seg: 100.0000
+2024/02/06 12:44:38 - mmengine - INFO - Iter(train) [ 9850/10000]  lr: 1.0000e-04  eta: 0:01:05  time: 0.4295  data_time: 0.0016  memory: 4513  loss: 1.3621  decode.loss_dice: 0.9703  decode.acc_seg: 100.0000  aux.loss_dice: 0.3918  aux.acc_seg: 100.0000
+2024/02/06 12:44:59 - mmengine - INFO - Iter(train) [ 9900/10000]  lr: 1.0000e-04  eta: 0:00:43  time: 0.4297  data_time: 0.0017  memory: 4513  loss: 1.3740  decode.loss_dice: 0.9797  decode.acc_seg: 100.0000  aux.loss_dice: 0.3943  aux.acc_seg: 100.0000
+2024/02/06 12:45:21 - mmengine - INFO - Iter(train) [ 9950/10000]  lr: 1.0000e-04  eta: 0:00:21  time: 0.4298  data_time: 0.0017  memory: 4513  loss: 1.3598  decode.loss_dice: 0.9685  decode.acc_seg: 100.0000  aux.loss_dice: 0.3913  aux.acc_seg: 100.0000
+2024/02/06 12:45:42 - mmengine - INFO - Exp name: unet-s5-d16_fcn_4xb4-160k_cityscapes_cbis-ddsm-mono-512x1024_20240206_113249
+2024/02/06 12:45:42 - mmengine - INFO - Iter(train) [10000/10000]  lr: 1.0000e-04  eta: 0:00:00  time: 0.4297  data_time: 0.0018  memory: 4513  loss: 1.3765  decode.loss_dice: 0.9815  decode.acc_seg: 100.0000  aux.loss_dice: 0.3949  aux.acc_seg: 100.0000
+2024/02/06 12:45:42 - mmengine - INFO - Saving checkpoint at 10000 iterations
+2024/02/06 12:45:51 - mmengine - INFO - Iter(val) [ 50/246]    eta: 0:00:32  time: 0.1492  data_time: 0.0062  memory: 1531  
+2024/02/06 12:45:59 - mmengine - INFO - Iter(val) [100/246]    eta: 0:00:23  time: 0.1541  data_time: 0.0071  memory: 1597  
+2024/02/06 12:46:06 - mmengine - INFO - Iter(val) [150/246]    eta: 0:00:15  time: 0.1554  data_time: 0.0083  memory: 1553  
+2024/02/06 12:46:14 - mmengine - INFO - Iter(val) [200/246]    eta: 0:00:07  time: 0.1549  data_time: 0.0073  memory: 1562  
+2024/02/06 12:46:21 - mmengine - INFO - per class results:
+2024/02/06 12:46:21 - mmengine - INFO - 
++-------+-----+-----+
+| Class | IoU | Acc |
++-------+-----+-----+
+|  roi  | 0.0 | 0.0 |
++-------+-----+-----+
+2024/02/06 12:46:21 - mmengine - INFO - Iter(val) [246/246]    aAcc: 0.0000  mIoU: 0.0000  mAcc: 0.0000  data_time: 0.0102  time: 0.1571
