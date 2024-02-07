@@ -144,7 +144,6 @@ class DiceLoss(nn.Module):
                 weight=None,
                 avg_factor=None,
                 reduction_override=None,
-                ignore_index=255,
                 **kwargs):
         """Forward function.
 
