@@ -60,9 +60,9 @@ fi
 
 
 if [ ${optimizer} == "adamw" ]; then
-  optim_options="optimizer=\"dict(type='AdamW',lr=$lr,weight_decay=$wd)\" optim_wrapper.optimizer=\"dict(type='AdamW',lr=$lr,weight_decay=$wd)\""
+  optim_options=(optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)" optim_wrapper.optimizer="dict(type='AdamW',lr=$lr,weight_decay=$wd)")
 elif [ ${optimizer} == "sgd" ]; then
-  optim_options="optimizer.lr=$lr optimizer.weight_decay=$wd optim_wrapper.optimizer.lr=$lr optim_wrapper.optimizer.weight_decay=$wd"
+  optim_options=(optimizer.lr=$lr optimizer.weight_decay=$wd optim_wrapper.optimizer.lr=$lr optim_wrapper.optimizer.weight_decay=$wd)
 else
   echo "Error: optimizer must be adamw or sgd"
   exit 1
@@ -88,7 +88,7 @@ python tools/train.py $config \
   --cfg-options \
   train_dataloader.batch_size=4 \
   train_dataloader.num_workers=4 \
-  $optim_options \
+  "${optim_options[@]}" \
   record_gpu_snapshot=True \
   model.decode_head.loss_decode.class_weight=$class_weights \
   $auxiliary_head_options \
