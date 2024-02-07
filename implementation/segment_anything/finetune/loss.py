@@ -5,21 +5,28 @@ from metrics import iou, dice, focal, mse
 
 
 def get_loss_function(loss_definition) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
+    metric = None
     if loss_definition.name == 'Dice':
-        return lambda outputs, targets: dice(outputs, targets)
+        metric = lambda outputs, targets: dice(outputs, targets)
     if loss_definition.name == 'Focal':
-        alpha = loss_definition.get('alpha', -1)  # -1 means no class balancing
-        gamma = loss_definition.get('gamma', 2.0)  # 2.0 is the default value from torchvision
-        # 'mean' is not normally the default value, but we want equal impact from each sample, regardless of image size.
+        alpha = loss_definition.get('alpha', -1)
+        gamma = loss_definition.get('gamma', 2.0)
         reduction = loss_definition.get('reduction', 'mean')
-        return lambda outputs, targets: focal(outputs, targets.float(), alpha, gamma, reduction)
-    raise NotImplementedError()
+        metric = lambda outputs, targets: focal(outputs, targets.float(), alpha, gamma, reduction)
+    if metric is None:
+        raise NotImplementedError()
+    loss_function = metric
+    if loss_definition.get('invert', False):
+        loss_function = lambda *args: -metric(*args)
+    return loss_function
+
 
 def build_loss_function(cfg):
     loss_parts = [get_loss_function(loss_item) for loss_item in cfg.model.loss.parts]
     loss_weights = [loss_item.weight for loss_item in cfg.model.loss.parts]
     total_weight = sum(loss_weights)
-    return lambda outputs, targets: sum([weight * loss_part(outputs, targets) for weight, loss_part in zip(loss_weights, loss_parts)]) / total_weight
+    return lambda outputs, targets: sum(
+        [weight * loss_part(outputs, targets) for weight, loss_part in zip(loss_weights, loss_parts)]) / total_weight
 
 
 def find_minimum_loss(zipped_losses):
@@ -31,12 +38,13 @@ def find_minimum_loss(zipped_losses):
     sorted_losses = torch.sort(zipped_losses, dim=1)
     return sorted_losses.values[:, 0, :]
 
+
 def call_loss(
         loss_function: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         outputs: torch.Tensor,
         targets: torch.Tensor,
         cfg
-        ) -> torch.Tensor:
+) -> torch.Tensor:
     # we don't use the low_res_masks output, so we ignore it in the below line
     masks, iou_predictions, _ = outputs
     # we need to match the target dimensions to the mask dimensions, by repeating the target:
@@ -57,10 +65,10 @@ def call_loss(
     # return losses
     return reduce_losses(losses, cfg)
 
+
 def reduce_losses(loss, cfg):
     reduction = cfg.model.loss.reduction
     if reduction == 'mean':
         return torch.mean(loss, dim=0)
     if reduction == 'sum':
         return torch.sum(loss, dim=0)
-

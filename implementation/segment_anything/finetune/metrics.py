@@ -7,7 +7,7 @@ import torchvision
 
 def dice_single(output, target):
     # invert because we use it as a loss, not an objective
-    return - 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target))
+    return 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target))
 
 
 def dice_item(outputs, targets):
@@ -21,21 +21,21 @@ def dice(output_batch, target_batch) -> torch.Tensor:
         1], f'Expected targets to have {output_batch.shape[1]} masks, but got {target_batch.shape[1]} masks'
     return torch.vmap(dice_item)(output_batch, target_batch)
 
+def focal_single(output, target, alpha, gamma, reduction):
+    return torchvision.ops.sigmoid_focal_loss(output, target, alpha=alpha, gamma=gamma, reduction=reduction)
+
+def focal_item(outputs, targets, alpha, gamma, reduction):
+    partial_focal_single = lambda output, target: focal_single(output, target, alpha, gamma, reduction)
+    return torch.vmap(partial_focal_single)(outputs, targets)
 
 def focal(output_batch, target_batch, alpha, gamma, reduction) -> torch.Tensor:
-    print(output_batch.shape, output_batch.min(), output_batch.max())
-    print(target_batch.shape, target_batch.min(), target_batch.max())
-    def focal_single(output, target):
-        return torchvision.ops.sigmoid_focal_loss(output, target, alpha=alpha, gamma=gamma, reduction=reduction)
-
-    def focal_item(outputs, targets):
-        return torch.vmap(focal_single)(outputs, targets)
-    return torch.vmap(focal_item)(output_batch, target_batch)
+    partial_focal_item = lambda outputs, targets: focal_item(outputs, targets, alpha, gamma, reduction)
+    return torch.vmap(partial_focal_item)(output_batch, target_batch)
 
 
 def iou_single(output, target):
     intersection = torch.sum(output * target > 0)
-    union = torch.sum(output + target > 0)
+    union = torch.sum((output > 0) + (target > 0))  # boolean addition is the same as logical or
     return intersection / union
 
 
@@ -48,11 +48,13 @@ def iou(output_batch, target_batch) -> torch.Tensor:
                                      3], f'Expected outputs to have 1 or 3 masks, but got {output_batch.shape[1]} masks'
     assert target_batch.shape[1] == output_batch.shape[
         1], f'Expected targets to have {output_batch.shape[1]} masks, but got {target_batch.shape[1]} masks'
+
     return torch.vmap(iou_item)(output_batch, target_batch)
 
 
 def mse(predicted_batch, target_batch):
     return torch.nn.functional.mse_loss(predicted_batch, target_batch, reduction='none')
+
 
 
 def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
@@ -65,7 +67,7 @@ def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Te
         alpha = metric_definition.get('alpha', -1)
         gamma = metric_definition.get('gamma', 2.0)
         reduction = metric_definition.get('reduction', 'mean')
-        metric = lambda outputs, targets: focal(outputs, targets, alpha=alpha, gamma=gamma, reduction=reduction)
+        metric = lambda outputs, targets: focal(outputs, targets.float(), alpha, gamma, reduction)
     if metric is None:
         raise NotImplementedError()
     return lambda *args: metric(*args).tolist()
@@ -83,6 +85,7 @@ def call_metrics(
 ) -> dict[str, torch.Tensor]:
     mask_batch, _, _ = output_batch
     target_batch = target_batch.repeat(1, mask_batch.shape[1], 1, 1)
+    assert target_batch.shape == mask_batch.shape
     return {key: metric_function(mask_batch, target_batch) for key, metric_function in metric_functions.items()}
 
 

@@ -1,3 +1,5 @@
+import time
+
 from prodict import Prodict
 import json
 import os.path as osp
@@ -6,22 +8,59 @@ import os
 
 class Logger(Prodict):
     log_dir: str
+    cfg: Prodict
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, cfg, *args, **kwargs):
+        timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+        log_dir = osp.join(cfg.out_dir, timestamp)
+
+        super().__init__(self, *args, cfg=cfg, log_dir=log_dir, **kwargs)
+        assert self.cfg is not None
         assert self.log_dir is not None
         os.makedirs(self.log_dir, exist_ok=True)
         self.metrics_file = open(osp.join(self.log_dir, 'metrics.json'), 'w')
         self.text_file = open(osp.join(self.log_dir, 'logs.txt'), 'w')
 
-    def log_dict(self, d: dict):
+    def _log_dict(self, d: dict):
         d_json = json.dumps(d)
         print(d_json)
         self.metrics_file.write(f'{d_json}\n')
 
-    def log_string(self, s: str):
+    def _log_string(self, s: str):
         print(s)
         self.text_file.write(f'{s}\n')
 
     def log(self, s: str):
-        self.log_string(s)
+        self._log_string(s)
+
+
+class EpochLogger(Logger):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.epoch_metrics = []
+
+    def log_batch_metrics(self, metrics: dict):
+        self.epoch_metrics.append(metrics)
+
+    def log_epoch(self, epoch: int):
+        avg_metrics = {k: sum([m[k] for m in self.epoch_metrics]) / len(self.epoch_metrics) for k in self.epoch_metrics[0].keys()}
+        avg_metrics['epoch'] = epoch
+        self._log_dict(avg_metrics)
+        self.epoch_metrics = []
+
+
+class IterationLogger(EpochLogger):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.iteration_metrics = []
+
+    def _log_average_iteration_metrics(self):
+        avg_metrics = {k: sum([m[k] for m in self.iteration_metrics]) / len(self.iteration_metrics) for k in self.iteration_metrics[0].keys()}
+        self._log_dict(avg_metrics)
+        self.iteration_metrics = []
+
+    def log_iteration_metrics(self, metrics: dict, iteration: int):
+        self.iteration_metrics.append((metrics))
+        if iteration % self.cfg.schedule.log_interval != 0:
+            return
+        self._log_average_iteration_metrics()

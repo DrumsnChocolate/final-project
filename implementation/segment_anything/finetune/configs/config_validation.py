@@ -45,3 +45,4 @@ def validate_cfg(cfg):
     assert type(cfg.model.metrics) == list, "metrics should be a list"
     for metric in cfg.model.metrics:
         assert metric.name in supported_metrics, f"metric should be one of {supported_metrics}"
+        assert metric.get('invert', False) in [True, False], "metric.invert should be True or False"
