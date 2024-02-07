@@ -15,6 +15,23 @@ from prettytable import PrettyTable
 from mmseg.registry import METRICS
 
 
+def f_score(precision, recall, beta=1, eps=1e-7):
+    """calculate the f-score value.
+
+    Args:
+        precision (float | torch.Tensor): The precision value.
+        recall (float | torch.Tensor): The recall value.
+        beta (int): Determines the weight of recall in the combined
+            score. Default: 1.
+
+    Returns:
+        [torch.tensor]: The f-score value.
+    """
+    score = (1 + beta ** 2) * (precision * recall) / (
+            (beta ** 2 * precision) + recall + eps)
+    return score
+
+
 @METRICS.register_module()
 class IoUMetric(BaseMetric):
     """IoU evaluation metric.
@@ -118,16 +135,12 @@ class IoUMetric(BaseMetric):
         # convert list of tuples to tuple of lists, e.g.
         # [(A_1, B_1, C_1, D_1), ...,  (A_n, B_n, C_n, D_n)] to
         # ([A_1, ..., A_n], ..., [D_1, ..., D_n])
-        results = tuple(zip(*results))
-        assert len(results) == 4
 
-        total_area_intersect = sum(results[0])
-        total_area_union = sum(results[1])
-        total_area_pred_label = sum(results[2])
-        total_area_label = sum(results[3])
-        ret_metrics = self.total_area_to_metrics(
-            total_area_intersect, total_area_union, total_area_pred_label,
-            total_area_label, self.metrics, self.nan_to_num, self.beta)
+        # total_area_intersect = sum(results[0])
+        # total_area_union = sum(results[1])
+        # total_area_pred_label = sum(results[2])
+        # total_area_label = sum(results[3])
+        ret_metrics = self.results_to_metrics(results, self.metrics, self.nan_to_num, self.beta)
 
         class_names = self.dataset_meta['classes']
 
@@ -181,23 +194,57 @@ class IoUMetric(BaseMetric):
             torch.Tensor: The prediction histogram on all classes.
             torch.Tensor: The ground truth histogram on all classes.
         """
-
-        mask = (label != ignore_index)
-        pred_label = pred_label[mask]
-        label = label[mask]
-
-        intersect = pred_label[pred_label == label]
+        intersect = pred_label[torch.logical_and(pred_label == label, label != ignore_index)]
         area_intersect = torch.histc(
             intersect.float(), bins=(num_classes), min=0,
             max=num_classes - 1).cpu()
         area_pred_label = torch.histc(
-            pred_label.float(), bins=(num_classes), min=0,
+            pred_label[pred_label != ignore_index].float(), bins=(num_classes), min=0,
             max=num_classes - 1).cpu()
         area_label = torch.histc(
-            label.float(), bins=(num_classes), min=0,
+            label[label != ignore_index].float(), bins=(num_classes), min=0,
             max=num_classes - 1).cpu()
         area_union = area_pred_label + area_label - area_intersect
         return area_intersect, area_union, area_pred_label, area_label
+
+    @staticmethod
+    def results_to_metrics(results: list[torch.Tensor], metrics: list[str] = ['mIoU'], nan_to_num: Optional[int] = None, beta: int = 1, eps=1e-7):
+        results = tuple(zip(*results))
+        assert len(results) == 4
+        if isinstance(metrics, str):
+            metrics = [metrics]
+        areas_intersect = np.array(results[0])
+        areas_union = np.array(results[1])
+        areas_pred_label = np.array(results[2])
+        areas_label = np.array(results[3])
+        allowed_metrics = ['mIoU', 'mDice', 'mAcc', 'mFscore']
+        if not set(metrics).issubset(set(allowed_metrics)):
+            raise KeyError(f'metrics {metrics} is not supported')
+        avg_acc = (areas_intersect / (areas_label + eps)).mean()
+        ret_metrics = OrderedDict({'aAcc': avg_acc})
+        for metric in metrics:
+            if metric == 'mIoU':
+                iou = (areas_intersect / (areas_union + eps)).mean(axis=0)
+                ret_metrics['IoU'] = iou
+            if metric == 'mDice':
+                dice = (2 * areas_intersect / (areas_pred_label + areas_label + eps)).mean(axis=0)
+                ret_metrics['Dice'] = dice
+            if metric == 'mAcc':
+                acc = (areas_intersect / (areas_label + eps)).mean(axis=0)
+                ret_metrics['Acc'] = acc
+            if metric == 'mFscore':
+                precisions = areas_intersect / (areas_pred_label + eps)
+                recalls = areas_intersect / (areas_label + eps)
+                f_value = np.array([f_score(p, r, beta, eps=eps) for p, r in zip(precisions, recalls)]).mean(axis=0)
+                ret_metrics['Fscore'] = f_value
+                ret_metrics['Precision'] = precisions.mean(axis=0)
+                ret_metrics['Recall'] = recalls.mean(axis=0)
+
+        if nan_to_num is not None:
+            ret_metrics = {
+                metric: np.nan_to_num(metric_value, nan=nan_to_num) for metric, metric_value in ret_metrics.items()
+            }
+        return ret_metrics
 
     @staticmethod
     def total_area_to_metrics(total_area_intersect: np.ndarray,
@@ -228,22 +275,6 @@ class IoUMetric(BaseMetric):
                 shape (num_classes, ).
         """
 
-        def f_score(precision, recall, beta=1):
-            """calculate the f-score value.
-
-            Args:
-                precision (float | torch.Tensor): The precision value.
-                recall (float | torch.Tensor): The recall value.
-                beta (int): Determines the weight of recall in the combined
-                    score. Default: 1.
-
-            Returns:
-                [torch.tensor]: The f-score value.
-            """
-            score = (1 + beta**2) * (precision * recall) / (
-                (beta**2 * precision) + recall)
-            return score
-
         if isinstance(metrics, str):
             metrics = [metrics]
         allowed_metrics = ['mIoU', 'mDice', 'mFscore']
@@ -260,7 +291,7 @@ class IoUMetric(BaseMetric):
                 ret_metrics['Acc'] = acc
             elif metric == 'mDice':
                 dice = 2 * total_area_intersect / (
-                    total_area_pred_label + total_area_label)
+                        total_area_pred_label + total_area_label)
                 acc = total_area_intersect / total_area_label
                 ret_metrics['Dice'] = dice
                 ret_metrics['Acc'] = acc
