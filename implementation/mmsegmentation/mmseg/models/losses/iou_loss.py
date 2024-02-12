@@ -13,8 +13,6 @@ def iou_loss(pred: torch.Tensor,
              weight: Union[torch.Tensor, None],
              eps: float = 1e-7,
              reduction: Union[str, None] = 'mean',
-             naive=False,
-             signed=False,
              avg_factor: Union[float, None] = None,
              ignore_index: int = 255) -> float:
     """Calculate IoU loss, arguments similar to dice loss.
@@ -46,7 +44,6 @@ def iou_loss(pred: torch.Tensor,
 
     """
 
-    assert not naive or not signed, "naive and signed are mutually exclusive"
     if ignore_index is not None:
         num_classes = pred.shape[1]
         pred = pred[:, torch.arange(num_classes) != ignore_index, :, :]
@@ -54,42 +51,9 @@ def iou_loss(pred: torch.Tensor,
         assert pred.shape[1] != 0  # if the ignored index is the only class
     input = pred.flatten(1)
     target = target.flatten(1).to(input)
-    if naive:
-        intersection = torch.sum(torch.abs(input*target), 1)
-        union = torch.sum(input, 1) + torch.sum(target, 1) - intersection
-        iou = (intersection + eps) / (union + eps)
-    else:
-        # we divert from the Connected U-Nets implementation here,
-        # because we want to ensure that the denominator > numerator,
-        # as long as the domain of the function falls within the real numbers.
-        # Even more importantly, we want to ensure that the denominator > 0.
-        # This is because we both want to avoid division by zero, and a bifurcation
-        # in the loss function, where the loss would suddenly become greater than 1
-        # if the denominator becomes negative.
-        # Connected U-Nets uses (loosely speaking)
-        # |A*B| / (A + B - |A*B|)
-        # while we prefer
-        # sqrt(|A*B|) / (|A| + |B| - sqrt(|A*B|))
-        # As it is closer to the definition of Intersection over Union.
-        # Specifically, this allows us to mathematically prove that both our
-        # requirements (denominator > 0, and denominator >= numerator) are met
-        # by the use of this loss function.
-
-        # eps for keeping the derivative of the sqrt from being infinite.
-        # This is a very small number, so it should not destabilize the loss.
-        # it's much smaller than regular eps, because we add it to each element of a matrix.
-        sqrt_eps = torch.tensor(1e-20)
-        if signed:
-            # preserves the sign of the product, by taking
-            # Intersection = A*B / (sqrt(|A*B|)) instead of
-            # Intersection = sqrt(|A*B|)
-            # this penalizes when a=-b instead of rewarding it like a=b.
-            product = input * target
-            intersection = torch.sum(product/torch.sqrt(torch.abs(input*target) + sqrt_eps), 1)
-        else:
-            intersection = torch.sum(torch.sqrt(torch.abs(input*target) + sqrt_eps), 1)
-        union = torch.sum(torch.abs(input), 1) + torch.sum(torch.abs(target), 1) - intersection
-        iou = (intersection + eps) / (union + eps)
+    intersection = torch.sum(torch.abs(input*target), 1)
+    union = torch.sum(input, 1) + torch.sum(target, 1) - intersection
+    iou = (intersection + eps) / (union + eps)
     loss = 1 - iou
     if weight is not None:
         assert weight.ndim == loss.ndim
@@ -119,8 +83,6 @@ class IoULoss(nn.Module):
         self.use_sigmoid = use_sigmoid
         self.activate = activate
         self.reduction = reduction
-        self.naive = naive
-        self.signed = signed
         self.loss_weight = loss_weight
         self.eps = eps
         self.ignore_index = ignore_index
@@ -151,8 +113,6 @@ class IoULoss(nn.Module):
             weight,
             eps=self.eps,
             reduction=reduction,
-            naive=self.naive,
-            signed=self.signed,
             avg_factor=avg_factor,
             ignore_index=self.ignore_index)
 
