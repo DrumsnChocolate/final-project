@@ -29,14 +29,6 @@ def iou_loss(pred: torch.Tensor,
         reduction (str, optional): The method used to reduce the loss into
             a scalar. Defaults to 'mean'.
             Options are "none", "mean" and "sum".
-        naive (bool, optional): If true, use the iou
-            loss defined in the Connect-UNets repository, otherwise, use the
-            iou loss in which the magnitudes of the numerator and denominator
-            correspond better to the binary definition of Intersection over Union.
-             Default: False.
-        signed (bool, optional): Mutually exclusive with naive. If true, preserve
-            the sign of the product in the intersection, to prevent the loss from
-            rewarding when x=-y. Default: False.
         avg_factor (int, optional): Average factor that is used to average
             the loss. Defaults to None.
         ignore_index (int, optional): The label index to be ignored.
