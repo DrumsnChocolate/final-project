@@ -9,10 +9,11 @@
 mkdir /local/${SLURM_JOBID}
 ## copy data to node
 cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
-ls data
-du -hsL data/cbis
 cp -rL --parents data/cbis /local/${SLURM_JOBID}
-echo /local/${SLURM_JOBID}
-ls /local/${SLURM_JOBID}/data
-du -hs /local/${SLURM_JOBID}/data/cbis
+
+## execute the pyton we want
+
+
+## clean up
+
 rm -rf /local/${SLURM_JOBID}
