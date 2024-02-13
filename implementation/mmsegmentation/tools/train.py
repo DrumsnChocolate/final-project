@@ -16,6 +16,10 @@ def parse_args():
     parser.add_argument('config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
+        '--data-root-prefix',
+        help='a prefix for the data roots in the config. Can be very useful when working wit SLURM,'
+             'to prevent long loading times, by moving the data to the local node storage.')
+    parser.add_argument(
         '--resume',
         action='store_true',
         default=False,
@@ -68,6 +72,23 @@ def main():
         # use config filename as default work_dir if cfg.work_dir is None
         cfg.work_dir = osp.join('./work_dirs',
                                 osp.splitext(osp.basename(args.config))[0])
+
+    # add prefix to data roots that are relative paths
+    if args.data_root_prefix is not None:
+        print(f'Adding prefix to data roots: {args.data_root_prefix}')
+        print(type(cfg))
+        def _recursively_prefix(obj):
+            if isinstance(obj, dict) or isinstance(obj, Config):
+                for k, v in obj.items():
+                    if k == 'data_root' and not os.path.isabs(v):
+                        obj[k] = os.path.join(args.data_root_prefix, v)
+                    else:
+                        obj[k] = _recursively_prefix(v)
+                return obj
+            elif isinstance(obj, list):
+                return [_recursively_prefix(v) for v in obj]
+            return obj
+        cfg = _recursively_prefix(cfg)
 
     # enable automatic-mixed-precision training
     if args.amp is True:

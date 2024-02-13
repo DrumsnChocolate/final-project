@@ -22,7 +22,7 @@ cp -rL --parents data/cbis /local/${SLURM_JOBID}
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
 
-python tools/train.py $config \
+python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
   --cfg-options \
   "${model_options[@]}" \
   "${optim_options[@]}" \
