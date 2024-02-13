@@ -6,5 +6,13 @@
 # this script is to move data from personal storage to local storage of the node
 # this could speed up data loading times significantly, and with it, experiment duration.
 
-# let's first inspect where the data is to be stored
-echo $SLURM_TMPDIR
+mkdir /local/${SLURM_JOBID}
+## copy data to node
+cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
+ls data
+du -hsL data/cbis
+cp -rL --parents data/cbis /local/${SLURM_JOBID}
+echo /local/${SLURM_JOBID}
+ls /local/${SLURM_JOBID}/data
+du -hs /local/${SLURM_JOBID}/data/cbis
+rm -rf /local/${SLURM_JOBID}
