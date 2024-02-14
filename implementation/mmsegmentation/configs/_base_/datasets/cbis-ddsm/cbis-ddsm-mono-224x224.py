@@ -4,16 +4,15 @@ data_root = 'data/cbis/cbis-linked'
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', reduce_zero_label=True),
-    dict(type='Resize', scale=(512, 512)),
+    dict(type='Resize', scale=(224, 224)),
     dict(type='RandomFlip', prob=0.5),
-    # these two random rotations result in randomly choosing one of 4 rotations: 0, 90, 180, 270
     dict(type='RandomRotate', degree=(90, 90), prob=0.5, auto_bound=True),
     dict(type='RandomRotate', degree=(180, 180), prob=0.5, auto_bound=True),
     dict(type='PackSegInputs'),
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='Resize', scale=(512, 512)),
+    dict(type='Resize', scale=(224, 224)),
     # add loading annotation after ``Resize`` because ground truth
     # does not need to do resize data transform
     dict(type='LoadAnnotations', reduce_zero_label=True),

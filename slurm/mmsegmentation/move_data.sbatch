@@ -11,7 +11,7 @@ mkdir /local/${SLURM_JOBID}
 cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
 cp -rL --parents data/cbis /local/${SLURM_JOBID}
 
-## execute the pyton we want
+## execute the python we want
 
 
 ## clean up
