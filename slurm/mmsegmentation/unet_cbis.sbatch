@@ -6,7 +6,9 @@
 #SBATCH --constraint=a40
 
 lr=$1  # learning rate, float
-size=$2
+size=$2  # size of the image, 256 or 512
+loss=$3  # loss function, "dice & iou" or "cross_entropy"
+
 
 if [ $size == 256 ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
@@ -14,6 +16,15 @@ elif [ $size == 512 ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-512x512.py"
 else
   echo "Error: Unknown size"
+  exit 1
+fi
+
+if [ $loss == "dice & iou" ]; then
+  model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.4,type='DiceLoss',naive_dice=True),dict(loss_weight=0.6,type='IoULoss')]")
+elif [ $loss == "cross_entropy" ]; then
+  model_options=(model.decode_head.loss_decode="dict(loss_weight=1.0,type='CrossEntropyLoss',use_sigmoid=true)")
+else
+  echo "Error: Unknown loss"
   exit 1
 fi
 model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.4,type='DiceLoss',naive_dice=True),dict(loss_weight=0.6,type='IoULoss')]")
