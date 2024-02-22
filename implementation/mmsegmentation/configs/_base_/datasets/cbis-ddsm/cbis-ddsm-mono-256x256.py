@@ -4,6 +4,7 @@ data_root = 'data/cbis/cbis-linked'
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', reduce_zero_label=True),
+    dict(type='CLAHE'),
     dict(type='Resize', scale=(256, 256)),
     dict(type='RandomFlip', prob=0.5),
     dict(type='RandomRotate', degree=(90, 90), prob=0.5, auto_bound=True),
@@ -12,6 +13,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
+    dict(type='CLAHE'),
     dict(type='Resize', scale=(256, 256)),
     # add loading annotation after ``Resize`` because ground truth
     # does not need to do resize data transform
