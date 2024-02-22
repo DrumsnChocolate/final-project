@@ -153,8 +153,6 @@ def binary_cross_entropy(pred,
         assert torch.all(torch.isin(label, torch.tensor([0, ignore_index], device=label.device)))
         label[label == 0] = 1  # set the background label to 1, so that it will be used in the loss calculation
         label[label == ignore_index] = 0  # set the ignored label to 0, so that it will be used in the loss calculation
-        print(label.unique())
-        print(pred.min(), pred.max())
         pred = pred.squeeze(1)
     if pred.dim() != label.dim():
         assert (pred.dim() == 2 and label.dim() == 1) or (
