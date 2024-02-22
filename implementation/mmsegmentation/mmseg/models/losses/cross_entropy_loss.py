@@ -133,15 +133,28 @@ def binary_cross_entropy(pred,
     Returns:
         torch.Tensor: The calculated loss
     """
+    # We still need to apply the sigmoid, because that's
     if pred.size(1) == 1:
+        # We only supply a single foreground label, with the background label set to ignored.
+
         # For binary class segmentation, the shape of pred is
-        # [N, 1, H, W] and that of label is [N, H, W].
-        # As the ignore_index often set as 255, so the
-        # binary class label check should mask out
-        # ignore_index
-        assert label[label != ignore_index].max() <= 1, \
-            'For pred with shape [N, 1, H, W], its label must have at ' \
-            'most 2 classes'
+        # [N, 1, H, W] and that of label is  [N, H, W].
+        # As the ignore_index is often set as 255, we know that when we match the number of output channels
+        # to the number of non-ignored labels, we will have 1 channel for the foreground, and that's it.
+        # The label will consist of 0s and 255s, where 255s are the ignored label/background label
+
+        # Now, in the binary case it's actually important not to ignore the background label when calculating the
+        # binary cross entropy, because we are not only interested in maximizing true foreground, but also in minimizing
+        # false foreground. So we need to calculate the loss for all pixels.
+
+        # assert label[label != ignore_index].max() <= 1, \
+        #     'For pred with shape [N, 1, H, W], its label must have at ' \
+        #     'most 2 classes'
+        assert torch.all(torch.isin(label, torch.tensor([0, ignore_index], device=label.device)))
+        label[label == 0] = 1  # set the background label to 1, so that it will be used in the loss calculation
+        label[label == ignore_index] = 0  # set the ignored label to 0, so that it will be used in the loss calculation
+        print(label.unique())
+        print(pred.min(), pred.max())
         pred = pred.squeeze(1)
     if pred.dim() != label.dim():
         assert (pred.dim() == 2 and label.dim() == 1) or (
@@ -217,7 +230,7 @@ class CrossEntropyLoss(nn.Module):
 
     Args:
         use_sigmoid (bool, optional): Whether the prediction uses sigmoid
-            of softmax. Defaults to False.
+            or softmax. Defaults to False.
         use_mask (bool, optional): Whether to use mask cross entropy loss.
             Defaults to False.
         reduction (str, optional): . Defaults to 'mean'.
