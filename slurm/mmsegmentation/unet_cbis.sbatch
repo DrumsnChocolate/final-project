@@ -4,6 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mail-type=END,FAIL
 #SBATCH --constraint=a40
+#SBATCH --time=4-00:00:00
 
 lr=$1  # learning rate, float
 size=$2  # size of the image, 256 or 512
