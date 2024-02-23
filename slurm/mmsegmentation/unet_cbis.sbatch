@@ -24,6 +24,8 @@ if [ $loss == "dice & iou" ]; then
   model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.4,type='DiceLoss',naive_dice=True),dict(loss_weight=0.6,type='IoULoss')]")
 elif [ $loss == "cross_entropy" ]; then
   model_options=(model.decode_head.loss_decode="dict(loss_weight=1.0,type='CrossEntropyLoss',use_sigmoid=true)")
+elif [ $loss == "cross_entropy & iou" ]; then
+  model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.5,type='CrossEntropyLoss',use_sigmoid=true),dict(loss_weight=0.5,type='IoULoss')]")
 else
   echo "Error: Unknown loss"
   exit 1
