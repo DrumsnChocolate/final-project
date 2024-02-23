@@ -61,8 +61,6 @@ class IoULoss(nn.Module):
                  use_sigmoid=True,
                  activate=True,
                  reduction='mean',
-                 naive=False,
-                 signed=False,
                  loss_weight=1.0,
                  ignore_index=255,
                  eps=1e-7,
