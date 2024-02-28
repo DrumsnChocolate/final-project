@@ -7,23 +7,27 @@
 #SBATCH --time=4-00:00:00
 
 lr=$1  # learning rate, float
-size=$2  # size of the image, 256 or 512
+size=$2  # size of the image, 256 only option right now
 loss=$3  # loss function, "dice & iou" or "cross_entropy"
 clahe=$4  # boolean; whether we use clahe and therefore need to standardize to [0,1], or standardize with z-score
+augmentation=$5  # boolean; whether we use any data augmentation besides CLAHE or not.
+
 
 
 if [ $size == 256 ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
-elif [ $size == 512 ]; then
-  config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-512x512.py"
 else
   echo "Error: Unknown size"
   exit 1
 fi
 
+
+param_scheduler_metric='mIoU'
+param_scheduler_rule='greater'
 if [ "$loss" == "dice & iou" ]; then
   model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.4,type='DiceLoss',naive_dice=True),dict(loss_weight=0.6,type='IoULoss')]")
 elif [ "$loss" == "cross_entropy" ]; then
+  param_scheduler_metric='mCE'
   model_options=(model.decode_head.loss_decode="dict(loss_weight=1.0,type='CrossEntropyLoss',use_sigmoid=true)")
 elif [ "$loss" == "cross_entropy & iou" ]; then
   model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.5,type='CrossEntropyLoss',use_sigmoid=true),dict(loss_weight=0.5,type='IoULoss')]")
@@ -32,11 +36,26 @@ else
   exit 1
 fi
 
-optim_options=(optimizer="dict(lr=${lr},type='Adam')" optim_wrapper.optimizer="dict(lr=${lr},type='Adam')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='greater',monitor='mIoU')]")
+if [ "$param_scheduler_metric" == 'mCE' ]; then
+  param_scheduler_rule='less'
+fi
+stopping_metric="$param_scheduler_metric"
+stopping_rule="$param_scheduler_rule"
+stopping_patience=100
+
+optim_options=(optimizer="dict(lr=${lr},type='Adam')" optim_wrapper.optimizer="dict(lr=${lr},type='Adam')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0.00000001)]")
+stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience}),rule='${stopping_rule}',min_delta=0.001")
+
 if [ "$clahe" == "true" ]; then
   normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
 else
   normalization_options=(data_preprocessor.mean='[68.882,68.882,68.882]' data_preprocessor.std='[66.631,66.631,66.631]' model.data_preprocessor.mean='[68.882,68.882,68.882]' model.data_preprocessor.std='[66.631,66.631,66.631]')
+fi
+
+if [ "$augmentation" == "false" ]; then
+  augmentation_options=(train_dataloader.dataset.pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]" train_pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]")
+else
+  augmentation_options=()
 fi
 
 mkdir /local/${SLURM_JOBID}
@@ -52,7 +71,9 @@ python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
   --cfg-options \
   "${model_options[@]}" \
   "${optim_options[@]}" \
-  "${normalization_options[@]}"
+  "${normalization_options[@]}" \
+  "${augmentation_options[@]}" \
+  "${stopping_options[@]}"
 
 
 ## clean up

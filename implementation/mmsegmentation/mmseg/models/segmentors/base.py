@@ -190,8 +190,8 @@ class BaseSegmentor(BaseModel, metaclass=ABCMeta):
                 # Threshold logits, and convert True and False to labels 0 and 255, respectively.
                 # This is done because 255 is usually the ignored label. This may not hold up well if it were
                 # added to the official mmsegmentation codebase.
-                i_seg_logits = i_seg_logits.sigmoid()
-                i_seg_pred = (1 - (i_seg_logits >
+                i_seg_logits = i_seg_logits
+                i_seg_pred = (1 - (i_seg_logits.sigmoid() >
                               self.decode_head.threshold).to(i_seg_logits)) * 255
             data_samples[i].set_data({
                 'seg_logits':

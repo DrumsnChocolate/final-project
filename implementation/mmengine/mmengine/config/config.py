@@ -1795,42 +1795,44 @@ class DictAction(Action):
         # Strip ' and " characters and replace whitespace.
         val = val.strip('\'\"').replace(' ', '')
         is_tuple = False
+        is_dict = False
         if val.startswith('(') and val.endswith(')'):
             is_tuple = True
             val = val[1:-1]
         elif val.startswith('[') and val.endswith(']'):
             val = val[1:-1]
+        elif val.startswith('dict(') and val.endswith(')'):
+            is_dict = True
+            val = val[5:-1]
         elif ',' not in val:
             # val is a single value
             return DictAction._parse_int_float_bool(val)
 
-        values = []
-        while len(val) > 0:
-            comma_idx = find_next_comma(val)
-            element = DictAction._parse_value(val[:comma_idx])
-            values.append(element)
-            val = val[comma_idx + 1:]
+        if not is_dict:
+            values = []
+            while len(val) > 0:
+                comma_idx = find_next_comma(val)
+                element = DictAction._parse_value(val[:comma_idx])
+                values.append(element)
+                val = val[comma_idx + 1:]
 
-        if is_tuple:
-            return tuple(values)
+            if is_tuple:
+                return tuple(values)
 
-        return values
+            return values
+        else:
+            d = OverrideDict()
+            while len(val) > 0:
+                comma_idx = find_next_comma(val)
+                k, v = val.split('=', 1)
+                v = DictAction._parse_value(v[:(comma_idx - len(f'{k}='))])
+                d[k] = v
+                val = val[comma_idx + 1:]
 
-    @staticmethod
-    def _parse_dict(val: str):
-        val = val[5:-1]
-        arg_items = val.split(',')
-        dict_args = {}
-        for arg_item in arg_items:
-            key, val = arg_item.split('=')
-            val = DictAction._parse_value(val)
-            dict_args[key] = val
-        return OverrideDict(**dict_args)
+            return d
 
     @staticmethod
     def _parse_value(val: str):
-        if val.startswith('dict(') and val.endswith(')'):
-            return DictAction._parse_dict(val)
         return DictAction._parse_iterable(val)
 
     def __call__(self,

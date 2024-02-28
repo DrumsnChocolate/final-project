@@ -5,7 +5,6 @@ _base_ = [
 num_layers = 12
 crop_size = (224, 224)
 data_preprocessor = dict(size=crop_size, test_cfg=dict(size=crop_size))
-norm_cfg = dict(type='SyncBN', requires_grad=True)
 model = dict(
     data_preprocessor=data_preprocessor,
     pretrained=None,

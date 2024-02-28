@@ -133,7 +133,6 @@ def binary_cross_entropy(pred,
     Returns:
         torch.Tensor: The calculated loss
     """
-    # We still need to apply the sigmoid, because that's
     if pred.size(1) == 1:
         # We only supply a single foreground label, with the background label set to ignored.
 

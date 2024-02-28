@@ -58,5 +58,5 @@ test_dataloader = dict(
         pipeline=val_pipeline,
     ),
 )
-val_evaluator = dict(type='IoUMetric', iou_metrics=['mIoU', 'mAcc', 'mFscore'])
+val_evaluator = [dict(type='IoUMetric', iou_metrics=['mIoU', 'mAcc', 'mFscore']), dict(type='CrossEntropyMetric')]
 test_evaluator = val_evaluator
