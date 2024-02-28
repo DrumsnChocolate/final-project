@@ -31,7 +31,7 @@ else
   echo "Error: Unknown loss"
   exit 1
 fi
-model_options=(model.decode_head.loss_decode="[dict(loss_weight=0.4,type='DiceLoss',naive_dice=True),dict(loss_weight=0.6,type='IoULoss')]")
+
 optim_options=(optimizer="dict(lr=${lr},type='Adam')" optim_wrapper.optimizer="dict(lr=${lr},type='Adam')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='greater',monitor='mIoU')]")
 if [ "$clahe" == "true" ]; then
   normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
