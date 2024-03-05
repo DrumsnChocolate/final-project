@@ -38,7 +38,7 @@ class EarlyStoppingHook(Hook):
         'acc', 'top', 'AR@', 'auc', 'precision', 'mAP', 'mDice', 'mIoU',
         'mAcc', 'aAcc'
     ]
-    _default_less_keys = ['loss']
+    _default_less_keys = ['loss', 'mCE', 'train_loss']
 
     def __init__(
         self,
@@ -68,6 +68,10 @@ class EarlyStoppingHook(Hook):
 
         self.wait_count = 0
         self.best_score = -inf if rule == 'greater' else inf
+        self.training_metrics = None
+        if self.monitor == 'train_loss':
+            self.monitor = 'loss'
+            self.training_metrics = []
 
     def _init_rule(self, monitor: str) -> str:
         greater_keys = {key.lower() for key in self._default_greater_keys}
@@ -138,22 +142,56 @@ class EarlyStoppingHook(Hook):
             metrics (dict): Evaluation results of all metrics
         """
 
-        if self.monitor not in metrics:
-            if self.strict:
-                raise RuntimeError(
-                    'Early stopping conditioned on metric '
-                    f'`{self.monitor} is not available. Please check available'
-                    f' metrics {metrics}, or set `strict=False` in '
-                    '`EarlyStoppingHook`.')
-            warnings.warn(
-                'Skip early stopping process since the evaluation '
-                f'results ({metrics.keys()}) do not include `monitor` '
-                f'({self.monitor}).')
-            return
+        if self.training_metrics is not None:  # this means we're monitoring a training metric
+            if len(self.training_metrics) < 1:
+                raise RuntimeError(f'Early stopping on training metric {self.monitor} not available. '
+                                   f'No training metrics found.')
+            if self.monitor not in self.training_metrics[0]:
+                if self.strict:
+                    raise RuntimeError(
+                        'Early stopping conditioned on metric '
+                        f'`{self.monitor} is not available. Please check available'
+                        f' metrics {self.training_metrics[0].keys()}, or set `strict=False` in '
+                        '`EarlyStoppingHook`.')
+                warnings.warn(
+                    'Skip early stopping process since the evaluation '
+                    f'results ({self.training_metrics[0].keys()}) do not include `monitor` '
+                    f'({self.monitor}).')
 
-        current_score = metrics[self.monitor]
+            scores_per_iter = [m[self.monitor] for m in self.training_metrics]
+            current_score = sum(scores_per_iter) / len(scores_per_iter)  # take the average across iterations
+            self.training_metrics = []
+
+        else:
+            if self.monitor not in metrics:
+                if self.strict:
+                    raise RuntimeError(
+                        'Early stopping conditioned on metric '
+                        f'`{self.monitor} is not available. Please check available'
+                        f' metrics {metrics.keys()}, or set `strict=False` in '
+                        '`EarlyStoppingHook`.')
+                warnings.warn(
+                    'Skip early stopping process since the evaluation '
+                    f'results ({metrics.keys()}) do not include `monitor` '
+                    f'({self.monitor}).')
+                return
+
+            current_score = metrics[self.monitor]
 
         stop_training, message = self._check_stop_condition(current_score)
         if stop_training:
             runner.train_loop.stop_training = True
             runner.logger.info(message)
+
+    def after_train_iter(self, runner, batch_idx, data_batch, outputs):
+        """Decide whether to stop the training process.
+
+        Args:
+            runner (Runner): The runner of the training process.
+            batch_idx (int): The index of the current batch.
+            data_batch (dict): The input data batch.
+            outputs (dict): The output of the model.
+        """
+        if self.training_metrics is None:
+            return
+        self.training_metrics.append(outputs)

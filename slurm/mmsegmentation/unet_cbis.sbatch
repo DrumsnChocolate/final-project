@@ -39,12 +39,12 @@ fi
 if [ "$param_scheduler_metric" == 'mCE' ]; then
   param_scheduler_rule='less'
 fi
-stopping_metric="$param_scheduler_metric"
-stopping_rule="$param_scheduler_rule"
-stopping_patience=100
+stopping_metric="train_loss"
+stopping_rule="less"
+stopping_patience=40
 
-optim_options=(optimizer="dict(lr=${lr},type='Adam')" optim_wrapper.optimizer="dict(lr=${lr},type='Adam')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0.00000001)]")
-stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0.001)]")
+optim_options=(optimizer="dict(lr=${lr},type='Adam')" optim_wrapper.optimizer="dict(lr=${lr},type='Adam')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0,cooldown=0,patience=25,threshold=0.0001,factor=0.1)]")
+stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0)]")
 
 if [ "$clahe" == "true" ]; then
   normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')

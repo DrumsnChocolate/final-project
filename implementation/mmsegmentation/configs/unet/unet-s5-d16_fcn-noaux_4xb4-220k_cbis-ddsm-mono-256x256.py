@@ -12,6 +12,6 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(mode='whole', _delete_=True))
 train_cfg = dict(val_interval=275)  # validate every 2200 images, because the dataset has 2212 images. 2200/8=275 iters
-train_dataloader = dict(batch_size=8, num_workers=4)
+train_dataloader = dict(batch_size=16, num_workers=4)
 val_dataloader = dict(batch_size=1, num_workers=4)
 test_dataloader = val_dataloader
