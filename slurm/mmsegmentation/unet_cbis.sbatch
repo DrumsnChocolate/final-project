@@ -11,6 +11,7 @@ size=$2  # size of the image, 256 only option right now
 loss=$3  # loss function, "dice & iou" or "cross_entropy"
 clahe=$4  # boolean; whether we use clahe and therefore need to standardize to [0,1], or standardize with z-score
 augmentation=$5  # boolean; whether we use any data augmentation besides CLAHE or not.
+mass_only=$6  # boolean; whether we only use the mass data or not.
 
 
 
@@ -58,6 +59,14 @@ else
   augmentation_options=()
 fi
 
+if [ "$mass_only" == "true" ]; then
+  train_loader_source_options=(train_dataloader.dataset.data_prefix="dict(img_path='images_mass/train',seg_map_path='annotations_mass_binary/train')")
+  val_loader_source_options=(val_dataloader.dataset.data_prefix="dict(img_path='images_mass/val',seg_map_path='annotations_mass_binary/val')")
+  test_loader_source_options=(test_dataloader.dataset.data_prefix="dict(img_path='images_mass/test',seg_map_path='annotations_mass_binary/test')")
+  data_source_options=("${train_loader_source_options[@]}" "${val_loader_source_options[@]}" "${test_loader_source_options[@]}")
+  schedule_options=(train_cfg.val_interval=69) # roughly 1106 samples, divided by batch size 16
+fi
+
 mkdir /local/${SLURM_JOBID}
 ## copy data to node
 cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
@@ -73,7 +82,9 @@ python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
   "${optim_options[@]}" \
   "${normalization_options[@]}" \
   "${augmentation_options[@]}" \
-  "${stopping_options[@]}"
+  "${stopping_options[@]}" \
+  "${data_source_options[@]}" \
+  "${schedule_options[@]}"
 
 
 ## clean up
