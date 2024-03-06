@@ -4,9 +4,9 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 mammo_root = os.path.join(os.getcwd(), "data", "mammography")
-cbis_root = os.path.join(mammo_root, "")
+cbis_root = os.path.join(mammo_root, "cbis-ddsm")
 cbis_linked_root = os.path.join(mammo_root, "cbis-linked")
-mmseg_data_root = os.path.join(os.path.dirname(os.getcwd()), "implementation", "mmsegmentation", "data")
+mmseg_data_root = os.path.join(os.getcwd(), "implementation", "mmsegmentation", "data")
 
 
 def symlink_sample(sample):
@@ -17,6 +17,7 @@ def symlink_sample(sample):
                                     sample['ImageName'] + "_binary_mask.png")
     multi_mask_path = os.path.join(cbis_root, 'merged-multi-cropped-roi-images',
                                    sample['ImageName'] + "_multi_mask.png")
+    mass_binary_mask_path  = os.path.join(cbis_root, 'merged-mass-binary-cropped-roi-images', sample['ImageName'] + "_binary_mask.png")
 
     img_link_path = os.path.join(cbis_linked_root, 'images', split, sample['ImageName'] + '.png')
     binary_mask_link_path = os.path.join(cbis_linked_root, 'annotations_binary', split, sample['ImageName'] + '.png')
@@ -29,6 +30,15 @@ def symlink_sample(sample):
     os.symlink(img_path, img_link_path)
     os.symlink(binary_mask_path, binary_mask_link_path)
     os.symlink(multi_mask_path, multi_mask_link_path)
+    if not os.path.exists(mass_binary_mask_path):
+        return
+
+    mass_img_link_path = os.path.join(cbis_linked_root, 'images_mass', split, sample['ImageName'] + '.png')
+    os.makedirs(os.path.dirname(mass_img_link_path), exist_ok=True)
+    os.symlink(img_path, mass_img_link_path)
+    mass_binary_mask_link_path = os.path.join(cbis_linked_root, 'annotations_mass_binary', split, sample['ImageName'] + '.png')
+    os.makedirs(os.path.dirname(mass_binary_mask_link_path), exist_ok=True)
+    os.symlink(mass_binary_mask_path, mass_binary_mask_link_path)
 
 
 def main():
@@ -54,7 +64,12 @@ def main():
 
     samples_df.apply(symlink_sample, axis=1)
     # finally, we symlink from mmseg data dir to the newly created cbis-linked dir
-    os.symlink(cbis_linked_root, os.path.join(mmseg_data_root, 'cbis', 'cbis-linked'))
+    mmseg_cbis_linked_dir = os.path.join(mmseg_data_root, 'cbis', 'cbis-linked')
+    if os.path.exists(mmseg_cbis_linked_dir):
+        os.unlink(mmseg_cbis_linked_dir)
+    else:
+        os.makedirs(os.path.dirname(mmseg_cbis_linked_dir), exist_ok=True)
+    os.symlink(cbis_linked_root, mmseg_cbis_linked_dir)
 
 
 if __name__ == '__main__':

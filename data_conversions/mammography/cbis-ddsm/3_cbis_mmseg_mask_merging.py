@@ -3,10 +3,12 @@ import os
 import numpy as np
 import cv2
 
-cbis_root = os.path.join(os.getcwd(), "data", "mammography", "")
+cbis_root = os.path.join(os.getcwd(), "data", "mammography", "cbis-ddsm")
 
 cbis_merged_single_path = os.path.join(cbis_root, "merged-binary-cropped-roi-images")
 cbis_merged_multi_path = os.path.join(cbis_root, "merged-multi-cropped-roi-images")
+cbis_merged_mass_single_path = os.path.join(cbis_root, "merged-mass-binary-cropped-roi-images")
+
 multi_label_class_ids = None
 
 
@@ -83,9 +85,21 @@ def store_multi_class(sample):
     cv2.imwrite(mask_path, merged_multi_mask)
 
 
+def store_single_mass_class(sample):
+    merged_mask = merge_rois_multi_class(sample)
+    merged_mask[merged_mask == multi_label_class_ids[('calcification', 'benign')]] = 0
+    merged_mask[merged_mask == multi_label_class_ids[('calcification', 'malignant')]] = 0
+    merged_mask[merged_mask > 0] = 1
+    if not any(merged_mask.flatten()):
+        return
+    mask_path = os.path.join(cbis_merged_mass_single_path, sample['ImageName'] + '_binary_mask.png')
+    cv2.imwrite(mask_path, merged_mask)
+
+
 def main():
     os.makedirs(cbis_merged_single_path, exist_ok=True)
     os.makedirs(cbis_merged_multi_path, exist_ok=True)
+    os.makedirs(cbis_merged_mass_single_path, exist_ok=True)
 
     # we do the same type of merging as in cbis_mask_alignment.py, but without the crop df
 
@@ -125,6 +139,7 @@ def main():
 
     aggregated_df.apply(store_single_class, axis=1)
     aggregated_df.apply(store_multi_class, axis=1)
+    aggregated_df.apply(store_single_mass_class, axis=1)
 
 
 if __name__ == '__main__':
