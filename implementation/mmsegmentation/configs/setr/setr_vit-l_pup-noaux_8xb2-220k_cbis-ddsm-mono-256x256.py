@@ -21,7 +21,7 @@ model = dict(
 )
 
 optim_wrapper = dict(paramwise_cfg=dict(custom_keys={'head': dict(lr_mult=10.)}))
-train_cfg = dict(val_interval=275)
-train_dataloader = dict(batch_size=8, num_workers=4)
+train_cfg = dict(val_interval=138)
+train_dataloader = dict(batch_size=16, num_workers=4)
 val_dataloader = dict(batch_size=4, num_workers=4)
 test_dataloader = val_dataloader

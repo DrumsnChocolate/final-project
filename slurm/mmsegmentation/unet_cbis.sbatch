@@ -15,7 +15,7 @@ mass_only=$6  # boolean; whether we only use the mass data or not.
 
 
 
-if [ $size == 256 ]; then
+if [ "$size" == "256" ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
 else
   echo "Error: Unknown size"
@@ -59,6 +59,8 @@ else
   augmentation_options=()
 fi
 
+data_source_options=()
+schedule_options=()
 if [ "$mass_only" == "true" ]; then
   train_loader_source_options=(train_dataloader.dataset.data_prefix="dict(img_path='images_mass/train',seg_map_path='annotations_mass_binary/train')")
   val_loader_source_options=(val_dataloader.dataset.data_prefix="dict(img_path='images_mass/val',seg_map_path='annotations_mass_binary/val')")

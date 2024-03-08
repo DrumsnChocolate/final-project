@@ -7,7 +7,7 @@ class CBISMonoDataset(BaseSegDataset):
     """
     METAINFO = dict(
         classes=("roi",),
-        palette=[[255, 255, 255]],  # black, white
+        palette=[[255, 255, 255]],  # black
     )
 
     def __init__(self,
@@ -62,4 +62,6 @@ class CBISMultiDataset(BaseSegDataset):
             seg_map_suffix=seg_map_suffix,
             reduce_zero_label=reduce_zero_label,
             **kwargs)
+
+
 
