@@ -44,6 +44,7 @@ stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stoppi
 normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
 augmentation_options=(train_dataloader.dataset.pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]" train_pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]")
 
+cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
 
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
