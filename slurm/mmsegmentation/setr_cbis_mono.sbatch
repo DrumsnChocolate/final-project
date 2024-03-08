@@ -5,16 +5,11 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --constraint=a40
 
-lr=0.0001
-size=256
+lr="$1"
+size="$2"
 loss="cross_entropy"
+config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
 
-if [ "$size" == "256" ]; then
-  config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
-else
-  echo "Error: Unknown size"
-  exit 1
-fi
 
 param_scheduler_metric='mIoU'
 param_scheduler_rule='greater'
@@ -42,7 +37,17 @@ optim_options=(optimizer="$optimizer" optim_wrapper.optimizer="$optimizer" param
 stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0)]")
 
 normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
-augmentation_options=(train_dataloader.dataset.pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]" train_pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]")
+train_pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]"
+augmentation_options=(train_dataloader.dataset.pipeline="$train_pipeline" train_pipeline="$train_pipeline")
+
+# further options related to size
+
+test_size_options=(test_dataloader.dataset.pipeline.2.scale="($size,$size)" test_pipeline.2.scale="($size,$size)")
+val_size_options=(val_dataloader.dataset.pipeline.2.scale="($size,$size)" val_pipeline.2.scale="($size,$size)")
+overall_size_options=(crop_size="($size,$size)" data_preprocessor.size="($size,$size)" data_preprocessor.test_cfg.size="($size,$size)" model.data_preprocessor.size="($size,$size)" model.data_preprocessor.test_cfg.size="($size,$size)" model.backbone.img_size="($size,$size)")
+
+size_options=("${test_size_options[@]}" "${val_size_options[@]}" "${overall_size_options[@]}")
+
 pretrain_options=(model.backbone.init_cfg=None)
 
 cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
@@ -56,4 +61,5 @@ python tools/train.py $config --cfg-options \
   "${normalization_options[@]}" \
   "${augmentation_options[@]}" \
   "${stopping_options[@]}" \
-  "${pretrain_options[@]}"
+  "${pretrain_options[@]}" \
+  "${size_options[@]}"
