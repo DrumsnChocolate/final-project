@@ -7,8 +7,14 @@
 
 lr="$1"
 size="$2"
+batch_size="$3"
 loss="cross_entropy"
 config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
+
+sample_count=2212
+val_interval=$(($sample_count / $batch_size))
+batch_settings=( train_dataloader.batch_size="$batch_size" train_cfg.val_interval="$val_interval" )
+
 
 
 param_scheduler_metric='mIoU'
@@ -62,4 +68,5 @@ python tools/train.py $config --cfg-options \
   "${augmentation_options[@]}" \
   "${stopping_options[@]}" \
   "${pretrain_options[@]}" \
-  "${size_options[@]}"
+  "${size_options[@]}" \
+  "${batch_settings[@]}"
