@@ -1,14 +1,14 @@
 import argparse
 import time
-from typing import Callable, Any
+from typing import Callable, Any, List
 
 import numpy as np
 import scipy
 import torch
+import yaml
 from prodict import Prodict
 from torch.optim import SGD
 from tqdm import tqdm
-from yaml import load, Loader
 from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
 from finetune.loss import build_loss_function, call_loss
@@ -45,7 +45,7 @@ def parse_args():
 
 def load_cfg(filename):
     with open(filename, 'r') as f:
-        return load(f, Loader=Loader)
+        return yaml.load(f, Loader=yaml.Loader)
 
 
 def override_cfg(cfg, cfg_overrides):
@@ -87,6 +87,11 @@ def get_cfg(args):
     cfg = cfg_to_prodict(get_cfg_dict(args))
     validate_cfg(cfg)
     return cfg
+
+def store_cfg(cfg, logger):
+    with open(osp.join(logger.log_dir, 'config.yaml'), 'w') as f:
+        f.write(yaml.dump(cfg.to_dict(is_recursive=True, exclude_none=True, exclude_none_in_lists=True)))
+    exit(0)
 
 
 def get_logger(cfg):
@@ -237,6 +242,7 @@ def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, op
 
 def train(cfg):
     logger = get_logger(cfg)
+    store_cfg(cfg, logger)
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg, logger)
     optimizer = build_optimizer(cfg, model)

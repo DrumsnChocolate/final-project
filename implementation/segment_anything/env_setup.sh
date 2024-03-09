@@ -5,7 +5,7 @@ pip install -e .
 pip install opencv-python pycocotools matplotlib onnxruntime onnx
 pip install jupyter
 pip install PyYAML
-pip install prodict
+pip install "git+https://github.com/drumsnchocolate/prodict.git@0356b31368c915e51d8942b47ad9c5cda788b7e1#egg=prodict"
 pip install pandas
 pip install scipy
 pip install pytest
