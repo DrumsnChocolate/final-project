@@ -8,6 +8,7 @@
 lr="$1"
 size="$2"
 batch_size="$3"
+pretrained="$4"
 loss="cross_entropy"
 config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
 
@@ -54,7 +55,11 @@ overall_size_options=(crop_size="($size,$size)" data_preprocessor.size="($size,$
 
 size_options=("${test_size_options[@]}" "${val_size_options[@]}" "${overall_size_options[@]}")
 
-pretrain_options=(model.backbone.init_cfg=None)
+if [ "$pretrained" == "true" ]; then
+  pretrain_options=()
+else
+  pretrain_options=(model.backbone.init_cfg=None)
+fi
 
 cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
 
