@@ -9,7 +9,7 @@ lr="$1"
 size="$2"
 batch_size="$3"
 pretrained="$4"
-loss="cross_entropy"
+loss="$5"
 config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
 
 sample_count=2212
