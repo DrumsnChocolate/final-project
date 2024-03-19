@@ -2,92 +2,71 @@ from typing import Callable, Any
 
 import numpy as np
 import torch
-import torchvision
+
+from models import SamWrapper
 
 
-def dice_single(output, target):
-    # invert because we use it as a loss, not an objective
-    return 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target))
+def iou_metric(mask_logits: torch.Tensor, predictions: torch.Tensor, target: torch.Tensor):
+    """
+    Intersection over Union (IoU) Expects each tensor to be of shape BxMxHxW
 
+    :param mask_logits: unnormed mask logits
+    :param predictions: predicted masks, values either 0 or 1
+    :param target: target masks, values either 0 or 1
+    :return: the area of the intersection, divided by the area of the union, averaged over the batch.
+    """
+    eps = 1e-7
+    areas_intersection = torch.sum(predictions * target, axis=(2,3))
+    areas_union = torch.sum((predictions + target) > 0, axis=(2,3))
+    iou = (areas_intersection / (areas_union + eps)).mean(axis=0)
+    return iou
 
-def dice_item(outputs, targets):
-    return torch.vmap(dice_single)(outputs, targets)
+def dice_metric(mask_logits: torch.Tensor, predictions: torch.Tensor, target: torch.Tensor):
+    """
+    Dice Coefficient. Expects each tensor to be of shape BxMxHxW, M for the separate mask dimension
 
+    :param mask_logits: unnormed mask logits
+    :param predictions: predicted masks, values either 0 or 1
+    :param target: target masks, values either 0 or 1
 
-def dice(output_batch, target_batch) -> torch.Tensor:
-    assert output_batch.shape[1] in [1,
-                                     3], f'Expected outputs to have 1 or 3 masks, but got {output_batch.shape[1]} masks'
-    assert target_batch.shape[1] == output_batch.shape[
-        1], f'Expected targets to have {output_batch.shape[1]} masks, but got {target_batch.shape[1]} masks'
-    return torch.vmap(dice_item)(output_batch, target_batch)
-
-def focal_single(output, target, alpha, gamma, reduction):
-    return torchvision.ops.sigmoid_focal_loss(output, target, alpha=alpha, gamma=gamma, reduction=reduction)
-
-def focal_item(outputs, targets, alpha, gamma, reduction):
-    partial_focal_single = lambda output, target: focal_single(output, target, alpha, gamma, reduction)
-    return torch.vmap(partial_focal_single)(outputs, targets)
-
-def focal(output_batch, target_batch, alpha, gamma, reduction) -> torch.Tensor:
-    partial_focal_item = lambda outputs, targets: focal_item(outputs, targets, alpha, gamma, reduction)
-    return torch.vmap(partial_focal_item)(output_batch, target_batch)
-
-
-def iou_single(output, target):
-    intersection = torch.sum(output * target > 0)
-    union = torch.sum((output > 0) + (target > 0))  # boolean addition is the same as logical or
-    return intersection / union
-
-
-def iou_item(outputs, targets):
-    return torch.vmap(iou_single)(outputs, targets)
-
-
-def iou(output_batch, target_batch) -> torch.Tensor:
-    assert output_batch.shape[1] in [1,
-                                     3], f'Expected outputs to have 1 or 3 masks, but got {output_batch.shape[1]} masks'
-    assert target_batch.shape[1] == output_batch.shape[
-        1], f'Expected targets to have {output_batch.shape[1]} masks, but got {target_batch.shape[1]} masks'
-
-    return torch.vmap(iou_item)(output_batch, target_batch)
-
-
-def mse(predicted_batch, target_batch):
-    return torch.nn.functional.mse_loss(predicted_batch, target_batch, reduction='none')
+    :return: the dice coefficient, averaged over the batch.
+    """
+    eps = 1e-7
+    areas_intersection = torch.sum(predictions * target, axis=(2,3))
+    areas_prediction = torch.sum(predictions, axis=(2,3))
+    areas_target = torch.sum(target, axis=(2,3))
+    dice = (2 * areas_intersection / (areas_prediction + areas_target + eps)).mean(axis=0)
+    return dice
 
 
 
-def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
+
+def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor]:
     metric = None
     if metric_definition.name == 'IoU':
-        metric = iou
+        metric = iou_metric
     if metric_definition.name == 'Dice':
-        metric = dice
-    if metric_definition.name == 'Focal':
-        alpha = metric_definition.get('alpha', -1)
-        gamma = metric_definition.get('gamma', 2.0)
-        reduction = metric_definition.get('reduction', 'mean')
-        metric = lambda outputs, targets: focal(outputs, targets.float(), alpha, gamma, reduction)
+        metric = dice_metric
     if metric is None:
         raise NotImplementedError()
     return lambda *args: metric(*args).tolist()
+
 
 def build_metric_functions(cfg):
     return {metric.name: build_metric_function(metric) for metric in cfg.model.metrics}
 
 
-
-
 def call_metrics(
-        metric_functions: dict[str, Callable[[torch.Tensor, torch.Tensor], torch.Tensor]],
-        output_batch: torch.Tensor,
-        target_batch: torch.Tensor
+        metric_functions: dict[str, Callable[[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor]],
+        output_batch: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+        target_batch: torch.Tensor,
+        model: SamWrapper
 ) -> dict[str, torch.Tensor]:
     mask_batch, _, _ = output_batch
+    prediction_batch: torch.Tensor = (mask_batch > model.mask_threshold) * 1
     target_batch = target_batch.repeat(1, mask_batch.shape[1], 1, 1)
     assert target_batch.shape == mask_batch.shape
-    return {key: metric_function(mask_batch, target_batch) for key, metric_function in metric_functions.items()}
-
+    return {key: metric_function(mask_batch, prediction_batch, target_batch) for key, metric_function in metric_functions.items()}
 
 
 def append_metrics(metrics: dict[str, list[Any]], new_metrics: dict[str, Any]):
@@ -98,6 +77,7 @@ def append_metrics(metrics: dict[str, list[Any]], new_metrics: dict[str, Any]):
     assert metrics.keys() == new_metrics.keys(), f'Expected metrics to have keys {metrics.keys()}, but got {new_metrics.keys()}'
     for k, v in new_metrics.items():
         metrics[k].append(v)
+
 
 def average_metrics(metrics: dict[str, list[Any]]):
     for k, v in list(metrics.items()):

@@ -60,7 +60,8 @@ def override_cfg(cfg, cfg_overrides):
 def load_cfg_from_file(filename):
     cfg = load_cfg(filename)
     bases = cfg.get('_bases_', None)
-    if bases:
+    if bases is not None:
+        del cfg['_bases_']
         for base in bases:
             cfg = override_cfg(load_cfg(base), cfg)
     return cfg
@@ -88,10 +89,12 @@ def get_cfg(args):
     validate_cfg(cfg)
     return cfg
 
+def dump_cfg(cfg):
+    return yaml.dump(cfg.to_dict(is_recursive=True, exclude_none=True, exclude_none_in_lists=True))
+
 def store_cfg(cfg, logger):
     with open(osp.join(logger.log_dir, 'config.yaml'), 'w') as f:
-        f.write(yaml.dump(cfg.to_dict(is_recursive=True, exclude_none=True, exclude_none_in_lists=True)))
-    exit(0)
+        f.write(dump_cfg(cfg))
 
 
 def get_logger(cfg):
@@ -102,7 +105,7 @@ def get_logger(cfg):
         logger = EpochLogger(cfg)
     if logger is None:
         raise NotImplementedError()
-    logger.log(cfg)
+    logger.log(dump_cfg(cfg), to_file=False)
     return logger
 
 
@@ -151,7 +154,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
         foreground_points = get_random_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
-        metrics = call_metrics(metric_functions, outputs, targets)
+        metrics = call_metrics(metric_functions, outputs, targets, model)
         assert metrics.get('loss') is None
         metrics['loss'] = loss.tolist()
         logger.log_batch_metrics(metrics)
@@ -171,7 +174,7 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     outputs = model(samples, foreground_points)
     # print(outputs)
     loss = call_loss(loss_function, outputs, targets, cfg)
-    metrics = call_metrics(metric_functions, outputs, targets)
+    metrics = call_metrics(metric_functions, outputs, targets, model)
     assert metrics.get('loss') is None
     metrics['loss'] = loss.tolist()
     logger.log_iteration_metrics(metrics, iteration)
@@ -191,7 +194,7 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
         foreground_points = get_foreground_points(targets)
         outputs = model(samples, foreground_points)
         loss = call_loss(loss_function, outputs, targets, cfg)
-        metrics = call_metrics(metric_functions, outputs, targets)
+        metrics = call_metrics(metric_functions, outputs, targets, model)
         assert metrics.get('loss') is None
         metrics['loss'] = loss.tolist()
         logger.log_batch_metrics(metrics)
@@ -202,7 +205,6 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
 def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger):
     logger.log('Testing')
     test_loader = dataloaders['test']
-    print(len(test_loader))
     model.eval()
     total_test_loss = 0
     with torch.no_grad():
@@ -211,7 +213,7 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
             foreground_points = get_foreground_points(targets)
             outputs = model(samples, foreground_points)
             loss = call_loss(loss_function, outputs, targets, cfg)
-            metrics = call_metrics(metric_functions, outputs, targets)
+            metrics = call_metrics(metric_functions, outputs, targets, model)
             assert metrics.get('loss') is None
             metrics['loss'] = loss.tolist()
             logger.log_batch_metrics(metrics)

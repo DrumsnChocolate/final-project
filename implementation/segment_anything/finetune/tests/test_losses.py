@@ -1,5 +1,5 @@
 import torch
-from ..metrics import dice_single, iou_single, focal_single
+from ..loss import dice_single, iou_single, focal_single
 
 
 def test_dice_single():

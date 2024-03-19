@@ -1,5 +1,6 @@
 import time
 
+import numpy as np
 from prodict import Prodict
 import json
 import os.path as osp
@@ -21,17 +22,21 @@ class Logger(Prodict):
         self.metrics_file = open(osp.join(self.log_dir, 'metrics.json'), 'w')
         self.text_file = open(osp.join(self.log_dir, 'logs.txt'), 'w')
 
-    def _log_dict(self, d: dict):
+    def _log_dict(self, d: dict, to_file: bool = True):
         d_json = json.dumps(d)
         print(d_json)
+        if not to_file:
+            return
         self.metrics_file.write(f'{d_json}\n')
 
-    def _log_string(self, s: str):
+    def _log_string(self, s: str, to_file: bool = True):
         print(s)
+        if not to_file:
+            return
         self.text_file.write(f'{s}\n')
 
-    def log(self, s: str):
-        self._log_string(s)
+    def log(self, s: str, to_file: bool = True):
+        self._log_string(s, to_file=to_file)
 
 
 class EpochLogger(Logger):
@@ -43,7 +48,10 @@ class EpochLogger(Logger):
         self.epoch_metrics.append(metrics)
 
     def log_epoch(self, epoch: int):
-        avg_metrics = {k: sum([m[k] for m in self.epoch_metrics]) / len(self.epoch_metrics) for k in self.epoch_metrics[0].keys()}
+        avg_metrics = {
+            k: (np.sum([m[k] for m in self.epoch_metrics], axis=0) / len(self.epoch_metrics)).tolist() for k in
+            self.epoch_metrics[0].keys()
+        }
         avg_metrics['epoch'] = epoch
         self._log_dict(avg_metrics)
         self.epoch_metrics = []
@@ -55,7 +63,10 @@ class IterationLogger(EpochLogger):
         self.iteration_metrics = []
 
     def _log_average_iteration_metrics(self):
-        avg_metrics = {k: sum([m[k] for m in self.iteration_metrics]) / len(self.iteration_metrics) for k in self.iteration_metrics[0].keys()}
+        avg_metrics = {
+            k: (np.sum([m[k] for m in self.iteration_metrics], axis=0) / len(self.iteration_metrics)).tolist()
+            for k in self.iteration_metrics[0].keys()
+        }
         self._log_dict(avg_metrics)
         self.iteration_metrics = []
 

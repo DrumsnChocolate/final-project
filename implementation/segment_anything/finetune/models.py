@@ -39,7 +39,7 @@ class SamWrapper:
 
 
 
-    def __call__(self, samples, foreground_points, multimask_output: bool = True, return_logits: bool = True):
+    def __call__(self, samples, foreground_points, multimask_output: bool = True, return_logits: bool = True) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         original_img_size = tuple(samples.shape[-2:])
         transformed_samples = self.transform(samples)
         transformed_img_size = tuple(transformed_samples.shape[-2:])
@@ -75,6 +75,10 @@ class SamWrapper:
 
     def parameters(self):
         return self.model.parameters()
+
+    @property
+    def mask_threshold(self):
+        return self.model.mask_threshold
 
 
 

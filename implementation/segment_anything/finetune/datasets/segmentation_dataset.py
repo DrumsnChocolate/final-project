@@ -45,6 +45,8 @@ class SegmentationDataset(Dataset):
         return [self.preprocess(image) for image in images]
 
     def get_item_by_index(self, index):
+        if index == len(self):
+            raise IndexError(f'index {index} out of range')
         image_name = self.image_names[index]
         image_path = self.get_image_path(image_name)
         annotation_path = self.get_annotation_path(image_name)
@@ -65,6 +67,8 @@ class SegmentationDataset(Dataset):
             _slice (slice): slice object that indicates which indices to obtain.
         """
         image_names = self.image_names[_slice]
+        if len(image_names) == 0:
+            raise IndexError(f'slice {_slice} out of range')
         image_paths = [self.get_image_path(image_name) for image_name in image_names]
         annotation_paths = [self.get_annotation_path(image_name) for image_name in image_names]
         images = [read_image(image_path) for image_path in image_paths]
@@ -171,6 +175,12 @@ class SegmentationMaskDataset(Dataset):
         images, annotations = self.preprocess_batch(images), self.preprocess_batch(annotations)
         # we still need to aggregate the images into a single tensor:
         class_indices = torch.Tensor(class_indices).to(self.cfg.device)
+        if len(images) == 0:
+            print('images:', images)
+            print('image names:', image_names)
+            print('slice:', _slice)
+            print('indices:', _slice.indices(len(self)))
+            print('length self:', len(self))
         images = torch.stack(images).to(self.cfg.device)
         annotations = torch.stack(annotations).to(self.cfg.device)
         return images, annotations, class_indices

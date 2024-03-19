@@ -1,7 +1,7 @@
 
-supported_losses = ['Dice', 'Focal']
+supported_losses = ['IoU', 'Dice', 'Focal']
 supported_loss_reductions = ['mean', 'sum']
-supported_metrics = ['IoU', 'Dice', 'Focal']
+supported_metrics = ['IoU', 'Dice']
 def validate_cfg(cfg):
     # model
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
@@ -23,7 +23,7 @@ def validate_cfg(cfg):
         assert cfg.schedule.epochs > 0, 'epochs must be positive'
         assert cfg.schedule.get('log_interval') is None, 'cannot specify log_interval with epochs'
     if cfg.schedule.get('iterations') is not None:
-        assert cfg.schedule.iterations > 0, 'iterations must be positive'
+        assert cfg.schedule.iterations >= 0, 'iterations must be non-negative'
         assert cfg.schedule.get('log_interval') is not None, 'must specify log_interval with iterations'
     # optimizer
     assert cfg.model.optimizer.name == 'sgd', f'only able to train with sgd, not {cfg.model.optimizer.name}'

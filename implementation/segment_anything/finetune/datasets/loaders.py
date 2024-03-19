@@ -10,6 +10,8 @@ class SegmentationMaskLoader:
 
     def __getitem__(self, item):
         assert isinstance(item, int), f'only able to provide items by index, not with argument {item}'
+        if item == len(self):
+            raise IndexError(f'index {item} out of range')
         start_index = item * self.cfg.data[self.dataset._split].batch_size
         end_index = min(start_index + self.cfg.data[self.dataset._split].batch_size, len(self.dataset))
         return self.dataset[start_index:end_index]
