@@ -17,10 +17,14 @@ mass_only=$6  # boolean; whether we only use the mass data or not.
 
 if [ "$size" == "256" ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
+elif [ "$size" == "224" ]; then
+  config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256py"
 else
   echo "Error: Unknown size"
   exit 1
 fi
+size_options=(crop_size="(${size},${size})" data_preprocessor.size="(${size},${size})" data_preprocessor.test_cfg.size="(${size},${size})" model.data_preprocessor.size="(${size},${size})" model.data_preprocessor.test_cfg.size="(${size},${size})" test_pipeline[1].scale="(${size},${size})" train_pipeline[2].scale="(${size},${size})" val_pipeline[1].scale="(${size},${size})" test_dataloader.dataset.pipeline[1].scale="(${size},${size})" train_dataloader.dataset.pipeline[2].scale="(${size},${size})" val_dataloader.dataset.pipeline[1].scale="(${size},${size})")
+
 
 
 param_scheduler_metric='mIoU'
@@ -69,16 +73,17 @@ if [ "$mass_only" == "true" ]; then
   schedule_options=(train_cfg.val_interval=69) # roughly 1106 samples, divided by batch size 16
 fi
 
-mkdir /local/${SLURM_JOBID}
+#mkdir /local/${SLURM_JOBID}
 ## copy data to node
-cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
-cp -rL --parents data/cbis /local/${SLURM_JOBID}
+#cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
+#cp -rL --parents data/cbis /local/${SLURM_JOBID}
 
 ## execute the python we want
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
 
-python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
+#python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
+python tools/train.py $config \
   --cfg-options \
   "${model_options[@]}" \
   "${optim_options[@]}" \
@@ -86,9 +91,10 @@ python tools/train.py $config --data-root-prefix /local/${SLURM_JOBID} \
   "${augmentation_options[@]}" \
   "${stopping_options[@]}" \
   "${data_source_options[@]}" \
-  "${schedule_options[@]}"
+  "${schedule_options[@]}" \
+  "${size_options[@]}"
 
 
 ## clean up
 
-rm -rf /local/${SLURM_JOBID}
+#rm -rf /local/${SLURM_JOBID}

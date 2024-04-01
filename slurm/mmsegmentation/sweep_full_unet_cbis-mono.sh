@@ -1,5 +1,5 @@
 lr=0.0001
-size=256
+size=224
 loss="cross_entropy"
 clahe="true"
 augmentation="false"
