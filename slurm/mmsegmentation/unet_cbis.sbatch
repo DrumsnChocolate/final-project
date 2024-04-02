@@ -23,7 +23,7 @@ else
   echo "Error: Unknown size"
   exit 1
 fi
-size_options=(crop_size="(${size},${size})" data_preprocessor.size="(${size},${size})" data_preprocessor.test_cfg.size="(${size},${size})" model.data_preprocessor.size="(${size},${size})" model.data_preprocessor.test_cfg.size="(${size},${size})" test_pipeline.1.scale="(${size},${size})" train_pipeline.2.scale="(${size},${size})" val_pipeline.1.scale="(${size},${size})" test_dataloader.dataset.pipeline.1.scale="(${size},${size})" train_dataloader.dataset.pipeline.2.scale="(${size},${size})" val_dataloader.dataset.pipeline.1.scale="(${size},${size})")
+size_options=(crop_size="(${size},${size})" data_preprocessor.size="(${size},${size})" data_preprocessor.test_cfg.size="(${size},${size})" model.data_preprocessor.size="(${size},${size})" model.data_preprocessor.test_cfg.size="(${size},${size})" test_pipeline.2.scale="(${size},${size})" train_pipeline.3.scale="(${size},${size})" val_pipeline.2.scale="(${size},${size})" test_dataloader.dataset.pipeline.2.scale="(${size},${size})" train_dataloader.dataset.pipeline.3.scale="(${size},${size})" val_dataloader.dataset.pipeline.2.scale="(${size},${size})")
 
 
 
