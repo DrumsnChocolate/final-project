@@ -287,4 +287,3 @@ visualizer = dict(
         dict(type='LocalVisBackend'),
     ])
 work_dir = './work_dirs/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256'
-ork_dirs/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256'
