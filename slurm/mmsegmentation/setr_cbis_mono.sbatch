@@ -56,7 +56,14 @@ overall_size_options=(crop_size="($size,$size)" data_preprocessor.size="($size,$
 size_options=("${test_size_options[@]}" "${val_size_options[@]}" "${overall_size_options[@]}")
 
 if [ "$pretrained" == "true" ]; then
-  pretrain_options=()
+  if [ "$size" == "224" ]; then
+    pretrain_options=(model.backbone.init_cfg.checkpoint="pretrain/vit_large_p16_224.pth")
+  elif [ "$size" == "384" ]; then
+    pretrain_options=(model.backbone.init_cfg.checkpoint="pretrain/vit_large_p16.pth")
+  else
+    echo "Error: Unknown size"
+    exit 1
+  fi
 else
   pretrain_options=(model.backbone.init_cfg=None)
 fi
