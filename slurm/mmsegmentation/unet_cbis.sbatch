@@ -18,7 +18,7 @@ mass_only=$6  # boolean; whether we only use the mass data or not.
 if [ "$size" == "256" ]; then
   config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
 elif [ "$size" == "224" ]; then
-  config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256py"
+  config="configs/unet/unet-s5-d16_fcn-noaux_4xb4-220k_cbis-ddsm-mono-256x256.py"
 else
   echo "Error: Unknown size"
   exit 1
@@ -75,7 +75,7 @@ fi
 
 #mkdir /local/${SLURM_JOBID}
 ## copy data to node
-#cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
+cd ${SLURM_SUBMIT_DIR}/implementation/mmsegmentation
 #cp -rL --parents data/cbis /local/${SLURM_JOBID}
 
 ## execute the python we want
