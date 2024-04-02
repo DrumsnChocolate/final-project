@@ -1609,7 +1609,14 @@ class Config:
             d = option_cfg_dict
             key_list = full_key.split('.')
             for subkey in key_list[:-1]:
-                d.setdefault(subkey, ConfigDict())
+                if isinstance(d, list):
+                    subkey = int(subkey)
+                    if len(d) < subkey:
+                        raise KeyError(f'Index {subkey} exceeds the length of list {d}')
+                    if len(d) == subkey:
+                        d[subkey] = ConfigDict()
+                else:
+                    d.setdefault(subkey, ConfigDict())
                 d = d[subkey]
             subkey = key_list[-1]
             d[subkey] = v
