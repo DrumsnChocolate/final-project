@@ -7,6 +7,6 @@
 cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
-python finetune/test.py finetune/configs/sam_full_ade20k.yaml
+python finetune/zero_shot.py finetune/configs/sam_full_ade20k.yaml
 conda deactivate
 
