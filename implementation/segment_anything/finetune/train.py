@@ -11,6 +11,7 @@ from torch.optim import SGD
 from tqdm import tqdm
 from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
+from finetune.checkpoint import checkpoint
 from finetune.loss import build_loss_function, call_loss
 from logger import IterationLogger, EpochLogger
 from metrics import call_metrics, build_metric_functions, append_metrics, average_metrics
@@ -189,16 +190,17 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
     val_loader = dataloaders['val']
     model.eval()
     total_val_loss = 0
-    for i, batch in enumerate(val_loader):
-        samples, targets, classes = batch
-        foreground_points = get_foreground_points(targets)
-        outputs = model(samples, foreground_points)
-        loss = call_loss(loss_function, outputs, targets, cfg)
-        metrics = call_metrics(metric_functions, outputs, targets, model)
-        assert metrics.get('loss') is None
-        metrics['loss'] = loss.tolist()
-        logger.log_batch_metrics(metrics)
-        total_val_loss += loss
+    with torch.no_grad():
+        for i, batch in enumerate(val_loader):
+            samples, targets, classes = batch
+            foreground_points = get_foreground_points(targets)
+            outputs = model(samples, foreground_points)
+            loss = call_loss(loss_function, outputs, targets, cfg)
+            metrics = call_metrics(metric_functions, outputs, targets, model)
+            assert metrics.get('loss') is None
+            metrics['loss'] = loss.tolist()
+            logger.log_batch_metrics(metrics)
+            total_val_loss += loss
     logger.log_epoch(1)
 
 
@@ -227,7 +229,7 @@ def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimi
         if epoch % cfg.schedule.val_interval != 0:
             continue
         validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
-    test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
+    # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
 
 
 
@@ -239,7 +241,7 @@ def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, op
         if iteration % cfg.schedule.val_interval != 0:
             continue
         validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
-    test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
+    # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
 
 
 def train(cfg):
@@ -255,6 +257,7 @@ def train(cfg):
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:
         train_epochs(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
+    checkpoint(cfg, model, optimizer)
 
 
 def main():

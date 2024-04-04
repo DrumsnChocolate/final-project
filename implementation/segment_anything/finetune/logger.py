@@ -11,9 +11,13 @@ class Logger(Prodict):
     log_dir: str
     cfg: Prodict
 
-    def __init__(self, cfg, *args, **kwargs):
-        timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+    def __init__(self, cfg, *args, test=False, **kwargs):
+        if cfg.get('timestamp') is None:
+            cfg.timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
+        timestamp = cfg.timestamp
         log_dir = osp.join(cfg.out_dir, timestamp)
+        if cfg.get('sub_dir') is not None:
+            log_dir = osp.join(log_dir, cfg.sub_dir)
 
         super().__init__(self, *args, cfg=cfg, log_dir=log_dir, **kwargs)
         assert self.cfg is not None

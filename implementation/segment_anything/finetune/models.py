@@ -64,6 +64,7 @@ class SamWrapper:
             masks = masks > self.model.mask_threshold
         return masks, iou_predictions, low_res_masks
 
+
     def log(self, *args):
         self.logger.log(*args)
 
@@ -75,6 +76,12 @@ class SamWrapper:
 
     def parameters(self):
         return self.model.parameters()
+
+    def load_state_dict(self, state_dict):
+        self.model.load_state_dict(state_dict)
+
+    def state_dict(self):
+        return self.model.state_dict()
 
     @property
     def mask_threshold(self):
