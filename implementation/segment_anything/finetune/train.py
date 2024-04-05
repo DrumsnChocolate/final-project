@@ -201,7 +201,7 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
             metrics['loss'] = loss.tolist()
             logger.log_batch_metrics(metrics)
             total_val_loss += loss
-    logger.log_epoch(1)
+    logger.log_epoch(1, split='val')
 
 
 def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger):
@@ -220,7 +220,7 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
             metrics['loss'] = loss.tolist()
             logger.log_batch_metrics(metrics)
             total_test_loss += loss
-    logger.log_epoch(1)
+    logger.log_epoch(1, split='test')
 
 
 def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger):

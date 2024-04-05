@@ -51,12 +51,13 @@ class EpochLogger(Logger):
     def log_batch_metrics(self, metrics: dict):
         self.epoch_metrics.append(metrics)
 
-    def log_epoch(self, epoch: int):
+    def log_epoch(self, epoch: int, split: str = 'train'):
         avg_metrics = {
             k: (np.sum([m[k] for m in self.epoch_metrics], axis=0) / len(self.epoch_metrics)).tolist() for k in
             self.epoch_metrics[0].keys()
         }
         avg_metrics['epoch'] = epoch
+        avg_metrics['split'] = split
         self._log_dict(avg_metrics)
         self.epoch_metrics = []
 
@@ -71,6 +72,7 @@ class IterationLogger(EpochLogger):
             k: (np.sum([m[k] for m in self.iteration_metrics], axis=0) / len(self.iteration_metrics)).tolist()
             for k in self.iteration_metrics[0].keys()
         }
+        avg_metrics['split'] = 'train'  # iteration logging is always train, never val.
         self._log_dict(avg_metrics)
         self.iteration_metrics = []
 
