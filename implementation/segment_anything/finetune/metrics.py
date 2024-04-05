@@ -78,8 +78,6 @@ def dice_metric_best_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, 
     return best_mask_dices.mean(axis=0)
 
 
-
-
 def dice_metric_per_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, target: torch.Tensor, iou_predictions: torch.Tensor):
     """
     Dice Coefficient. Expects each tensor to be of shape BxMxHxW,
@@ -102,7 +100,6 @@ def dice_metric_per_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, t
     return dice
 
 
-
 def choose_metric_function(metric_definition):
     if not metric_definition.per_mask:
         if metric_definition.name == 'IoU':
@@ -113,14 +110,16 @@ def choose_metric_function(metric_definition):
     if metric_definition.name == 'IoU':
         return iou_metric_per_mask
     if metric_definition.name == 'Dice':
-        return iou_metric_per_mask
+        return dice_metric_per_mask
     return None
+
 
 def build_metric_function(metric_definition) -> Callable[[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor]:
     metric = choose_metric_function(metric_definition)
     if metric is None:
         raise NotImplementedError()
     return lambda *args: metric(*args).tolist()
+
 
 def build_metric_name(metric_definition):
     if not metric_definition.per_mask:
