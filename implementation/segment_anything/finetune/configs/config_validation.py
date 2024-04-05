@@ -46,3 +46,5 @@ def validate_cfg(cfg):
     for metric in cfg.model.metrics:
         assert metric.name in supported_metrics, f"metric should be one of {supported_metrics}"
         assert metric.get('invert', False) in [True, False], "metric.invert should be True or False"
+        assert metric.get('per_mask') in [None, True, False], "metric.per_mask is an optional boolean, default False"
+        metric.per_mask = metric.get('per_mask') or False
