@@ -37,7 +37,7 @@ def focal(output_batch, target_batch, alpha, gamma, reduction) -> torch.Tensor:
 
 def iou_single(output, target):
     intersection = torch.sum(output * target > 0)
-    union = torch.sum((output > 0) + (target > 0))  # boolean addition is the same as logical or
+    union = torch.sum((output > 0).logical_or((target > 0)))
     return intersection / union
 
 
@@ -112,7 +112,6 @@ def call_loss(
     # We want to optimize the iou prediction to fit the mask.
     iou_targets = iou(masks, targets).detach()
     iou_losses = mse(iou_predictions, iou_targets)
-    # we choose to zip the losses together,
     zipped_losses = torch.cat([masks_losses.unsqueeze(-1), iou_losses.unsqueeze(-1)], dim=2)
     # and now, take the minimum loss for each item in the batch:
     # zipped_losses has shape [batch_size, num_masks, 2]. We are looking for the tuple with the smallest first element.
