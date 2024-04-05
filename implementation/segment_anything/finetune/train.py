@@ -90,8 +90,10 @@ def get_cfg(args):
     validate_cfg(cfg)
     return cfg
 
+
 def dump_cfg(cfg):
     return yaml.dump(cfg.to_dict(is_recursive=True, exclude_none=True, exclude_none_in_lists=True))
+
 
 def store_cfg(cfg, logger):
     with open(osp.join(logger.log_dir, 'config.yaml'), 'w') as f:
@@ -150,7 +152,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
     train_loader = dataloaders['train']
     model.train()
     total_epoch_train_loss = 0
-    for i, batch in enumerate(train_loader):
+    for i, batch in tqdm(enumerate(train_loader)):
         samples, targets, classes = batch
         foreground_points = get_random_foreground_points(targets)
         outputs = model(samples, foreground_points)
@@ -181,8 +183,6 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     logger.log_iteration_metrics(metrics, iteration)
     loss.backward()
     optimizer.step()
-    if iteration % cfg.schedule.log_interval != 0:
-        return
 
 
 def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger):
@@ -191,7 +191,7 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
     model.eval()
     total_val_loss = 0
     with torch.no_grad():
-        for i, batch in enumerate(val_loader):
+        for i, batch in tqdm(enumerate(val_loader)):
             samples, targets, classes = batch
             foreground_points = get_foreground_points(targets)
             outputs = model(samples, foreground_points)
@@ -230,8 +230,6 @@ def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimi
             continue
         validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
     # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
-
-
 
 
 def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger):

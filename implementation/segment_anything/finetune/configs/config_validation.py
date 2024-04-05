@@ -18,6 +18,8 @@ def validate_cfg(cfg):
     # schedule
     assert cfg.schedule.get('epochs') is not None or cfg.schedule.get('iterations') is not None, 'must specify either epochs or iterations'
     assert cfg.schedule.get('epochs') is None or cfg.schedule.get('iterations') is None, 'cannot specify both epochs and iterations'
+    cfg.schedule.epochs = cfg.schedule.get('epochs')
+    cfg.schedule.iterations = cfg.schedule.get('iterations')
     assert cfg.schedule.get('val_interval') is not None, 'must specify val_interval'
     if cfg.schedule.get('epochs') is not None:
         assert cfg.schedule.epochs > 0, 'epochs must be positive'
