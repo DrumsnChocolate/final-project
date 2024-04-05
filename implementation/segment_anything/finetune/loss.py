@@ -50,7 +50,6 @@ def iou(output_batch, target_batch) -> torch.Tensor:
         f'Expected outputs to have 1 or 3 masks, but got {output_batch.shape[1]} masks'
     assert target_batch.shape[1] == output_batch.shape[
         1], f'Expected targets to have {output_batch.shape[1]} masks, but got {target_batch.shape[1]} masks'
-
     return torch.vmap(iou_item)(output_batch, target_batch)
 
 
@@ -100,6 +99,8 @@ def call_loss(
         targets: torch.Tensor,
         cfg
 ) -> torch.Tensor:
+    assert (targets > 0).sum(axis=(2, 3)).all()  # assert that all masks will have a target area > 0
+
     # we don't use the low_res_masks output, so we ignore it in the below line
     masks, iou_predictions, _ = outputs
     # we need to match the target dimensions to the mask dimensions, by repeating the target:
@@ -107,10 +108,11 @@ def call_loss(
     masks_losses = loss_function(masks, targets)
     # iou loss is calculated using MSE loss, just like done in https://arxiv.org/pdf/2304.02643.pdf
     # to detach or not to detach, that is the question.
-    # I think detaching makes sense, because we don't want to optimize the mask to fit the iou prediction.
+    # I think detaching makes sense, because we don't want to optimize the mask to fit the model's own iou prediction;
     # We want to optimize the iou prediction to fit the mask.
     iou_targets = iou(masks, targets).detach()
     iou_losses = mse(iou_predictions, iou_targets)
+    # we choose to zip the losses together,
     zipped_losses = torch.cat([masks_losses.unsqueeze(-1), iou_losses.unsqueeze(-1)], dim=2)
     # and now, take the minimum loss for each item in the batch:
     # zipped_losses has shape [batch_size, num_masks, 2]. We are looking for the tuple with the smallest first element.
