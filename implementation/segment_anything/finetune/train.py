@@ -262,7 +262,8 @@ def main():
     # parse config
     args = parse_args()
     cfg = get_cfg(args)
-    train(cfg)
+    with torch.autograd.detect_anomaly(check_nan=True):
+        train(cfg)
 
 
 if __name__ == '__main__':
