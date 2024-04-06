@@ -6,7 +6,8 @@ import torchvision
 
 
 def dice_single(output, target):
-    return 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target))
+    eps = 1e-7
+    return 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target) + eps)
 
 
 def dice_item(outputs, targets):
@@ -36,9 +37,10 @@ def focal(output_batch, target_batch, alpha, gamma, reduction) -> torch.Tensor:
 
 
 def iou_single(output, target):
+    eps = 1e-7
     intersection = torch.sum(output * target > 0)
     union = torch.sum((output > 0).logical_or((target > 0)))
-    return intersection / union
+    return intersection / (union + eps)
 
 
 def iou_item(outputs, targets):
@@ -71,7 +73,9 @@ def get_loss_function(loss_definition) -> Callable[[torch.Tensor, torch.Tensor],
         raise NotImplementedError()
     loss_function = loss_metric
     if loss_definition.get('invert', False):
-        loss_function = lambda *args: -loss_metric(*args)
+        permitted_inversions = ['IoU', 'Dice']
+        assert loss_definition.name in permitted_inversions, f'Invert is only supported for {permitted_inversions}, but got {loss_definition.name}'
+        loss_function = lambda *args: 1 - loss_metric(*args)
     return loss_function
 
 
@@ -99,12 +103,14 @@ def call_loss(
         targets: torch.Tensor,
         cfg
 ) -> torch.Tensor:
-    assert (targets > 0).sum(axis=(2, 3)).all()  # assert that all masks will have a target area > 0
 
     # we don't use the low_res_masks output, so we ignore it in the below line
     masks, iou_predictions, _ = outputs
+    assert masks.isnan().sum() == 0, 'Predicted masks contain NaN values'
+    assert iou_predictions.isnan().sum() == 0, 'Predicted iou values contain NaN values'
     # we need to match the target dimensions to the mask dimensions, by repeating the target:
     targets = targets.repeat(1, masks.shape[1], 1, 1)
+    assert (targets > 0).sum(axis=(2, 3)).all()  # assert that all masks will have a target area > 0
     masks_losses = loss_function(masks, targets)
     # iou loss is calculated using MSE loss, just like done in https://arxiv.org/pdf/2304.02643.pdf
     # to detach or not to detach, that is the question.
@@ -118,8 +124,11 @@ def call_loss(
     zipped_minimum_losses = find_minimum_loss(zipped_losses)
     # we end up with shape [batch_size, 2]. now sum each tuple:
     losses = torch.vmap(torch.sum)(zipped_minimum_losses)
+    assert losses.isnan().sum() == 0, 'Losses contain NaN values'
     # return losses
-    return reduce_losses(losses, cfg)
+    loss = reduce_losses(losses, cfg)
+    assert loss.isnan().sum() == 0, 'Loss is NaN'
+    return loss
 
 
 def reduce_losses(loss, cfg):
