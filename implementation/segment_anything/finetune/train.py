@@ -133,7 +133,7 @@ def get_foreground_points(targets):
         foreground_point = np.argmax(distance_transform)
         foreground_point = np.unravel_index(foreground_point, distance_transform.shape)
         foreground_points.append(foreground_point)
-    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(0)
+    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(1)
 
 
 def get_random_foreground_points(targets):
