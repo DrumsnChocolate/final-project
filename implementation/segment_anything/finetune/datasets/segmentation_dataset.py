@@ -7,6 +7,13 @@ from torchvision.transforms import functional as F, InterpolationMode
 from torch.utils.data import Dataset
 
 
+def ensure_image_rgb(image):
+    # necessary in case the image is not yet represented as RGB.
+    # arguably, there are different ways of converting grayscale to RGB, but this is the simplest
+    if image.shape[0] == 3:
+        return image
+    return image.repeat(3, 1, 1)
+
 # todo: remove SegmentationDataset entirely?
 class SegmentationDataset(Dataset):
 
@@ -50,7 +57,7 @@ class SegmentationDataset(Dataset):
         image_name = self.image_names[index]
         image_path = self.get_image_path(image_name)
         annotation_path = self.get_annotation_path(image_name)
-        image = read_image(image_path)
+        image = ensure_image_rgb(read_image(image_path))
         # using ImageReadMode.GRAY to be sure, though this should be done automatically already
         annotation = read_image(annotation_path, mode=ImageReadMode.GRAY)
         image, annotation = self.preprocess(image), self.preprocess(annotation)
@@ -71,7 +78,7 @@ class SegmentationDataset(Dataset):
             raise IndexError(f'slice {_slice} out of range')
         image_paths = [self.get_image_path(image_name) for image_name in image_names]
         annotation_paths = [self.get_annotation_path(image_name) for image_name in image_names]
-        images = [read_image(image_path) for image_path in image_paths]
+        images = [ensure_image_rgb(read_image(image_path)) for image_path in image_paths]
         # using ImageReadMode.GRAY to be sure, though this should be done automatically already
         annotations = [read_image(annotation_path, mode=ImageReadMode.GRAY) for annotation_path in annotation_paths]
         images, annotations = self.preprocess_batch(images), self.preprocess_batch(annotations)
@@ -145,7 +152,7 @@ class SegmentationMaskDataset(Dataset):
         class_index = self.index_to_class[index]
         image_path = self.get_image_path(image_name)
         annotation_path = self.get_annotation_path(image_name)
-        image = read_image(image_path)
+        image = ensure_image_rgb(read_image(image_path))
         # using ImageReadMode.GRAY to be sure, though this should be done automatically already
         annotation = read_image(annotation_path, mode=ImageReadMode.GRAY)
         annotation = (annotation == class_index) * 1
@@ -168,7 +175,7 @@ class SegmentationMaskDataset(Dataset):
         class_indices = [self.index_to_class[index] for index in indices]
         image_paths = [self.get_image_path(image_name) for image_name in image_names]
         annotation_paths = [self.get_annotation_path(image_name) for image_name in image_names]
-        images = [read_image(image_path) for image_path in image_paths]
+        images = [ensure_image_rgb(read_image(image_path)) for image_path in image_paths]
         # using ImageReadMode.GRAY to be sure, though this should be done automatically already
         annotations = [read_image(annotation_path, mode=ImageReadMode.GRAY) for annotation_path in annotation_paths]
         annotations = [(annotation == class_index) * 1 for annotation, class_index in zip(annotations, class_indices)]
