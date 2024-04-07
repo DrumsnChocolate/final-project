@@ -213,6 +213,8 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
         for i, batch in tqdm(enumerate(test_loader)):
             samples, targets, classes = batch
             foreground_points = get_foreground_points(targets)
+            print(foreground_points.shape)
+            print(foreground_points)
             outputs = model(samples, foreground_points)
             loss = call_loss(loss_function, outputs, targets, cfg)
             metrics = call_metrics(metric_functions, outputs, targets, model)
