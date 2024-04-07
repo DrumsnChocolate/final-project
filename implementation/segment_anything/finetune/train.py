@@ -145,7 +145,7 @@ def get_random_foreground_points(targets):
         index = np.random.choice(np.arange(len(xs)))
         foreground_point = xs[index], ys[index]
         foreground_points.append(foreground_point)
-    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(0)
+    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(1)
 
 
 def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, epoch, logger: EpochLogger):
