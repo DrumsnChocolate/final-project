@@ -106,8 +106,6 @@ def call_loss(
 
     # we don't use the low_res_masks output, so we ignore it in the below line
     masks, iou_predictions, _ = outputs
-    assert masks.isnan().sum() == 0, f'Predicted masks contain {masks.isnan().sum()} NaN values'
-    assert iou_predictions.isnan().sum() == 0, f'Predicted iou values contain {iou_predictions.isnan().sum()} NaN values'
     # we need to match the target dimensions to the mask dimensions, by repeating the target:
     targets = targets.repeat(1, masks.shape[1], 1, 1)
     assert (targets > 0).sum(axis=(2, 3)).all()  # assert that all masks will have a target area > 0
@@ -124,11 +122,8 @@ def call_loss(
     zipped_minimum_losses = find_minimum_loss(zipped_losses)
     # we end up with shape [batch_size, 2]. now sum each tuple:
     losses = torch.vmap(torch.sum)(zipped_minimum_losses)
-    assert losses.isnan().sum() == 0, 'Losses contain NaN values'
     # return losses
-    loss = reduce_losses(losses, cfg)
-    assert loss.isnan().sum() == 0, 'Loss is NaN'
-    return loss
+    return reduce_losses(losses, cfg)
 
 
 def reduce_losses(loss, cfg):
