@@ -3,6 +3,10 @@ supported_losses = ['IoU', 'Dice', 'Focal']
 supported_loss_reductions = ['mean', 'sum']
 supported_metrics = ['IoU', 'Dice']
 def validate_cfg(cfg):
+    # seed
+    if cfg.get('seed') is None:
+        cfg.seed = 218
+    assert isinstance(cfg.seed, int), 'seed must be an integer'
     # model
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
     assert cfg.model.backbone in ['vit_h', 'vit_l', 'vit_b'], f'only able to train with one of vit_h, vit_l, vit_b, not {cfg.model.backbone}'
