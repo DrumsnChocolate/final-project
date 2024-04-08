@@ -1,4 +1,5 @@
 import argparse
+import random
 import time
 from typing import Callable, Any, List
 
@@ -244,6 +245,15 @@ def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, op
     # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
 
 
+def seed(cfg):
+    _seed = cfg.seed
+    torch.manual_seed(_seed)
+    torch.cuda.manual_seed(_seed)
+    torch.cuda.manual_seed_all(_seed)
+    np.random.seed(_seed)
+    random.seed(_seed)
+
+
 def train(cfg):
     logger = get_logger(cfg)
     store_cfg(cfg, logger)
@@ -253,6 +263,7 @@ def train(cfg):
     loss_function = build_loss_function(cfg)
     metric_functions = build_metric_functions(cfg)
     logger.log('Training')
+    seed(cfg)
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:
