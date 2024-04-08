@@ -257,13 +257,13 @@ def seed(cfg):
 def train(cfg):
     logger = get_logger(cfg)
     store_cfg(cfg, logger)
+    seed(cfg)
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg, logger)
     optimizer = build_optimizer(cfg, model)
     loss_function = build_loss_function(cfg)
     metric_functions = build_metric_functions(cfg)
     logger.log('Training')
-    seed(cfg)
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:
