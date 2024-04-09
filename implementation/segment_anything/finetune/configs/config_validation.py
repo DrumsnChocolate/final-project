@@ -10,6 +10,7 @@ def validate_cfg(cfg):
     # model
     assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
     assert cfg.model.backbone in ['vit_h', 'vit_l', 'vit_b'], f'only able to train with one of vit_h, vit_l, vit_b, not {cfg.model.backbone}'
+    cfg.model.clip_grad_norm = cfg.model.get('clip_grad_norm')
     # dataset
     permitted_datasets = ['ade20k', 'cbis-binary', 'cbis-multi']
     assert cfg.data.name in permitted_datasets, f'only able to train on one of {permitted_datasets}, not {cfg.data.name}'
