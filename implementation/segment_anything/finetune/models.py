@@ -89,6 +89,10 @@ class SamWrapper:
             'max': max_gradient,
         }
 
+    def clip_gradients(self):
+        if self.cfg.model.clip_grad_norm is not None:
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.cfg.model.clip_grad_norm)
+
 
     @property
     def mask_threshold(self):
