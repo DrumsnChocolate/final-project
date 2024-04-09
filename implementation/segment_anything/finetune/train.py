@@ -163,6 +163,7 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
         metrics['loss'] = loss.tolist()
         logger.log_batch_metrics(metrics)
         total_epoch_train_loss += loss
+        optimizer.zero_grad()
         loss.backward()
         model.clip_gradients()
         # if i % 10 == 0:
@@ -186,7 +187,9 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     assert metrics.get('loss') is None
     metrics['loss'] = loss.tolist()
     logger.log_iteration_metrics(metrics, iteration)
+    optimizer.zero_grad()
     loss.backward()
+    model.clip_gradients()
     optimizer.step()
 
 
