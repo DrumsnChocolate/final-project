@@ -84,7 +84,7 @@ class SamWrapper:
         return self.model.state_dict()
 
     def get_gradient_stats(self):
-        gradients = [g for param in self.model.parameters() for g in param.grad.flatten()]
+        gradients = [g for param in self.model.parameters() for g in param.grad.flatten().cpu()]
         return {
             'mean': torch.mean(torch.stack(gradients)),
             'std': torch.std(torch.stack(gradients)),
