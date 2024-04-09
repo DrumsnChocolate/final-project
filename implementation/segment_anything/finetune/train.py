@@ -164,8 +164,9 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
         logger.log_batch_metrics(metrics)
         total_epoch_train_loss += loss
         loss.backward()
-        gradient_stats = model.get_gradient_stats()
-        logger.log(f'gradient stats: {gradient_stats}')
+        if i % 10 == 0:
+            gradient_stats = model.get_gradient_stats()
+            logger.log(f'gradient stats: {gradient_stats}')
         optimizer.step()
     logger.log_epoch(epoch)
 
