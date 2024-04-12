@@ -20,6 +20,8 @@ from models import build_model, SamWrapper
 from datasets.loaders import build_dataloaders
 import os.path as osp
 
+from segment_anything.modeling import get_param_count, get_param_count_trainable_recursively
+
 
 class InfiniteIterator:
     def __init__(self, iterable):
@@ -258,6 +260,12 @@ def seed(cfg):
     np.random.seed(_seed)
     random.seed(_seed)
 
+def log_parameter_counts(model: SamWrapper, logger):
+    model.train()
+    total_params = get_param_count(model.model)
+    trainable_params = get_param_count_trainable_recursively(model.model)
+    logger.log(f'Parameters: total: {total_params}, trainable: {trainable_params}')
+
 
 def train(cfg):
     logger = get_logger(cfg)
@@ -269,6 +277,7 @@ def train(cfg):
     loss_function = build_loss_function(cfg)
     metric_functions = build_metric_functions(cfg)
     logger.log('Training')
+    log_parameter_counts(model, logger)
     if cfg.schedule.iterations is not None:
         train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger)
     elif cfg.schedule.epochs is not None:

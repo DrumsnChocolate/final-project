@@ -9,3 +9,6 @@ from .image_encoder import ImageEncoderViT
 from .mask_decoder import MaskDecoder
 from .prompt_encoder import PromptEncoder
 from .transformer import TwoWayTransformer
+from .vpt_image_encoder import VPTImageEncoderViT
+from .vpt_sam import VPTSam
+from .param_counts import get_param_count, get_param_count_trainable_recursively

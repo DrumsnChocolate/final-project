@@ -10,17 +10,17 @@ from torch.nn import functional as F
 
 from typing import Any, Dict, List, Tuple
 
-from .image_encoder import ImageEncoderViT
+from .vpt_image_encoder import VPTImageEncoderViT
 from .mask_decoder import MaskDecoder
 from .prompt_encoder import PromptEncoder
 
-class Sam(nn.Module):
+class VPTSam(nn.Module):
     mask_threshold: float = 0.0
     image_format: str = "RGB"
 
     def __init__(
         self,
-        image_encoder: ImageEncoderViT,
+        image_encoder: VPTImageEncoderViT,
         prompt_encoder: PromptEncoder,
         mask_decoder: MaskDecoder,
         pixel_mean: List[float] = [123.675, 116.28, 103.53],

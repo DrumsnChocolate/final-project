@@ -8,8 +8,10 @@ def validate_cfg(cfg):
         cfg.seed = 218
     assert isinstance(cfg.seed, int), 'seed must be an integer'
     # model
-    assert cfg.model.name == 'sam', f'only able to train sam, not {cfg.model.name}'
-    assert cfg.model.backbone in ['vit_h', 'vit_l', 'vit_b'], f'only able to train with one of vit_h, vit_l, vit_b, not {cfg.model.backbone}'
+    permitted_models = ['sam']
+    assert cfg.model.name in permitted_models, f'only able to train one of {permitted_models}, not {cfg.model.name}'
+    permitted_backbones = ['vit_h', 'vit_l', 'vit_b']
+    assert cfg.model.backbone in permitted_backbones, f'only able to train with one of {permitted_backbones}, not {cfg.model.backbone}'
     cfg.model.clip_grad_norm = cfg.model.get('clip_grad_norm')
     # dataset
     permitted_datasets = ['ade20k', 'cbis-binary', 'cbis-multi']
@@ -19,7 +21,11 @@ def validate_cfg(cfg):
     assert cfg.data.get('test') is not None, 'must specify test split'
     assert cfg.data.get('root') is not None, 'must specify data root directory'
     # finetuning
-    assert cfg.model.finetuning.name == 'full', f'only able to train with full finetuning, not {cfg.model.finetuning.name}'
+    permitted_finetuning = ['full', 'vpt']
+    assert cfg.model.finetuning.name in permitted_finetuning, f'only able to finetune with one of {permitted_finetuning}, not {cfg.model.finetuning.name}'
+    if cfg.model.finetuning.name == 'vpt':
+        cfg.model.finetuning.length = cfg.model.finetuning.get('length', 50)
+        cfg.model.finetuning.dropout = cfg.model.finetuning.get('dropout', 0.1)
     # schedule
     assert cfg.schedule.get('epochs') is not None or cfg.schedule.get('iterations') is not None, 'must specify either epochs or iterations'
     assert cfg.schedule.get('epochs') is None or cfg.schedule.get('iterations') is None, 'cannot specify both epochs and iterations'
