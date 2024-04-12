@@ -10,7 +10,15 @@ size="$2"
 batch_size="$3"
 pretrained="$4"
 loss="$5"
-config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
+tuning_method="$6"
+if [ "$tuning_method" == "full" ]; then
+  config="configs/setr/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
+elif [ "$tuning_method" == "vpt" ]; then
+  config="configs/setr_vpt/setrvpt_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256.py"
+else
+  echo "Error: Unknown tuning method"
+  exit 1
+fi
 
 sample_count=2212
 val_interval=$(($sample_count / $batch_size))
