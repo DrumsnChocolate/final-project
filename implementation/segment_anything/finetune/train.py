@@ -134,8 +134,12 @@ def build_optimizer(cfg, model):
         return SGD(
             model.parameters(),
             lr=cfg.model.optimizer.lr,
-            weight_decay=cfg.model.optimizer.wd,
             momentum=cfg.model.optimizer.momentum
+        )
+    if cfg.model.optimizer.name == 'adamw':
+        return torch.optim.AdamW(
+            model.parameters(),
+            lr=cfg.model.optimizer.lr,
         )
     raise NotImplementedError()
 

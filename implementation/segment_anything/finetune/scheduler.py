@@ -9,9 +9,11 @@ class Scheduler:
     def observe_metrics(self, metrics, split):
         raise NotImplementedError()
 
+
 class DummyScheduler(Scheduler):
     def observe_metrics(self, metrics, split):
         pass
+
 
 class ReduceLROnPlateauScheduler(Scheduler):
     def __init__(self, cfg, optimizer):

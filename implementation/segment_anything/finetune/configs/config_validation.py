@@ -55,10 +55,10 @@ def validate_cfg(cfg):
         assert cfg.schedule.scheduler.get('split') in ['train', 'val'], 'scheduler split must be train or val'
         assert cfg.schedule.scheduler.get('metric') is not None, 'must specify scheduler metric'
     # optimizer
-    assert cfg.model.optimizer.name == 'sgd', f'only able to train with sgd, not {cfg.model.optimizer.name}'
+    assert cfg.model.optimizer.name in ['sgd', 'adamw'], f'only able to train with sgd or adamw, not {cfg.model.optimizer.name}'
     assert cfg.model.optimizer.get('lr') is not None, 'must specify learning rate'
-    assert cfg.model.optimizer.get('wd') is not None, 'must specify weight decay'
-    assert cfg.model.optimizer.get('momentum') is not None, 'must specify momentum'
+    if cfg.model.optimizer.name == 'sgd':
+        assert cfg.model.optimizer.get('momentum') is not None, 'must specify momentum'
     # device
     assert cfg.device in ['cpu', 'cuda'], "Only able to use cpu or cuda device"
     # loss
