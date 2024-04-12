@@ -14,6 +14,7 @@ from configs.config_options import DictAction
 from configs.config_validation import validate_cfg
 from finetune.checkpoint import checkpoint
 from finetune.loss import build_loss_function, call_loss
+from finetune.scheduler import ReduceLROnPlateauScheduler, DummyScheduler
 from finetune.stopper import EarlyStopper, DummyStopper, Stopper
 from logger import IterationLogger, EpochLogger
 from metrics import call_metrics, build_metric_functions, append_metrics, average_metrics
@@ -123,6 +124,10 @@ def get_stopper(cfg):
         stopper = EarlyStopper(cfg)
     return stopper
 
+def build_scheduler(cfg, optimizer):
+    if cfg.schedule.scheduler.name == 'reduce_lr_on_plateau':
+        return ReduceLROnPlateauScheduler(cfg, optimizer)
+    return DummyScheduler(cfg, optimizer)
 
 def build_optimizer(cfg, model):
     if cfg.model.optimizer.name == 'sgd':
@@ -177,13 +182,11 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
         optimizer.zero_grad()
         loss.backward()
         model.clip_gradients()
-        # if i % 10 == 0:
-        #     gradient_stats = model.get_gradient_stats()
-        #     logger.log(f'gradient stats: {gradient_stats}')
         optimizer.step()
     avg_epoch_metrics = logger.get_avg_epoch_metrics()
     logger.log_epoch(epoch)
     stopper.record_metrics(avg_epoch_metrics, 'train')
+    return avg_epoch_metrics
 
 
 def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_functions: dict[str, Callable], optimizer,
@@ -205,13 +208,13 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     loss.backward()
     model.clip_gradients()
     optimizer.step()
+    return metrics
 
 
 def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger, stopper: Stopper):
     logger.log('Validation')
     val_loader = dataloaders['val']
     model.eval()
-    total_val_loss = 0
     with torch.no_grad():
         for i, batch in tqdm(enumerate(val_loader)):
             samples, targets, classes = batch
@@ -222,8 +225,10 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
             assert metrics.get('loss') is None
             metrics['loss'] = loss.tolist()
             logger.log_batch_metrics(metrics)
-            total_val_loss += loss
+            stopper.record_metrics(metrics, 'val')
+    avg_epoch_metrics = logger.get_avg_epoch_metrics()
     logger.log_epoch(1, split='val')
+    return avg_epoch_metrics
 
 
 def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger):
@@ -245,22 +250,26 @@ def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataload
     logger.log_epoch(1, split='test')
 
 
-def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger, stopper):
+def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper):
     for epoch in range(1, cfg.schedule.epochs + 1):
-        train_epoch(cfg, model, loss_function, metric_functions, optimizer, dataloaders, epoch, logger, stopper)
+        train_metrics = train_epoch(cfg, model, loss_function, metric_functions, optimizer, dataloaders, epoch, logger, stopper)
+        scheduler.observe_metrics(train_metrics, 'train')
         if epoch % cfg.schedule.val_interval == 0:
-            validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger, stopper)
+            validation_metrics = validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger, stopper)
+            scheduler.observe_metrics(validation_metrics, 'val')
         if stopper.should_stop():
             break
     # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
 
 
-def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, logger, stopper):
+def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper):
     dataloaders['infinite_train'] = InfiniteIterator(dataloaders['train'])
     for iteration in range(1, cfg.schedule.iterations + 1):
-        train_iteration(cfg, model, loss_function, metric_functions, optimizer, dataloaders, iteration, logger, stopper)
+        train_metrics = train_iteration(cfg, model, loss_function, metric_functions, optimizer, dataloaders, iteration, logger, stopper)
+        scheduler.observe_metrics(train_metrics, 'train')
         if iteration % cfg.schedule.val_interval == 0:
-            validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger, stopper)
+            validation_metrics = validate_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger, stopper)
+            scheduler.observe_metrics(validation_metrics, 'val')
         if stopper.should_stop():
             break
     # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
@@ -288,15 +297,16 @@ def train(cfg):
     dataloaders = build_dataloaders(cfg)
     model = build_model(cfg, logger)
     optimizer = build_optimizer(cfg, model)
+    scheduler = build_scheduler(cfg, optimizer)
     stopper = get_stopper(cfg)
     loss_function = build_loss_function(cfg)
     metric_functions = build_metric_functions(cfg)
     logger.log('Training')
     log_parameter_counts(model, logger)
     if cfg.schedule.iterations is not None:
-        train_iterations(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger, stopper)
+        train_iterations(cfg, model, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper)
     elif cfg.schedule.epochs is not None:
-        train_epochs(cfg, model, loss_function, metric_functions, optimizer, dataloaders, logger, stopper)
+        train_epochs(cfg, model, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper)
     checkpoint(cfg, model, optimizer)
 
 

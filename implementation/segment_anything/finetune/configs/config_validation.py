@@ -38,13 +38,22 @@ def validate_cfg(cfg):
     if cfg.schedule.get('iterations') is not None:
         assert cfg.schedule.iterations >= 0, 'iterations must be non-negative'
         assert cfg.schedule.get('log_interval') is not None, 'must specify log_interval with iterations'
-    cfg.schedule.early_stopping = cfg.schedule.get('early_stopping', None)
-    if cfg.schedule.get('stopper') is not None:
+    cfg.schedule.stopper = cfg.schedule.get('stopper', None)
+    if cfg.schedule.stopper is not None:
         assert cfg.schedule.stopper.get('name') in ['early_stopper'], 'stopper name must be early_stopper'
         assert cfg.schedule.stopper.get('patience') is not None, 'must specify early stopping patience'
         assert cfg.schedule.stopper.get('metric') is not None, 'must specify early stopping metric'
         assert cfg.schedule.stopper.get('split') in ['train', 'val'], 'early stopping split must be train or val'
         assert cfg.schedule.stopper.get('mode') in ['min', 'max'], 'early stopping mode must be min or max'
+    cfg.schedule.scheduler = cfg.schedule.get('scheduler', None)
+    if cfg.schedule.scheduler is not None:
+        assert cfg.schedule.scheduler.get('name') in ['reduce_lr_on_plateau'], 'scheduler name must be reduce_lr_on_plateau'
+        assert cfg.schedule.scheduler.get('mode') in ['min', 'max'], 'scheduler mode must be min or max'
+        assert cfg.schedule.scheduler.get('factor') is not None, 'must specify scheduler factor'
+        assert cfg.schedule.scheduler.get('patience') is not None, 'must specify scheduler patience'
+        assert cfg.schedule.scheduler.get('threshold') is not None, 'must specify scheduler threshold'
+        assert cfg.schedule.scheduler.get('split') in ['train', 'val'], 'scheduler split must be train or val'
+        assert cfg.schedule.scheduler.get('metric') is not None, 'must specify scheduler metric'
     # optimizer
     assert cfg.model.optimizer.name == 'sgd', f'only able to train with sgd, not {cfg.model.optimizer.name}'
     assert cfg.model.optimizer.get('lr') is not None, 'must specify learning rate'
