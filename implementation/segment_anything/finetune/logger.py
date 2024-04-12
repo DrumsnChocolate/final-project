@@ -55,11 +55,16 @@ class EpochLogger(Logger):
     def log_batch_metrics(self, metrics: dict):
         self.epoch_metrics.append(metrics)
 
-    def log_epoch(self, epoch: int, split: str = 'train'):
-        avg_metrics = {
+    def get_avg_epoch_metrics(self):
+        avg_epoch_metrics = {
             k: (np.sum([m[k] for m in self.epoch_metrics], axis=0) / len(self.epoch_metrics)).tolist() for k in
             self.epoch_metrics[0].keys()
         }
+        return avg_epoch_metrics
+
+
+    def log_epoch(self, epoch: int, split: str = 'train'):
+        avg_metrics = self.get_avg_epoch_metrics()
         avg_metrics['epoch'] = epoch
         avg_metrics['split'] = split
         self._log_dict(avg_metrics)
