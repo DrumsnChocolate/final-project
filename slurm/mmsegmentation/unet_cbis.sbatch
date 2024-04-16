@@ -50,6 +50,7 @@ stopping_patience=40
 
 optim_options=(optimizer="dict(lr=${lr},type='AdamW')" optim_wrapper.optimizer="dict(lr=${lr},type='AdamW')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0,cooldown=0,patience=25,threshold=0.0001,factor=0.1)]")
 stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0)]")
+checkpoint_options=(default_hooks.checkpoint.save_last=true)
 
 if [ "$clahe" == "true" ]; then
   normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
@@ -90,6 +91,7 @@ python tools/train.py $config \
   "${normalization_options[@]}" \
   "${augmentation_options[@]}" \
   "${stopping_options[@]}" \
+  "${checkpoint_options[@]}" \
   "${data_source_options[@]}" \
   "${schedule_options[@]}" \
   "${size_options[@]}"
