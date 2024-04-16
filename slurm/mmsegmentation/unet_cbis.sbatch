@@ -12,7 +12,7 @@ loss=$3  # loss function, "dice & iou" or "cross_entropy"
 clahe=$4  # boolean; whether we use clahe and therefore need to standardize to [0,1], or standardize with z-score
 augmentation=$5  # boolean; whether we use any data augmentation besides CLAHE or not.
 mass_only=$6  # boolean; whether we only use the mass data or not.
-
+optimizer=$7  # choice between adamw and adam
 
 
 if [ "$size" == "256" ]; then
@@ -48,7 +48,16 @@ stopping_metric="train_loss"
 stopping_rule="less"
 stopping_patience=40
 
-optim_options=(optimizer="dict(lr=${lr},type='AdamW')" optim_wrapper.optimizer="dict(lr=${lr},type='AdamW')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0,cooldown=0,patience=25,threshold=0.0001,factor=0.1)]")
+if [ "$optimizer" == "adam" ]; then
+  optim_name="Adam"
+elif [ "$optimizer" == "adamw" ]; then
+  optim_name="AdamW"
+else
+  echo "Error: Unknown optimizer"
+  exit 1
+fi
+
+optim_options=(optimizer="dict(lr=${lr},type='${optim_name}')" optim_wrapper.optimizer="dict(lr=${lr},type='${optim_name}')" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0,cooldown=0,patience=25,threshold=0.0001,factor=0.1)]")
 stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0)]")
 checkpoint_options=(default_hooks.checkpoint.save_last=true)
 
