@@ -50,7 +50,7 @@ stopping_patience=40
 optimizer="dict(lr=${lr},type='AdamW')"
 optim_options=(optimizer="$optimizer" optim_wrapper.optimizer="$optimizer" param_scheduler="[dict(type='ReduceOnPlateauLR',rule='${param_scheduler_rule}',monitor='${param_scheduler_metric}',min_value=0,cooldown=0,patience=25,threshold=0.0001,factor=0.1)]")
 stopping_options=(custom_hooks="[dict(type='EarlyStoppingHook',monitor='${stopping_metric}',patience=${stopping_patience},rule='${stopping_rule}',min_delta=0)]")
-checkpoint_options=(default_hooks.checkpoint.save_last=true)
+checkpoint_options=(default_hooks.checkpoint="dict(type='CheckpointHook',interval=1,by_epoch=True)")
 
 normalization_options=(data_preprocessor.mean='[0.0,0.0,0.0]' data_preprocessor.std='[255,255,255]' model.data_preprocessor.mean='[0.0,0.0,0.0]' model.data_preprocessor.std='[255,255,255]')
 train_pipeline="[dict(type='LoadImageFromFile'),dict(type='LoadAnnotations',reduce_zero_label=True),dict(type='CLAHE'),dict(scale=($size,$size),type='Resize'),dict(type='PackSegInputs')]"
