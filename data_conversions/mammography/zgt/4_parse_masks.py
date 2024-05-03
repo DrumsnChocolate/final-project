@@ -101,13 +101,13 @@ def merge_rois_multi_class(masks):
 
 def store_single_class(row):
     mask_path = os.path.join(annotations_root, 'annotations_binary', row['image_name'])
-    mask = row['mask'] * 50
+    mask = row['mask']
     cv2.imwrite(mask_path, mask)
 
 
 def store_multi_class(row):
     mask_path = os.path.join(annotations_root, 'annotations_multi', row['image_name'])
-    mask = row['mask'] * 50
+    mask = row['mask']
     cv2.imwrite(mask_path, mask)
 
 
