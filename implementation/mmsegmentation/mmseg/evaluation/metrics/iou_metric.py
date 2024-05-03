@@ -224,17 +224,17 @@ class IoUMetric(BaseMetric):
         ret_metrics = OrderedDict({'aAcc': avg_acc})
         for metric in metrics:
             if metric == 'mIoU':
-                iou = (areas_intersect / (areas_union + eps)).mean(axis=0)
+                iou = ((areas_intersect + eps) / (areas_union + eps)).mean(axis=0)
                 ret_metrics['IoU'] = iou
             if metric == 'mDice':
-                dice = (2 * areas_intersect / (areas_pred_label + areas_label + eps)).mean(axis=0)
+                dice = ((2 * areas_intersect + eps) / (areas_pred_label + areas_label + eps)).mean(axis=0)
                 ret_metrics['Dice'] = dice
             if metric == 'mAcc':
-                acc = (areas_intersect / (areas_label + eps)).mean(axis=0)
+                acc = ((areas_intersect + eps) / (areas_label + eps)).mean(axis=0)
                 ret_metrics['Acc'] = acc
             if metric == 'mFscore':
-                precisions = areas_intersect / (areas_pred_label + eps)
-                recalls = areas_intersect / (areas_label + eps)
+                precisions = (areas_intersect + eps) / (areas_pred_label + eps)
+                recalls = (areas_intersect + eps) / (areas_label + eps)
                 f_value = np.array([f_score(p, r, beta, eps=eps) for p, r in zip(precisions, recalls)]).mean(axis=0)
                 ret_metrics['Fscore'] = f_value
                 ret_metrics['Precision'] = precisions.mean(axis=0)
@@ -246,72 +246,72 @@ class IoUMetric(BaseMetric):
             }
         return ret_metrics
 
-    @staticmethod
-    def total_area_to_metrics(total_area_intersect: np.ndarray,
-                              total_area_union: np.ndarray,
-                              total_area_pred_label: np.ndarray,
-                              total_area_label: np.ndarray,
-                              metrics: List[str] = ['mIoU'],
-                              nan_to_num: Optional[int] = None,
-                              beta: int = 1):
-        """Calculate evaluation metrics
-        Args:
-            total_area_intersect (np.ndarray): The intersection of prediction
-                and ground truth histogram on all classes.
-            total_area_union (np.ndarray): The union of prediction and ground
-                truth histogram on all classes.
-            total_area_pred_label (np.ndarray): The prediction histogram on
-                all classes.
-            total_area_label (np.ndarray): The ground truth histogram on
-                all classes.
-            metrics (List[str] | str): Metrics to be evaluated, 'mIoU' and
-                'mDice'.
-            nan_to_num (int, optional): If specified, NaN values will be
-                replaced by the numbers defined by the user. Default: None.
-            beta (int): Determines the weight of recall in the combined score.
-                Default: 1.
-        Returns:
-            Dict[str, np.ndarray]: per category evaluation metrics,
-                shape (num_classes, ).
-        """
-
-        if isinstance(metrics, str):
-            metrics = [metrics]
-        allowed_metrics = ['mIoU', 'mDice', 'mFscore']
-        if not set(metrics).issubset(set(allowed_metrics)):
-            raise KeyError(f'metrics {metrics} is not supported')
-
-        all_acc = total_area_intersect.sum() / total_area_label.sum()
-        ret_metrics = OrderedDict({'aAcc': all_acc})
-        for metric in metrics:
-            if metric == 'mIoU':
-                iou = total_area_intersect / total_area_union
-                acc = total_area_intersect / total_area_label
-                ret_metrics['IoU'] = iou
-                ret_metrics['Acc'] = acc
-            elif metric == 'mDice':
-                dice = 2 * total_area_intersect / (
-                        total_area_pred_label + total_area_label)
-                acc = total_area_intersect / total_area_label
-                ret_metrics['Dice'] = dice
-                ret_metrics['Acc'] = acc
-            elif metric == 'mFscore':
-                precision = total_area_intersect / total_area_pred_label
-                recall = total_area_intersect / total_area_label
-                f_value = torch.tensor([
-                    f_score(x[0], x[1], beta) for x in zip(precision, recall)
-                ])
-                ret_metrics['Fscore'] = f_value
-                ret_metrics['Precision'] = precision
-                ret_metrics['Recall'] = recall
-
-        ret_metrics = {
-            metric: value.numpy()
-            for metric, value in ret_metrics.items()
-        }
-        if nan_to_num is not None:
-            ret_metrics = OrderedDict({
-                metric: np.nan_to_num(metric_value, nan=nan_to_num)
-                for metric, metric_value in ret_metrics.items()
-            })
-        return ret_metrics
+    # @staticmethod
+    # def total_area_to_metrics(total_area_intersect: np.ndarray,
+    #                           total_area_union: np.ndarray,
+    #                           total_area_pred_label: np.ndarray,
+    #                           total_area_label: np.ndarray,
+    #                           metrics: List[str] = ['mIoU'],
+    #                           nan_to_num: Optional[int] = None,
+    #                           beta: int = 1):
+    #     """Calculate evaluation metrics
+    #     Args:
+    #         total_area_intersect (np.ndarray): The intersection of prediction
+    #             and ground truth histogram on all classes.
+    #         total_area_union (np.ndarray): The union of prediction and ground
+    #             truth histogram on all classes.
+    #         total_area_pred_label (np.ndarray): The prediction histogram on
+    #             all classes.
+    #         total_area_label (np.ndarray): The ground truth histogram on
+    #             all classes.
+    #         metrics (List[str] | str): Metrics to be evaluated, 'mIoU' and
+    #             'mDice'.
+    #         nan_to_num (int, optional): If specified, NaN values will be
+    #             replaced by the numbers defined by the user. Default: None.
+    #         beta (int): Determines the weight of recall in the combined score.
+    #             Default: 1.
+    #     Returns:
+    #         Dict[str, np.ndarray]: per category evaluation metrics,
+    #             shape (num_classes, ).
+    #     """
+    #
+    #     if isinstance(metrics, str):
+    #         metrics = [metrics]
+    #     allowed_metrics = ['mIoU', 'mDice', 'mFscore']
+    #     if not set(metrics).issubset(set(allowed_metrics)):
+    #         raise KeyError(f'metrics {metrics} is not supported')
+    #
+    #     all_acc = total_area_intersect.sum() / total_area_label.sum()
+    #     ret_metrics = OrderedDict({'aAcc': all_acc})
+    #     for metric in metrics:
+    #         if metric == 'mIoU':
+    #             iou = total_area_intersect / total_area_union
+    #             acc = total_area_intersect / total_area_label
+    #             ret_metrics['IoU'] = iou
+    #             ret_metrics['Acc'] = acc
+    #         elif metric == 'mDice':
+    #             dice = 2 * total_area_intersect / (
+    #                     total_area_pred_label + total_area_label)
+    #             acc = total_area_intersect / total_area_label
+    #             ret_metrics['Dice'] = dice
+    #             ret_metrics['Acc'] = acc
+    #         elif metric == 'mFscore':
+    #             precision = total_area_intersect / total_area_pred_label
+    #             recall = total_area_intersect / total_area_label
+    #             f_value = torch.tensor([
+    #                 f_score(x[0], x[1], beta) for x in zip(precision, recall)
+    #             ])
+    #             ret_metrics['Fscore'] = f_value
+    #             ret_metrics['Precision'] = precision
+    #             ret_metrics['Recall'] = recall
+    #
+    #     ret_metrics = {
+    #         metric: value.numpy()
+    #         for metric, value in ret_metrics.items()
+    #     }
+    #     if nan_to_num is not None:
+    #         ret_metrics = OrderedDict({
+    #             metric: np.nan_to_num(metric_value, nan=nan_to_num)
+    #             for metric, metric_value in ret_metrics.items()
+    #         })
+    #     return ret_metrics
