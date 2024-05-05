@@ -2,10 +2,11 @@ import argparse
 
 from finetune.configs.config_options import DictAction
 from finetune.loss import build_loss_function
-from models import build_model
-from datasets.loaders import build_dataloaders
-from train import parse_args, get_cfg, get_logger, test_epoch, store_cfg
-from metrics import build_metric_functions
+from finetune.datasets.loaders import build_dataloaders
+from finetune.train import parse_args, get_cfg, get_logger, store_cfg
+from finetune.test import test_epoch
+from finetune.models.build_model import build_model
+from finetune.metrics import build_metric_functions
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Apply a segment anything model zero-shot')

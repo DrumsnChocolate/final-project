@@ -2,33 +2,17 @@
 supported_losses = ['IoU', 'Dice', 'Focal']
 supported_loss_reductions = ['mean', 'sum']
 supported_metrics = ['IoU', 'Dice']
-def validate_cfg(cfg):
-    # seed
-    if cfg.get('seed') is None:
-        cfg.seed = 218
-    assert isinstance(cfg.seed, int), 'seed must be an integer'
-    # model
-    permitted_models = ['sam']
-    assert cfg.model.name in permitted_models, f'only able to train one of {permitted_models}, not {cfg.model.name}'
-    permitted_backbones = ['vit_h', 'vit_l', 'vit_b']
-    assert cfg.model.backbone in permitted_backbones, f'only able to train with one of {permitted_backbones}, not {cfg.model.backbone}'
-    cfg.model.clip_grad_norm = cfg.model.get('clip_grad_norm')
+
+def validate_cfg_train(cfg):
+    _validate_cfg(cfg)
     # dataset
-    permitted_datasets = ['ade20k', 'cbis-binary', 'cbis-multi']
-    assert cfg.data.name in permitted_datasets, f'only able to train on one of {permitted_datasets}, not {cfg.data.name}'
     assert cfg.data.get('train') is not None, 'must specify train split'
     assert cfg.data.get('val') is not None, 'must specify val split'
-    assert cfg.data.get('test') is not None, 'must specify test split'
-    assert cfg.data.get('root') is not None, 'must specify data root directory'
-    # finetuning
-    permitted_finetuning = ['full', 'vpt']
-    assert cfg.model.finetuning.name in permitted_finetuning, f'only able to finetune with one of {permitted_finetuning}, not {cfg.model.finetuning.name}'
-    if cfg.model.finetuning.name == 'vpt':
-        cfg.model.finetuning.length = cfg.model.finetuning.get('length', 50)
-        cfg.model.finetuning.dropout = cfg.model.finetuning.get('dropout', 0.1)
     # schedule
-    assert cfg.schedule.get('epochs') is not None or cfg.schedule.get('iterations') is not None, 'must specify either epochs or iterations'
-    assert cfg.schedule.get('epochs') is None or cfg.schedule.get('iterations') is None, 'cannot specify both epochs and iterations'
+    assert cfg.schedule.get('epochs') is not None or cfg.schedule.get(
+        'iterations') is not None, 'must specify either epochs or iterations'
+    assert cfg.schedule.get('epochs') is None or cfg.schedule.get(
+        'iterations') is None, 'cannot specify both epochs and iterations'
     cfg.schedule.epochs = cfg.schedule.get('epochs')
     cfg.schedule.iterations = cfg.schedule.get('iterations')
     assert cfg.schedule.get('val_interval') is not None, 'must specify val_interval'
@@ -47,7 +31,8 @@ def validate_cfg(cfg):
         assert cfg.schedule.stopper.get('mode') in ['min', 'max'], 'early stopping mode must be min or max'
     cfg.schedule.scheduler = cfg.schedule.get('scheduler', None)
     if cfg.schedule.scheduler is not None:
-        assert cfg.schedule.scheduler.get('name') in ['reduce_lr_on_plateau'], 'scheduler name must be reduce_lr_on_plateau'
+        assert cfg.schedule.scheduler.get('name') in [
+            'reduce_lr_on_plateau'], 'scheduler name must be reduce_lr_on_plateau'
         assert cfg.schedule.scheduler.get('mode') in ['min', 'max'], 'scheduler mode must be min or max'
         assert cfg.schedule.scheduler.get('factor') is not None, 'must specify scheduler factor'
         assert cfg.schedule.scheduler.get('patience') is not None, 'must specify scheduler patience'
@@ -55,10 +40,45 @@ def validate_cfg(cfg):
         assert cfg.schedule.scheduler.get('split') in ['train', 'val'], 'scheduler split must be train or val'
         assert cfg.schedule.scheduler.get('metric') is not None, 'must specify scheduler metric'
     # optimizer
-    assert cfg.model.optimizer.name in ['sgd', 'adamw'], f'only able to train with sgd or adamw, not {cfg.model.optimizer.name}'
+    assert cfg.model.optimizer.name in ['sgd',
+                                        'adamw'], f'only able to train with sgd or adamw, not {cfg.model.optimizer.name}'
     assert cfg.model.optimizer.get('lr') is not None, 'must specify learning rate'
     if cfg.model.optimizer.name == 'sgd':
         assert cfg.model.optimizer.get('momentum') is not None, 'must specify momentum'
+
+
+def validate_cfg_test(cfg):
+    _validate_cfg(cfg)
+    assert cfg.data.get('test') is not None, 'must specify test split'
+
+
+def _validate_cfg(cfg):
+    # seed
+    if cfg.get('seed') is None:
+        cfg.seed = 218
+    assert isinstance(cfg.seed, int), 'seed must be an integer'
+    # model
+    permitted_models = ['sam']
+    assert cfg.model.name in permitted_models, f'only able to train one of {permitted_models}, not {cfg.model.name}'
+    permitted_backbones = ['vit_h', 'vit_l', 'vit_b']
+    assert cfg.model.backbone in permitted_backbones, f'only able to train with one of {permitted_backbones}, not {cfg.model.backbone}'
+    cfg.model.clip_grad_norm = cfg.model.get('clip_grad_norm')
+    if cfg.get('pixel_mean') is not None:
+        assert isinstance(cfg.pixel_mean, list), 'pixel_mean should be a list'
+        assert len(cfg.pixel_mean) == 3, 'pixel_mean should have length 3'
+    if cfg.get('pixel_std') is not None:
+        assert isinstance(cfg.pixel_std, list), 'pixel_std should be a list'
+        assert len(cfg.pixel_std) == 3, 'pixel_std should have length 3'
+    # dataset
+    permitted_datasets = ['ade20k', 'cbis-binary', 'cbis-multi']
+    assert cfg.data.name in permitted_datasets, f'only able to train on one of {permitted_datasets}, not {cfg.data.name}'
+    assert cfg.data.get('root') is not None, 'must specify data root directory'
+    # finetuning
+    permitted_finetuning = ['full', 'vpt']
+    assert cfg.model.finetuning.name in permitted_finetuning, f'only able to finetune with one of {permitted_finetuning}, not {cfg.model.finetuning.name}'
+    if cfg.model.finetuning.name == 'vpt':
+        cfg.model.finetuning.length = cfg.model.finetuning.get('length', 50)
+        cfg.model.finetuning.dropout = cfg.model.finetuning.get('dropout', 0.1)
     # device
     assert cfg.device in ['cpu', 'cuda'], "Only able to use cpu or cuda device"
     # loss

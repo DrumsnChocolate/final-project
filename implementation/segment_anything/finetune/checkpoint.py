@@ -4,7 +4,7 @@ from typing import Optional
 import torch
 from prodict import Prodict
 
-from finetune.models import SamWrapper
+from finetune.models.sam_wrapper import SamWrapper
 
 MODEL_STATE_DICT = 'model'
 OPTIMIZER_STATE_DICT = 'optimizer'

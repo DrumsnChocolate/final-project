@@ -1,8 +1,6 @@
 import torch
 
-from logger import Logger
-from segment_anything import sam_model_registry
-from segment_anything.build_sam import vpt_sam_model_registry
+from finetune.logger import Logger
 from segment_anything.modeling import Sam
 from torchvision.transforms.functional import resize
 
@@ -101,23 +99,3 @@ class SamWrapper:
     @property
     def mask_threshold(self):
         return self.model.mask_threshold
-
-
-
-def build_sam(cfg):
-    if cfg.model.finetuning.name == 'full':
-        return sam_model_registry[cfg.model.backbone](checkpoint=cfg.model.checkpoint)
-    if cfg.model.finetuning.name == 'vpt':
-        return vpt_sam_model_registry[cfg.model.backbone](vpt_length=cfg.model.finetuning.length, vpt_dropout=cfg.model.finetuning.dropout, checkpoint=cfg.model.checkpoint)
-    raise NotImplementedError()
-
-
-def build_model(cfg, logger) -> SamWrapper:
-    if cfg.model.name == 'sam':
-        sam = build_sam(cfg)
-        sam.to(cfg.device)
-        model = sam
-    else:
-        raise NotImplementedError()  # we only support sam for now
-    return SamWrapper(model, logger, cfg)
-

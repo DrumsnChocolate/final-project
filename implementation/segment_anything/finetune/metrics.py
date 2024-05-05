@@ -3,7 +3,7 @@ from typing import Callable, Any
 import numpy as np
 import torch
 
-from models import SamWrapper
+from finetune.models.sam_wrapper import SamWrapper
 
 
 def iou_metric_best_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, target: torch.Tensor, iou_predictions: torch.Tensor):

@@ -11,14 +11,15 @@ from prodict import Prodict
 from torch.optim import SGD
 from tqdm import tqdm
 from configs.config_options import DictAction
-from configs.config_validation import validate_cfg
+from configs.config_validation import validate_cfg_train
 from finetune.checkpoint import checkpoint
 from finetune.loss import build_loss_function, call_loss
+from finetune.models.build_model import build_model
+from finetune.models.sam_wrapper import SamWrapper
 from finetune.scheduler import ReduceLROnPlateauScheduler, DummyScheduler
 from finetune.stopper import EarlyStopper, DummyStopper, Stopper
 from logger import IterationLogger, EpochLogger
 from metrics import call_metrics, build_metric_functions, append_metrics, average_metrics
-from models import build_model, SamWrapper
 from datasets.loaders import build_dataloaders
 import os.path as osp
 
@@ -90,7 +91,7 @@ def cfg_to_prodict(cfg):
     return cfg
 
 
-def get_cfg(args):
+def get_cfg(args, validate_cfg=validate_cfg_train):
     cfg = cfg_to_prodict(get_cfg_dict(args))
     validate_cfg(cfg)
     return cfg
@@ -235,25 +236,6 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
     return avg_epoch_metrics
 
 
-def test_epoch(cfg, model: SamWrapper, loss_function, metric_functions, dataloaders, logger: EpochLogger):
-    logger.log('Testing')
-    test_loader = dataloaders['test']
-    model.eval()
-    total_test_loss = 0
-    with torch.no_grad():
-        for i, batch in tqdm(enumerate(test_loader)):
-            samples, targets, classes = batch
-            foreground_points = get_foreground_points(targets)
-            outputs = model(samples, foreground_points)
-            loss = call_loss(loss_function, outputs, targets, cfg)
-            metrics = call_metrics(metric_functions, outputs, targets, model)
-            assert metrics.get('loss') is None
-            metrics['loss'] = loss.tolist()
-            logger.log_batch_metrics(metrics)
-            total_test_loss += loss
-    logger.log_epoch(1, split='test')
-
-
 def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper):
     for epoch in range(1, cfg.schedule.epochs + 1):
         train_metrics = train_epoch(cfg, model, loss_function, metric_functions, optimizer, dataloaders, epoch, logger, stopper)
@@ -263,8 +245,6 @@ def train_epochs(cfg, model: SamWrapper, loss_function, metric_functions, optimi
             scheduler.observe_metrics(validation_metrics, 'val')
         if stopper.should_stop():
             break
-    # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
-
 
 def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, scheduler, dataloaders, logger, stopper):
     dataloaders['infinite_train'] = InfiniteIterator(dataloaders['train'])
@@ -276,8 +256,6 @@ def train_iterations(cfg, model: SamWrapper, loss_function, metric_functions, op
             scheduler.observe_metrics(validation_metrics, 'val')
         if stopper.should_stop():
             break
-    # test_epoch(cfg, model, loss_function, metric_functions, dataloaders, logger)
-
 
 def seed(cfg):
     _seed = cfg.seed
