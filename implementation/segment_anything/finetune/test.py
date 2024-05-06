@@ -24,6 +24,7 @@ def parse_args():
         nargs='+',
         action=DictAction,
     )
+    parser.add_argument('--sub-dir', default='test', help='subdirectory of the train_dir to store the test results')
     return parser.parse_args()
 
 
@@ -62,7 +63,7 @@ def main():
     args.config = osp.join(args.train_dir, 'config.yaml')
     cfg = get_cfg(args, validate_cfg=validate_cfg_test)
     cfg.timestamp = args.train_dir.split('/')[-1]
-    cfg.sub_dir = 'test'
+    cfg.sub_dir = args.sub_dir
     test(cfg)
 
 

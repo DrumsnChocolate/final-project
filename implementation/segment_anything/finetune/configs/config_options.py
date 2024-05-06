@@ -1,29 +1,15 @@
 import argparse
 import copy
 
+import yaml
+
 
 class DictAction(argparse.Action):
 
 
     @staticmethod
     def _parse_value(val: str):
-        if val.startswith('[') or val.startswith('(') or val.startswith('dict('):
-            # we just evaluate this string, which is not very safe but very simple. We don't expect any malicious input.
-            # if there is malicious input, that's on the user.
-            return eval(val)
-        try:
-            return int(val)
-        except ValueError:
-            pass
-        try:
-            return float(val)
-        except ValueError:
-            pass
-        if val.lower() in ['true', 'false']:
-            return True if val.lower() == 'true' else False
-        if val == 'None':
-            return None
-        return val
+        return yaml.safe_load(val)
 
     def __call__(self, parser, namespace, values, option_string=None):
         # this does not work all that well with complexer values,
@@ -35,10 +21,14 @@ class DictAction(argparse.Action):
                 subkeys = k.split('.')
                 subdict = options
                 for i, subkey in enumerate(subkeys):
+                    if isinstance(subdict, list):  # if tuples add trouble, turn this condition into an or-clause
+                        subkey = int(subkey)
                     if i == len(subkeys) - 1:
                         subdict[subkey] = DictAction._parse_value(v)
                         continue
-                    if subdict.get(subkey) is None:
-                        subdict[subkey] = {}
+                    try:
+                        subdict[subkey]  # raises an error if the key does not exist on the list or dict
+                    except KeyError or IndexError:
+                        subdict[subkey] = {}  # only passes on dicts or if it is the next index in the list
                     subdict = subdict[subkey]
         setattr(namespace, self.dest, options)
