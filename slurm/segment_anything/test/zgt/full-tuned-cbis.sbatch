@@ -1,4 +1,5 @@
 #!/bin/bash
+#SBATCH -J zgt_full-tuned-cbis
 #SBATCH -c 2
 #SBATCH --mail-type=END,FAIL
 #SBATCH --gres=gpu:1
