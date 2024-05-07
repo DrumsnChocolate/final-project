@@ -12,7 +12,7 @@ conda activate openmmlab
 # echo
 # echo "List of all setr runs so far:"
 
-for i in $(find work_dirs/*/202404* -name last_checkpoint); do
+for i in $(find work_dirs/*/2024041[78]* -name last_checkpoint); do
 
   # obtain directory name from path
   dir=$(dirname $i)

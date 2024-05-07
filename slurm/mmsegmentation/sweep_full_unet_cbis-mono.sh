@@ -3,6 +3,6 @@ size=224
 loss="cross_entropy"
 clahe="true"
 augmentation="false"
-mass_only="true"
+mass_only="false"
 optimizer="adam"
 sbatch -J "full-unet-cbis-mono-lr${lr}" slurm/mmsegmentation/unet_cbis.sbatch "${lr}" "${size}" "${loss}" "${clahe}" "${augmentation}" "${mass_only}" "${optimizer}"
