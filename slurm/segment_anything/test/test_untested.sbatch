@@ -8,7 +8,7 @@ cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
 
-for i in $(find outputs/* -name checkpoint.pth); do
+for i in $(find outputs/20240416_104218 -name checkpoint.pth); do
   dir=$(dirname $i)
   if [ ! -d "$dir/test" ]; then
     python finetune/test.py $dir
