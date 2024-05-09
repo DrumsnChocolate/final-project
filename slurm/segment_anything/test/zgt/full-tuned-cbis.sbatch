@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J zgt_full-tuned-cbis
 #SBATCH -c 2
-#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-type=START,END,FAIL
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=a40
 
@@ -14,4 +14,7 @@ conda activate segment_anything
 timestamp="20240416_104218"  # yyyymmdd_hhmmss
 
 python finetune/test.py outputs/${timestamp} --sub-dir 'test_zgt' --cfg-options data.root="data/zgt/zgt-linked" data.test="{annotation_dir: 'annotations_binary', batch_size: 1, image_dir: 'images'}"
+
+conda deactivate
+
 
