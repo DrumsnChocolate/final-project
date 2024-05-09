@@ -48,8 +48,9 @@ def _validate_dataset_preprocess_step(step):
         step.clip_limit = step.get('clip_limit', 40.0)
         assert isinstance(step.clip_limit, (float, int)), 'clahe clip_limit should be float or int'
         step.tile_grid_size = step.get('tile_grid_size', (8,8))
-        assert len(step.tile_grid_size) == 2, 'clahe tile_grid_size should be length 2'
+        print(len(step.tile_grid_size))
         assert _is_tuple_of(step.tile_grid_size, int), 'clahe tile_grid_size should be a tuple of ints'
+        assert len(step.tile_grid_size) == 2, 'clahe tile_grid_size should be length 2'
 
 
 def _validate_dataset_preprocess(cfg):
