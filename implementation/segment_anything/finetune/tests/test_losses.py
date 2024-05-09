@@ -1,43 +1,52 @@
 import torch
+
 from ..loss import dice_single, iou_single, focal_single
 
 
+def assert_close(a, b):
+    torch.testing.assert_close(torch.tensor(a), torch.tensor(b))
+
+
 def test_dice_single():
+    eps = 1e-7
+
+    output = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
+    target = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
+    assert dice_single(output, target) == 1  # perfect match, even though both are empty
+
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
-    assert dice_single(output, target) == 1
+    assert dice_single(output, target) == 1  # perfect match
+
 
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
-    assert dice_single(output, target) == 0
+    assert_close(dice_single(output, target), eps / (eps + 1))
 
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[1, 1, 1], [1, 1, 1], [1, 1, 1]]])
-    assert dice_single(output, target) == 2/10
+    assert_close(dice_single(output, target), (2 + eps)/(10 + eps))
 
-    # this case SHOULD never occur in practice, but it's good to know what happens if it does.
-    # the reason it never occurs in practice is that the target always contains at least one 1.
-    output = torch.tensor([0])
-    target = torch.tensor([0])
-    assert torch.isnan(dice_single(output, target))
 
 def test_iou_single():
+    eps = 1e-7
+
+    output = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
+    target = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
+    assert iou_single(output, target) == 1  # perfect match, even though both are empty
+
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
-    assert iou_single(output, target) == 1
+    assert iou_single(output, target) == 1  # perfect match
 
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[0, 0, 0], [0, 0, 0], [0, 0, 0]]])
-    assert iou_single(output, target) == 0
+    assert_close(iou_single(output, target), eps / (1 + eps))
 
     output = torch.tensor([[[0, 0, 0], [0, 1, 0], [0, 0, 0]]])
     target = torch.tensor([[[1, 1, 1], [1, 1, 1], [1, 1, 1]]])
-    assert iou_single(output, target) == 1 / 9
+    assert_close(iou_single(output, target), (1 + eps) / (9 + eps))
 
-    # again, this should never actually occur
-    output = torch.tensor([0])
-    target = torch.tensor([0])
-    assert torch.isnan(iou_single(output, target))
 
 def test_focal_single():
     alpha = -1

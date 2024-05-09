@@ -91,12 +91,13 @@ def merge_rois_single_class(masks):
     return (masks.sum(axis=0) > 0) * 1
 
 
-def merge_rois_multi_class(masks):
-    masks = np.array(masks)
-    merged_mask = np.zeros(masks[0].shape)
-    for i, mask in enumerate(masks):
-        merged_mask += mask * (i + 1)
-    return merged_mask
+# def merge_rois_multi_class(masks):
+#     # Todo: to properly implement, we need to decide class indices, for example for abnormality types
+#     masks = np.array(masks)
+#     merged_mask = np.zeros(masks[0].shape)
+#     for i, mask in enumerate(masks):
+#         merged_mask += mask * (i + 1)
+#     return merged_mask
 
 
 def store_single_class(row):
@@ -105,10 +106,10 @@ def store_single_class(row):
     cv2.imwrite(mask_path, mask)
 
 
-def store_multi_class(row):
-    mask_path = os.path.join(annotations_root, 'annotations_multi', row['image_name'])
-    mask = row['mask']
-    cv2.imwrite(mask_path, mask)
+# def store_multi_class(row):
+#     mask_path = os.path.join(annotations_root, 'annotations_multi', row['image_name'])
+#     mask = row['mask']
+#     cv2.imwrite(mask_path, mask)
 
 
 def main():
@@ -118,13 +119,13 @@ def main():
     df['mask'] = df['mask'].apply(fill_holes)
 
     os.makedirs(os.path.join(annotations_root, 'annotations_binary'), exist_ok=True)
-    os.makedirs(os.path.join(annotations_root, 'annotations_multi'), exist_ok=True)
+    # os.makedirs(os.path.join(annotations_root, 'annotations_multi'), exist_ok=True)
 
     df_binary_masks = df.groupby('image_name', dropna=False).agg({'mask': merge_rois_single_class}).reset_index()
-    df_multi_masks = df.groupby('image_name', dropna=False).agg({'mask': merge_rois_multi_class}).reset_index()
+    # df_multi_masks = df.groupby('image_name', dropna=False).agg({'mask': merge_rois_multi_class}).reset_index()
 
     df_binary_masks.apply(store_single_class, axis=1)
-    df_multi_masks.apply(store_multi_class, axis=1)
+    # df_multi_masks.apply(store_multi_class, axis=1)
 
 
 

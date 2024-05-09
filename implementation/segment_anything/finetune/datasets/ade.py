@@ -1,4 +1,4 @@
-from finetune.datasets.segmentation_dataset import SegmentationDataset, SegmentationMaskDataset
+from finetune.datasets.segmentation_dataset import SegmentationMaskDataset
 
 ade20k_class_names = ('wall', 'building', 'sky', 'floor', 'tree', 'ceiling', 'road',
                       'bed ', 'windowpane', 'grass', 'cabinet', 'sidewalk',
@@ -28,14 +28,6 @@ ade20k_class_names = ('wall', 'building', 'sky', 'floor', 'tree', 'ceiling', 'ro
                       'tray', 'ashcan', 'fan', 'pier', 'crt screen', 'plate',
                       'monitor', 'bulletin board', 'shower', 'radiator', 'glass',
                       'clock', 'flag')
-
-class ADE20KDataset(SegmentationDataset):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def get_class_names(self):
-        return ade20k_class_names
 
 
 class ADE20KMaskDataset(SegmentationMaskDataset):

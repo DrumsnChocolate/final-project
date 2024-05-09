@@ -7,7 +7,7 @@ import torchvision
 
 def dice_single(output, target):
     eps = 1e-7
-    return 2 * torch.sum(output * target) / (torch.sum(output * output) + torch.sum(target * target) + eps)
+    return (2 * torch.sum(output * target) + eps) / (torch.sum(output * output) + torch.sum(target * target) + eps)
 
 
 def dice_item(outputs, targets):
@@ -40,7 +40,7 @@ def iou_single(output, target):
     eps = 1e-7
     intersection = torch.sum(output * target > 0)
     union = torch.sum((output > 0).logical_or((target > 0)))
-    return intersection / (union + eps)
+    return (intersection + eps) / (union + eps)
 
 
 def iou_item(outputs, targets):
@@ -108,13 +108,14 @@ def call_loss(
     masks, iou_predictions, _ = outputs
     # we need to match the target dimensions to the mask dimensions, by repeating the target:
     targets = targets.repeat(1, masks.shape[1], 1, 1)
-    assert (targets > 0).sum(axis=(2, 3)).all()  # assert that all masks will have a target area > 0
+    # calculate the losses for the masks
     masks_losses = loss_function(masks, targets)
     # iou loss is calculated using MSE loss, just like done in https://arxiv.org/pdf/2304.02643.pdf
     # to detach or not to detach, that is the question.
     # I think detaching makes sense, because we don't want to optimize the mask to fit the model's own iou prediction;
     # We want to optimize the iou prediction to fit the mask.
     iou_targets = iou(masks, targets).detach()
+    # calculate the losses for the iou predictions
     iou_losses = mse(iou_predictions, iou_targets)
     zipped_losses = torch.cat([masks_losses.unsqueeze(-1), iou_losses.unsqueeze(-1)], dim=2)
     # and now, take the minimum loss for each item in the batch:

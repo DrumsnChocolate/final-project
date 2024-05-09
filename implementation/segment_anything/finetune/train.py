@@ -1,7 +1,7 @@
 import argparse
+import os.path as osp
 import random
-import time
-from typing import Callable, Any, List
+from typing import Callable
 
 import numpy as np
 import scipy
@@ -10,19 +10,18 @@ import yaml
 from prodict import Prodict
 from torch.optim import SGD
 from tqdm import tqdm
-from configs.config_options import DictAction
-from configs.config_validation import validate_cfg_train
+
 from finetune.checkpoint import checkpoint
+from finetune.configs.config_options import DictAction
+from finetune.configs.config_validation import validate_cfg_train
+from finetune.datasets.loaders import build_dataloaders
+from finetune.logger import IterationLogger, EpochLogger
 from finetune.loss import build_loss_function, call_loss
+from finetune.metrics import call_metrics, build_metric_functions
 from finetune.models.build_model import build_model
 from finetune.models.sam_wrapper import SamWrapper
 from finetune.scheduler import ReduceLROnPlateauScheduler, DummyScheduler
 from finetune.stopper import EarlyStopper, DummyStopper, Stopper
-from logger import IterationLogger, EpochLogger
-from metrics import call_metrics, build_metric_functions, append_metrics, average_metrics
-from datasets.loaders import build_dataloaders
-import os.path as osp
-
 from segment_anything.modeling import get_param_count, get_param_count_trainable_recursively
 
 
@@ -145,29 +144,48 @@ def build_optimizer(cfg, model):
     raise NotImplementedError()
 
 
-def get_foreground_points(targets):
-    foreground_points = []
+
+def _distance_transform(target):
+    if torch.all(target == 1):
+        padded_target = torch.zeros(tuple((torch.tensor(target.shape) + 2).tolist()))
+        padded_target[1:-1, 1:-1] = target
+        return scipy.ndimage.distance_transform_edt((padded_target).cpu())[1:-1, 1:-1]
+    return scipy.ndimage.distance_transform_edt((target).cpu())
+
+
+def get_point_prompts(targets):
+    point_prompts = []
+    point_prompts_labels = []
 
     for target in targets:
+        point_class = 1
         # we assume there's only one target
         assert target.shape[0] == 1
-        distance_transform = scipy.ndimage.distance_transform_edt(target[0].cpu())
-        foreground_point = np.argmax(distance_transform)
-        foreground_point = np.unravel_index(foreground_point, distance_transform.shape)
-        foreground_points.append(foreground_point)
-    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(1)
+        if torch.all(target[0] == 0):
+            point_class = 0
+        distance_transform = _distance_transform(target[0] == point_class)
+        point_prompt = np.argmax(distance_transform)
+        point_prompt = np.unravel_index(point_prompt, distance_transform.shape)
+        point_prompts.append([point_prompt])
+        point_prompts_labels.append([point_class])
+    return torch.tensor(point_prompts).to(targets.device), torch.tensor(point_prompts_labels).to(targets.device)
 
 
-def get_random_foreground_points(targets):
-    foreground_points = []
+def get_random_point_prompts(targets) :
+    point_prompts = []
+    point_prompts_labels = []
     for target in targets:
+        point_class = 1
         # we assume there's only one target
         assert target.shape[0] == 1
-        xs, ys = np.where(target[0].cpu() == 1.0)
+        if torch.all(target[0] == 0):
+            point_class = 0
+        xs, ys = np.where((target[0] == point_class).cpu())
         index = np.random.choice(np.arange(len(xs)))
-        foreground_point = xs[index], ys[index]
-        foreground_points.append(foreground_point)
-    return torch.Tensor(foreground_points).to(targets.device).unsqueeze(1)
+        point_prompt = xs[index], ys[index]
+        point_prompts.append([point_prompt])
+        point_prompts_labels.append([point_class])
+    return torch.tensor(point_prompts).to(targets.device), torch.tensor(point_prompts_labels).to(targets.device)
 
 
 def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimizer, dataloaders, epoch, logger: EpochLogger, stopper: Stopper):
@@ -176,8 +194,8 @@ def train_epoch(cfg, model: SamWrapper, loss_function, metric_functions, optimiz
     total_epoch_train_loss = 0
     for i, batch in tqdm(enumerate(train_loader)):
         samples, targets, classes = batch
-        foreground_points = get_random_foreground_points(targets)
-        outputs = model(samples, foreground_points)
+        point_prompts, point_prompts_labels = get_random_point_prompts(targets)
+        outputs = model(samples, point_prompts, point_prompts_labels)
         loss = call_loss(loss_function, outputs, targets, cfg)
         metrics = call_metrics(metric_functions, outputs, targets, model)
         assert metrics.get('loss') is None
@@ -200,8 +218,8 @@ def train_iteration(cfg, model: SamWrapper, loss_function: Callable, metric_func
     model.train()
     batch = next(infinite_train_loader)
     samples, targets, classes = batch
-    foreground_points = get_random_foreground_points(targets)
-    outputs = model(samples, foreground_points)
+    point_prompts, point_prompts_labels = get_random_point_prompts(targets)
+    outputs = model(samples, point_prompts, point_prompts_labels)
     # print(outputs)
     loss = call_loss(loss_function, outputs, targets, cfg)
     metrics = call_metrics(metric_functions, outputs, targets, model)
@@ -223,8 +241,8 @@ def validate_epoch(cfg, model: SamWrapper, loss_function, metric_functions, data
     with torch.no_grad():
         for i, batch in tqdm(enumerate(val_loader)):
             samples, targets, classes = batch
-            foreground_points = get_foreground_points(targets)
-            outputs = model(samples, foreground_points)
+            point_prompts, point_prompts_labels = get_point_prompts(targets)
+            outputs = model(samples, point_prompts, point_prompts_labels)
             loss = call_loss(loss_function, outputs, targets, cfg)
             metrics = call_metrics(metric_functions, outputs, targets, model)
             assert metrics.get('loss') is None

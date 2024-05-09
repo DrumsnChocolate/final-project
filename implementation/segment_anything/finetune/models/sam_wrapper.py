@@ -38,14 +38,14 @@ class SamWrapper:
 
 
 
-    def __call__(self, samples, foreground_points, multimask_output: bool = True, return_logits: bool = True) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def __call__(self, samples, point_prompts: torch.Tensor, point_prompts_labels: torch.Tensor, multimask_output: bool = True, return_logits: bool = True) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         original_img_size = tuple(samples.shape[-2:])
         transformed_samples = self.transform(samples)
         transformed_img_size = tuple(transformed_samples.shape[-2:])
         preprocessed_samples = self.model.preprocess(transformed_samples)
         image_embeddings = self.model.image_encoder(preprocessed_samples)
         sparse_embeddings, dense_embeddings = self.model.prompt_encoder(
-            points=(foreground_points, torch.ones(foreground_points.shape[:-1])),
+            points=(point_prompts, point_prompts_labels),
             boxes=None,
             masks=None,
         )

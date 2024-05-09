@@ -36,7 +36,7 @@ def build_sam(cfg):
     else:
         raise NotImplementedError()
 
-    if cfg.model.finetuning.name == 'full':
+    if cfg.model.get('finetuning') is None or cfg.model.finetuning.name == 'full':
         return _build_sam(
             encoder_embed_dim=encoder_embed_dim,
             encoder_depth=encoder_depth,
