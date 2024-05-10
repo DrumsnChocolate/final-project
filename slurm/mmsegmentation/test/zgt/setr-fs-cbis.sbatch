@@ -9,7 +9,7 @@
 # evaluate the From Scratch CBIS SETR on the zgt dataset
 cd implementation/mmsegmentation
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate mmsegmentation
+conda activate openmmlab
 
 timestamp="20240417_224050"
 work_dir="work_dirs/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256/${timestamp}"
