@@ -14,7 +14,13 @@ conda activate segment_anything
 
 timestamp="20240416_104218"  # yyyymmdd_hhmmss
 
-python finetune/test.py outputs/${timestamp} --sub-dir 'test_zgt' --cfg-options data.root="data/zgt/zgt-linked" data.test="{annotation_dir: 'annotations_binary', batch_size: 1, image_dir: 'images'}"
+python finetune/test.py outputs/${timestamp} \
+  --sub-dir 'test_zgt' \
+  --cfg-options \
+  data.root="data/zgt/zgt-linked" \
+  data.train=null \
+  data.val=null \
+  data.test="{annotation_dir: 'annotations_binary', batch_size: 1, image_dir: 'images'}"
 
 conda deactivate
 
