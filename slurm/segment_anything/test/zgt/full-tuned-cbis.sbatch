@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J zgt_full-tuned-cbis
 #SBATCH -c 2
-#SBATCH --mail-type=START,END,FAIL
+#SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=a40
 #SBATCH --time=0-01:00:00
