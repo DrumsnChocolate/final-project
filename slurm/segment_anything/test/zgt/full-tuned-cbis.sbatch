@@ -4,6 +4,7 @@
 #SBATCH --mail-type=START,END,FAIL
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=a40
+#SBATCH --time=0-01:00:00
 
 
 # evaluate the cbis full tuned model on the zgt dataset
