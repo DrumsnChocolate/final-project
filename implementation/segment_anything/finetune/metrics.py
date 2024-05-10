@@ -24,7 +24,7 @@ def iou_metric_best_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, t
     areas_intersection = torch.sum(predictions * target, axis=(2,3))
     areas_union = torch.sum((predictions + target) > 0, axis=(2,3))
     # iou_per_mask has shape BxM
-    iou_per_mask = (areas_intersection / (areas_union + eps))
+    iou_per_mask = ((areas_intersection + eps) / (areas_union + eps))
     best_mask_indices = iou_predictions.argmax(axis=1, keepdim=True)
     best_mask_selector = torch.zeros_like(iou_predictions).scatter(dim=1, index=best_mask_indices, value=1)
     best_mask_ious = torch.masked_select(iou_per_mask, best_mask_selector == 1)
@@ -48,7 +48,7 @@ def iou_metric_per_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, ta
     eps = 1e-7
     areas_intersection = torch.sum(predictions * target, axis=(2,3))
     areas_union = torch.sum((predictions + target) > 0, axis=(2,3))
-    iou = (areas_intersection / (areas_union + eps)).mean(axis=0)
+    iou = ((areas_intersection + eps) / (areas_union + eps)).mean(axis=0)
     return iou
 
 
@@ -71,7 +71,7 @@ def dice_metric_best_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, 
     areas_prediction = torch.sum(predictions, axis=(2,3))
     areas_target = torch.sum(target, axis=(2,3))
     # dice_per_mask has shape BxM
-    dice_per_mask = (2 * areas_intersection / (areas_prediction + areas_target + eps))
+    dice_per_mask = ((2 * areas_intersection + eps) / (areas_prediction + areas_target + eps))
     best_mask_indices = iou_predictions.argmax(axis=1, keepdim=True)
     best_mask_selector = torch.zeros_like(iou_predictions).scatter(dim=1, index=best_mask_indices, value=1)
     best_mask_dices = torch.masked_select(dice_per_mask, best_mask_selector == 1)
@@ -96,7 +96,7 @@ def dice_metric_per_mask(mask_logits: torch.Tensor, predictions: torch.Tensor, t
     areas_intersection = torch.sum(predictions * target, axis=(2,3))
     areas_prediction = torch.sum(predictions, axis=(2,3))
     areas_target = torch.sum(target, axis=(2,3))
-    dice = (2 * areas_intersection / (areas_prediction + areas_target + eps)).mean(axis=0)
+    dice = ((2 * areas_intersection + eps) / (areas_prediction + areas_target + eps)).mean(axis=0)
     return dice
 
 
