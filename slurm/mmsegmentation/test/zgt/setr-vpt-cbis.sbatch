@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J zgt_setr_fs_cbis
+#SBATCH -J zgt_setr_vpt_cbis
 #SBATCH -c 2
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --gres=gpu:1
