@@ -8,9 +8,11 @@
 
 
 # evaluate the cbis full tuned model on the zgt dataset
+module load nvidia/cuda-11.8
 cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
+
 
 timestamp="20240416_104218"  # yyyymmdd_hhmmss
 

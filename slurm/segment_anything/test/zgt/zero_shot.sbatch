@@ -7,9 +7,11 @@
 #SBATCH --time=0-01:00:00
 
 # evaluate the unmodified SAM on the zgt dataset
+module load nvidia/cuda-11.8
 cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
+
 
 python finetune/zero_shot.py finetune/configs/sam_zs_zgt-binary.yaml
 

@@ -7,6 +7,7 @@
 #SBATCH --time=0-01:00:00
 
 # evaluate the From Scratch CBIS SETR on the zgt dataset
+module load nvidia/cuda-11.8
 cd implementation/mmsegmentation
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
