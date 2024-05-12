@@ -15,6 +15,6 @@ conda activate openmmlab
 timestamp="20240418_100829"
 work_dir="work_dirs/setrvpt_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256/${timestamp}"
 
-python tools/test.py ${work_dir} --cfg-options test_dataloader.dataset.data_root='data/zgt/zgt-linked' test_dataloader.dataset.data_prefix="dict(img_path='images',seg_map_path='annotations_binary')" test_evaluator.0.iou_metrics="['mIoU', 'mAcc', 'mFscore', 'mDice']"
+python tools/test.py ${work_dir} --cfg-options test_dataloader.dataset.data_root='data/zgt/zgt-linked' test_dataloader.dataset.data_prefix="dict(img_path='images',seg_map_path='annotations_binary')"
 
 conda deactivate
