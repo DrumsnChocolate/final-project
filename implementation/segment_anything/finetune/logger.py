@@ -1,10 +1,22 @@
 import time
 
 import numpy as np
+import torch
 from prodict import Prodict
 import json
 import os.path as osp
 import os
+
+
+def get_max_cuda_memory(device):
+    # this does not work for cpu :(, but we have a gpu anyway
+    mem = torch.cuda.max_memory_allocated(device=device)
+    mem_mb = torch.tensor([int(mem) // (1024 * 1024)],
+                          dtype=torch.int,
+                          device=device)
+    torch.cuda.reset_peak_memory_stats()
+    return int(mem_mb.item())
+
 
 
 class Logger(Prodict):
@@ -67,6 +79,7 @@ class EpochLogger(Logger):
         avg_metrics = self.get_avg_epoch_metrics()
         avg_metrics['epoch'] = epoch
         avg_metrics['split'] = split
+        avg_metrics['memory'] = get_max_cuda_memory(self.cfg.device)
         self._log_dict(avg_metrics)
         self.epoch_metrics = []
 
@@ -82,6 +95,7 @@ class IterationLogger(EpochLogger):
             for k in self.iteration_metrics[0].keys()
         }
         avg_metrics['split'] = 'train'  # iteration logging is always train, never val.
+        avg_metrics['memory'] = get_max_cuda_memory(self.cfg.device)
         self._log_dict(avg_metrics)
         self.iteration_metrics = []
 

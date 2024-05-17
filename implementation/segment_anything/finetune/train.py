@@ -171,7 +171,7 @@ def get_point_prompts(targets):
     return torch.tensor(point_prompts).to(targets.device), torch.tensor(point_prompts_labels).to(targets.device)
 
 
-def get_random_point_prompts(targets) :
+def get_random_point_prompts(targets):
     point_prompts = []
     point_prompts_labels = []
     for target in targets:
