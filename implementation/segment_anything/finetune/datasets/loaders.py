@@ -28,14 +28,14 @@ class SegmentationMaskLoader:
         return -(- len(self.dataset) // self.cfg.data[self.dataset._split].batch_size)
 
 
-def build_dataloaders(cfg):
+def build_dataloaders(cfg, image_names=None):
     loaders = {}
     splits = ['train', 'val', 'test']
     for split in splits:
         if cfg.data.get(split) is None:
             continue
         dataset_class = dataset_class_mapping[cfg.data.name]
-        dataset = dataset_class(cfg, split)
+        dataset = dataset_class(cfg, split, image_names=image_names)
         loaders[split] = SegmentationMaskLoader(cfg, dataset)
         # if cfg.data.name == 'ade20k':
         #     dataset = ADE20KMaskDataset(cfg, split)

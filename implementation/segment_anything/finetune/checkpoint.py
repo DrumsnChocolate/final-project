@@ -31,6 +31,10 @@ def checkpoint(cfg: Prodict, model: SamWrapper, optimizer):
     create_checkpoint(checkpoint_path, model, optimizer)
 
 
+def contains_loadable_model(cfg: Prodict):
+    checkpoint_path = osp.join(cfg.out_dir, cfg.timestamp, 'checkpoint.pth')
+    return osp.exists(checkpoint_path)
+
 def load(cfg: Prodict, model: SamWrapper, optimizer: Optional[torch.optim.Optimizer] = None):
     checkpoint_path = osp.join(cfg.out_dir, cfg.timestamp, 'checkpoint.pth')
     return load_checkpoint(checkpoint_path, model, optimizer)

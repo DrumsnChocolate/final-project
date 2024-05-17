@@ -52,7 +52,7 @@ def _clahe(image, clip_limit=40.0, tile_grid_size=(8, 8)):
 
 class SegmentationMaskDataset(Dataset):
 
-    def __init__(self, cfg: Prodict, split: str):
+    def __init__(self, cfg: Prodict, split: str, image_names=None):
         assert split in {
             "train",
             "val",
@@ -60,7 +60,9 @@ class SegmentationMaskDataset(Dataset):
         }, f"Split '{split}' not supported for {cfg.data.name} dataset"
         self.cfg = cfg
         self._split = split
-        self.image_names = self.get_image_names()
+        self.image_names = image_names
+        if self.image_names is None:
+            self.image_names = self.get_image_names()
         self.masks_per_image, self.index_to_name, self.index_to_class = self.count_masks_per_image()
 
     def get_image_path(self, image_name):
