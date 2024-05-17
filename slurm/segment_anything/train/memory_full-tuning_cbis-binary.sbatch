@@ -6,6 +6,7 @@
 #SBATCH --constraint=a40
 #SBATCH --time=0-01:00:00
 
+module load nvidia/cuda-11.8
 cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
