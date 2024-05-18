@@ -6,7 +6,7 @@
 #SBATCH --constraint=a40
 #SBATCH --time=0-01:00:00
 
-# visualize the From Scratch CBIS U-Net on the cbis dataset
+# visualize the Full Tuned CBIS SETR on the cbis dataset
 module load nvidia/cuda-11.8
 cd implementation/mmsegmentation
 source ~/miniconda3/etc/profile.d/conda.sh
