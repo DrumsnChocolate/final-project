@@ -1,18 +1,18 @@
 #!/bin/bash
-#SBATCH -J zgt_setr-fs_vis
+#SBATCH -J zgt_setr-ft_vis
 #SBATCH -c 2
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=a40
 #SBATCH --time=0-01:00:00
 
-# visualize the From Scratch CBIS SETR on the zgt dataset
+# visualize the Full Tuned CBIS SETR on the zgt dataset
 module load nvidia/cuda-11.8
 cd implementation/mmsegmentation
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate openmmlab
 
-timestamp="20240417_224050"
+timestamp="20240417_234236"
 work_dir="work_dirs/setr_vit-l_pup-noaux_8xb2-220k_cbis-ddsm-mono-256x256/${timestamp}"
 
 python tools/val.py ${work_dir} \
@@ -23,6 +23,6 @@ python tools/val.py ${work_dir} \
   visualizer.alpha=1 \
   val_dataloader.dataset.data_root='data/zgt/zgt-linked' \  # semantically, this disgusts me, since it is the test set, and not validation. However, this is easier than modifying the val.py script with some extra argument
   val_dataloader.dataset.data_prefix="dict(img_path='images',seg_map_path='annotations_binary')" \
-  --save-dir visualization/setr_fs/zgt
+  --save-dir visualization/setr_ft/zgt
 
 conda deactivate
