@@ -34,14 +34,14 @@ def parse_args():
 def store_visualization(cfg, point_prompts, predicted_masks, predicted_ious, image_name, dataloader):
     visualization_dir = cfg.visualization_dir
     image_path = dataloader.dataset.get_image_path(image_name)
-    original_image = ensure_image_rgb(read_image(image_path)).to(cfg.device)
+    original_image = ensure_image_rgb(read_image(image_path))
 
     preprocessed_dimensions = predicted_masks.shape[-2:]  # predicted masks shape is MxHxW
     original_dimensions = original_image.shape[-2:]  # original image shape is CxHxW
     # resize each predicted mask to the original image size
     predicted_masks = torch.nn.functional.interpolate(predicted_masks.unsqueeze(1), size=original_dimensions, mode='nearest').squeeze(1)
     # also recalculate the point prompt
-    point_prompts = (point_prompts / torch.tensor(preprocessed_dimensions).float() * torch.tensor(original_dimensions).float()).round().int()
+    point_prompts = (point_prompts / torch.tensor(preprocessed_dimensions, device=cfg.device).float() * torch.tensor(original_dimensions, device=cfg.device).float()).round().int()
     best_index = torch.argmax(predicted_ious)
     best_mask = predicted_masks[best_index]
     os.makedirs(visualization_dir, exist_ok=True)
