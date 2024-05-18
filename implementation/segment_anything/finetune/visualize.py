@@ -45,9 +45,9 @@ def store_visualization(cfg, point_prompts, predicted_masks, predicted_ious, ima
     best_index = torch.argmax(predicted_ious)
     best_mask = predicted_masks[best_index]
     os.makedirs(visualization_dir, exist_ok=True)
-    write_png(torch.tensor(best_mask, dtype=torch.uint8).unsqueeze(0)*255, os.path.join(visualization_dir, f'{image_name}.png'), compression_level=0)
+    write_png(torch.tensor(best_mask, dtype=torch.uint8, device='cpu').unsqueeze(0)*255, os.path.join(visualization_dir, f'{image_name}.png'), compression_level=0)
     with open(os.path.join(visualization_dir, f'{image_name}.txt'), 'w') as f:
-        f.write(f'{point_prompts.tolist()}')
+        f.write(f'{point_prompts.to("cpu").tolist()}')
 
 
 
