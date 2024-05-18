@@ -31,7 +31,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def store_visualization(cfg, point_prompts, predicted_masks, predicted_ious, image_name, dataloader):
+def store_visualization(cfg, model, point_prompts, predicted_masks, predicted_ious, image_name, dataloader):
     visualization_dir = cfg.visualization_dir
     image_path = dataloader.dataset.get_image_path(image_name)
     original_image = ensure_image_rgb(read_image(image_path))
@@ -43,12 +43,9 @@ def store_visualization(cfg, point_prompts, predicted_masks, predicted_ious, ima
     # also recalculate the point prompt
     point_prompts = (point_prompts / torch.tensor(preprocessed_dimensions, device=cfg.device).float() * torch.tensor(original_dimensions, device=cfg.device).float()).round().int()
     best_index = torch.argmax(predicted_ious)
-    best_mask = predicted_masks[best_index]
+    best_mask = (predicted_masks[best_index] > model.mask_threshold) * 1
     os.makedirs(visualization_dir, exist_ok=True)
-    max_pixel = torch.max(best_mask)
-    if max_pixel == 0:
-        max_pixel = 1
-    write_png(torch.tensor(best_mask/max_pixel*255, dtype=torch.uint8, device='cpu').unsqueeze(0), os.path.join(visualization_dir, f'{image_name}.png'), compression_level=0)
+    write_png(torch.tensor(best_mask*255, dtype=torch.uint8, device='cpu').unsqueeze(0), os.path.join(visualization_dir, f'{image_name}.png'), compression_level=0)
     with open(os.path.join(visualization_dir, f'{image_name}.txt'), 'w') as f:
         f.write(f'{point_prompts.to("cpu").tolist()}')
 
@@ -64,7 +61,7 @@ def visualize_samples(cfg, model: SamWrapper, dataloader, image_names=None):
             predicted_masks, predicted_ious, _ = model(samples, point_prompts, point_prompts_labels)
             for j in range(len(samples)):
                 image_name = image_names[i*cfg.data.val.batch_size + j]
-                store_visualization(cfg, point_prompts[j], predicted_masks[j], predicted_ious[j], image_name, dataloader)
+                store_visualization(cfg, model, point_prompts[j], predicted_masks[j], predicted_ious[j], image_name, dataloader)
 
 
 def visualize(cfg, image_names=None):
