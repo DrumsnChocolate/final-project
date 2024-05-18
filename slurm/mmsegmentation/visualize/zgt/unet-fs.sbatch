@@ -23,6 +23,6 @@ python tools/val.py ${work_dir} \
   visualizer.alpha=1 \
   val_dataloader.dataset.data_root='data/zgt/zgt-linked' \  # semantically, this disgusts me, since it is the test set, and not validation. However, this is easier than modifying the val.py script with some extra argument
   val_dataloader.dataset.data_prefix="dict(img_path='images',seg_map_path='annotations_binary')" \
-  --save-dir visualization/unet_fs/cbis
+  --save-dir visualization/unet_fs/zgt
 
 conda deactivate
