@@ -11,7 +11,7 @@ cd implementation/segment_anything
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate segment_anything
 
-image_names=("Mass-Training_P_00559_LEFT_MLO_1-1" "Calc-Training_P_00312_RIGHT_MLO_1-1" "Calc-Training_P_01847_LEFT_MLO_1-1" "Calc-Training_P_01375_LEFT_MLO_1-1" "Mass-Training_P_00264_LEFT_CC_1-1" "Mass-Training_P_00128_LEFT_CC_1-1" "Calc-Training_P_01156_LEFT_CC_1-1" "Calc-Training_P_01545_RIGHT_MLO_1-1" "" "Mass-Training_P_00801_LEFT_MLO_1-1" "Calc-Training_P_00667_RIGHT_CC_1-1")
+image_names=("Mass-Training_P_00559_LEFT_MLO_1-1" "Calc-Training_P_00312_RIGHT_MLO_1-1" "Calc-Training_P_01847_LEFT_MLO_1-1" "Calc-Training_P_01375_LEFT_MLO_1-1" "Mass-Training_P_00264_LEFT_CC_1-1" "Mass-Training_P_00128_LEFT_CC_1-1" "Calc-Training_P_01156_LEFT_CC_1-1" "Calc-Training_P_01545_RIGHT_MLO_1-1" "Mass-Training_P_00801_LEFT_MLO_1-1" "Calc-Training_P_00667_RIGHT_CC_1-1")
 
 python finetune/visualize.py finetune/configs/sam_full_cbis-binary.yaml \
   --image_names "${image_names[@]}" \
