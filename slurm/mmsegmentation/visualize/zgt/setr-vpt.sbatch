@@ -21,7 +21,7 @@ python tools/val.py ${work_dir} \
   default_hooks.visualization.interval=1 \
   default_hooks.visualization.draw=True \
   visualizer.alpha=1 \
-  val_dataloader.dataset.data_root='data/zgt/zgt-linked' \  # semantically, this disgusts me, since it is the test set, and not validation. However, this is easier than modifying the val.py script with some extra argument
+  val_dataloader.dataset.data_root='data/zgt/zgt-linked' \
   val_dataloader.dataset.data_prefix="dict(img_path='images',seg_map_path='annotations_binary')" \
   --save-dir visualization/setr_vpt/zgt
 
