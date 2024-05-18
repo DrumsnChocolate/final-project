@@ -34,9 +34,8 @@ def parse_args():
 def store_visualization(cfg, point_prompts, predicted_masks, predicted_ious, image_name, dataloader):
     visualization_dir = cfg.visualization_dir
     image_path = dataloader.dataset.get_image_path(image_name)
-    annotation_path = dataloader.dataset.get_annotation_path(image_name)
-    original_image = ensure_image_rgb(read_image(image_path))
-    original_annotation = read_image(annotation_path, mode=ImageReadMode.GRAY)
+    original_image = ensure_image_rgb(read_image(image_path)).to(cfg.device)
+
     preprocessed_dimensions = predicted_masks.shape[-2:]  # predicted masks shape is MxHxW
     original_dimensions = original_image.shape[-2:]  # original image shape is CxHxW
     # resize each predicted mask to the original image size
