@@ -41,7 +41,8 @@ class SegVisualizationHook(Hook):
                  interval: int = 50,
                  show: bool = False,
                  wait_time: float = 0.,
-                 backend_args: Optional[dict] = None):
+                 backend_args: Optional[dict] = None,
+                 draw_gt: bool = True):
         self._visualizer: SegLocalVisualizer = \
             SegLocalVisualizer.get_current_instance()
         self.interval = interval
@@ -57,6 +58,7 @@ class SegVisualizationHook(Hook):
         self.wait_time = wait_time
         self.backend_args = backend_args.copy() if backend_args else None
         self.draw = draw
+        self.draw_gt = draw_gt
         if not self.draw:
             warnings.warn('The draw is False, it means that the '
                           'hook for visualization will not take '
@@ -87,12 +89,14 @@ class SegVisualizationHook(Hook):
                 img_bytes = fileio.get(
                     img_path, backend_args=self.backend_args)
                 img = mmcv.imfrombytes(img_bytes, channel_order='rgb')
-                window_name = f'{mode}_{osp.basename(img_path)}'
+                # window_name = f'{mode}_{osp.basename(img_path)}'
+                window_name = osp.basename(img_path)
 
                 self._visualizer.add_datasample(
                     window_name,
                     img,
                     data_sample=output,
+                    draw_gt=self.draw_gt,
                     show=self.show,
                     wait_time=self.wait_time,
                     step=runner.iter,

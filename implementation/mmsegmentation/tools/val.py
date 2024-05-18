@@ -19,7 +19,7 @@ def parse_args():
         '--save-dir',
         help='directory where painted images will be saved. '
              'If specified, it will be automatically saved '
-             'to the work_dir/timestamp/save_dir')
+             'to the save_dir relative from where executed')
     parser.add_argument(
         '--wait-time', type=float, default=2, help='the interval of show (s)')
     parser.add_argument(
@@ -54,6 +54,8 @@ def trigger_visualization_hook(cfg, args):
         if args.show:
             visualization_hook['show'] = True
             visualization_hook['wait_time'] = args.wait_time
+        if not args.show:
+            visualization_hook['draw_gt'] = False
         if args.save_dir:
             visualizer = cfg.visualizer
             visualizer['save_dir'] = args.save_dir
